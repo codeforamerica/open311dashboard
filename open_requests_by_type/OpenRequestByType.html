@@ -1,0 +1,54 @@
+<html>
+<head>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <div id="open_req_by_type"></div>
+
+<script>
+
+$(document).ready(
+    $.getJSON('open_requests_by_type.json', function(data) {
+      
+      var chart = {
+          title: "Open Requests by Type",
+          width: 400,
+          height: 200,
+          type: "bhs",
+          color: "676767"
+      };
+      
+      var params = ['http://chart.apis.google.com/chart'];
+
+      params.push("?chxs=0,676767,11.5,0,l,FFFFFF");
+      params.push("&chxt=x&chbh=a");
+      params.push("&chs=" + chart.width + "x" + chart.height);
+      params.push("&cht=" + chart.type);
+      params.push("&chco=" + chart.color);
+
+      var serviceCount = data.service_requests.length;
+      var dataPar = [];
+      var axis = [];
+      var maxValue = 0;
+      for (var i = 0; i < serviceCount; i++) {
+          var requestType = data.service_requests[i];
+          dataPar.push(requestType.open_requests);
+          axis.push('t+' + requestType.service_name + ',676767,0,' + String(serviceCount - i - 1) + ',11');
+          // find the largest value for the xmax caluclation
+          maxValue = maxValue < requestType.open_requests ? requestType.open_requests : maxValue;
+      }
+
+      params.push("&chds=0," + maxValue);
+      params.push("&chxr" + maxValue);
+
+      params.push("&chd=t:" + dataPar.join(','));
+      params.push("&chm=" + axis.join('|'));
+
+      $('#open_req_by_type').append('<img src="' + params.join('') + '"></img>');
+    })
+);
+
+
+</script>
+</body>
+</html>
