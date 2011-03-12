@@ -9,6 +9,8 @@
 			margin: 0px auto;
 		}
 		
+		.column { width: 410px; float: left; padding-bottom: 10px; }
+		
 		#widget_holder {
 			margin-left: auto;
 			margin-right: auto;
@@ -33,7 +35,11 @@
 	</style>
 </head>
 <body>
-	<div id="widget_holder"></div>
+	<div id="widget_holder">
+		<div id="col0" class="column"></div>
+		<div id="col1" class="column"></div>
+		<div id="col2" class="column"></div>
+	</div>
     <div id="open_req_by_type"></div>
 
 <script type="text/javascript">
@@ -122,20 +128,31 @@ $(document).ready(function() {
       all_widgets.push('<h3 class="ui-widget-header">'+chart.title+'</h3><img src="' + params.join('') + '"></img>');
     });
 	
-	$( "#widget_holder" ).sortable({
-		revert: true
-	});
 });
 
 $(document).ajaxStop(function() {
+	$( ".column" ).sortable({
+		connectWith: ".column"
+	});
+	
+	$( ".column" ).disableSelection();
+	
+	for(var x=0; x<5;x++) {
+		all_widgets.push(get_fake_widget(x));
+	}
+	
+	var col_index = 0;
 	$.each(all_widgets, function(index, value) {
 		x = $('<div id="widget-'+index+'" class="ui-widget-content widget-container">'+value+'</div>');
-		x.draggable({ containment: "#widget_holder", connectToSortable: "#widget_holder",
-			//helper: "clone",
-			revert: "invalid" });
-		$('#widget_holder').append(x);
+		$('#col'+(col_index%3)).append(x);
+		col_index++;
 	});
 });
+
+function get_fake_widget(x) {
+	color = Math.floor(Math.random()*16777215).toString(16);
+	return '<h3 class="ui-widget-header">Open Requests by Type '+x+'</h3><img src="http://chart.apis.google.com/chart?chxs=0,'+color+',11.5,0,l,FFFFFF&amp;chxt=x&amp;chbh=a&amp;chs=400x200&amp;cht=bhs&amp;chco='+color+'&amp;chds=0,136&amp;chxr136&amp;chd=t:74,31,136,24,12&amp;chm=t+Sidewalk Cleaning,'+color+',0,4,11|t+Abandoned Vehicle,'+color+',0,3,11|t+Illegal Dumping,'+color+',0,2,11|t+Pavement Defect,'+color+',0,1,11|t+Street Cleaning,'+color+',0,0,11">';
+}
 
 
 </script>
