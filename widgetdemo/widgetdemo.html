@@ -3,6 +3,7 @@
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.10/jquery-ui.min.js"></script>
 	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.10/themes/smoothness/jquery-ui.css" type="text/css" />
+	<script type="text/javascript" src="http://tile.cloudmade.com/wml/latest/web-maps-lite.js"></script>
 	<style type="text/css">
 		.widget-container { 
 			width: 400px;
@@ -32,30 +33,127 @@
 			margin-top:0px;
 			margin-bottom:0px;
 		}
+		
+		#shortstackmap a { 
+			color: #444; 
+			text-decoration: none; 
+		} 
+		
+		#shortstackmap{
+			border:1px solid #10394b; 
+			font-size:50%;
+			color: #10394b;
+		}
+		
+		#linechart{
+			border:1px solid #10394b; 
+			font-size:50%;
+			color: #10394b;
+		}
 
 	</style>
+	        <script type="text/javascript">
+            jQuery(document).ready(function() {
+                //Get the DOM ready and load in some data
+                jQuery.getJSON('ServiceRequests_Complete.json', initializeMap);
+            });
+
+            function initializeMap(data) {
+				//Put the data into a variable
+				//var location_data = data.location;
+                //Basic Map Parameters for Initialization
+                var CENTER_LATITUDE = 37.76;
+                var CENTER_LONGITUDE = -122.44;
+                var INITIAL_ZOOM_LEVEL = 11;
+				var i = 0;
+
+				//Getting our custom map tiles from CloudMade.  We're using a special API key for Short Stack.
+                var cloudmade = new CM.Tiles.CloudMade.Web({
+                    key: '62f1c690198043daa6a4fecfbfd29f0d',
+                    styleId: 1714,
+                    copyright: 'Map tiles &copy; 2011 CloudMade Map data CC-BY-SA OpenStreetMap.org ',
+                    minZoomLevel: 9
+                });
+
+				//Creating and centering the map
+                var map = new CM.Map('shortstackmap', cloudmade);
+                map.setCenter(new CM.LatLng(CENTER_LATITUDE, CENTER_LONGITUDE), INITIAL_ZOOM_LEVEL);
+               
+				//Using default map controls for now
+				map.addControl(new CM.SmallMapControl());
+                
+				//Defining the marker icon
+                var markerIcon = new CM.Icon();
+                markerIcon.image = "samplemarker.png";
+                markerIcon.iconSize = new CM.Size(8, 8);
+                markerIcon.iconAnchor = new CM.Point(4, 3.5);
+				
+				//Defining a sample marker
+				sampleMarker = new CM.Marker(new CM.LatLng(CENTER_LATITUDE, CENTER_LONGITUDE), {
+					//title: data.location[0].name,
+					title: "hi",
+					icon: markerIcon
+				});
+				
+				//We can have infobubbles if we want.  Just place a string of html into the bindInfoWindow method.
+                 sampleMarker.bindInfoWindow("<h2 style='color:#10394b; text-align: center' >" + "hi" + "</h2>", {
+                    maxWidth: 180
+                 });
+				
+				//Adding the marker to the map
+				map.addOverlay(sampleMarker);
+				
+				var markers = [];
+				for (i=0; i < data.requests.length; i++){
+					if(data.requests[i].status === "Open"){
+					markers[i] = new CM.Marker(new CM.LatLng(data.requests[i].lat, data.requests[i].lon), {
+						title: data.requests[i].service_name,
+						icon: markerIcon
+						});
+					markers[i].bindInfoWindow("<h2 style='color:#10394b; text-align: center' >" + data.requests[i].service_name + " at " + data.requests[i].address + "</h2>", {
+                    maxWidth: 180
+					});
+					map.addOverlay(markers[i]);
+					}
+				}
+            }
+        </script>
 </head>
+
 <body>
 	<div id="widget_holder">
 	   <div id="widget-0" class="ui-widget-content widget-container"></div>
 	   <div id="widget-1" class="ui-widget-content widget-container"></div>
 	   <div id="widget-2" class="ui-widget-content widget-container">
-	       <h3 class="ui-widget-header">Test Widget</h3><p class="centeredImage"><img src="http://chart.apis.google.com/chart?chxs=0,676767,11.5,0,l,FFFFFF|1,FFFFFF,11.5,0,_,FFFFFF&chxt=y,x&chbh=a&chs=380x200&cht=bhs&chco=5db7e3&chds=0,100&chxr=0,0,100&chd=t:49.09747292418773,26.714801444043324,11.191335740072201,8.664259927797833,4.332129963898916&chxl=0:|Street Cleaning|Pavement Defect|Illegal Dumping|Abandoned Vehicle|Sidewalk Cleaning&chm=t+12,676767,0,4,11|t+24,676767,0,3,11|t+31,676767,0,2,11|t+74,676767,0,1,11|t+136,676767,0,0,11"></img></p>
+		   <div id="linechart" style="width: 400px; height: 250px">
+	       <h3 class="ui-widget-header">Open Requests by Type</h3><p class="centeredImage"><img src="http://chart.apis.google.com/chart?chxs=0,676767,11.5,0,l,FFFFFF|1,FFFFFF,11.5,0,_,FFFFFF&chxt=y,x&chbh=a&chs=380x200&cht=bhs&chco=5db7e3&chds=0,100&chxr=0,0,100&chd=t:49.09747292418773,26.714801444043324,11.191335740072201,8.664259927797833,4.332129963898916&chxl=0:|Street Cleaning|Pavement Defect|Illegal Dumping|Abandoned Vehicle|Sidewalk Cleaning&chm=t+12,676767,0,4,11|t+24,676767,0,3,11|t+31,676767,0,2,11|t+74,676767,0,1,11|t+136,676767,0,0,11"></img></p>
+		   </div>
 	   </div>
 	   <div id="widget-3" class="ui-widget-content widget-container">
-	       <h3 class="ui-widget-header">Test Widget</h3><p class="centeredImage"><img src="http://chart.apis.google.com/chart?chxs=0,676767,11.5,0,l,FFFFFF|1,FFFFFF,11.5,0,_,FFFFFF&chxt=y,x&chbh=a&chs=380x200&cht=bhs&chco=5db7e3&chds=0,100&chxr=0,0,100&chd=t:49.09747292418773,26.714801444043324,11.191335740072201,8.664259927797833,4.332129963898916&chxl=0:|Street Cleaning|Pavement Defect|Illegal Dumping|Abandoned Vehicle|Sidewalk Cleaning&chm=t+12,676767,0,4,11|t+24,676767,0,3,11|t+31,676767,0,2,11|t+74,676767,0,1,11|t+136,676767,0,0,11"></img></p>
+	       <h3 class="ui-widget-header">Map of Open Requests</h3>
+		   <div id="shortstackmap" style="width: 400px; height: 250px">
+			</div>
 	   </div>
 	   <div id="widget-4" class="ui-widget-content widget-container">
-	       <h3 class="ui-widget-header">Test Widget</h3><p class="centeredImage"><img src="http://chart.apis.google.com/chart?chxs=0,676767,11.5,0,l,FFFFFF|1,FFFFFF,11.5,0,_,FFFFFF&chxt=y,x&chbh=a&chs=380x200&cht=bhs&chco=5db7e3&chds=0,100&chxr=0,0,100&chd=t:49.09747292418773,26.714801444043324,11.191335740072201,8.664259927797833,4.332129963898916&chxl=0:|Street Cleaning|Pavement Defect|Illegal Dumping|Abandoned Vehicle|Sidewalk Cleaning&chm=t+12,676767,0,4,11|t+24,676767,0,3,11|t+31,676767,0,2,11|t+74,676767,0,1,11|t+136,676767,0,0,11"></img></p>
+	       <h3 class="ui-widget-header">Graffiti Trends in December</h3>
+		   <div id="linechart" style="width: 400px; height: 70px">
+			<p class="centeredImage"><img src="http://chart.apis.google.com/chart?cht=lc&chs=380x70&chd=t:5,28,15.9,31.7,42.3,21,26.5,42.3,47.6,95.2,18.5,26.5,21.2,37.0,52.9,58.2,47.6,68.8,26.5,31.7,42.3&chco=336699&chls=1,1,0&chm=o,990000,0,20,4&chxt=r,x,y&chxs=0,990000,11,0,_|1,990000,1,0,_|2,990000,1,0,_&chxl=0:|8|1:||2:||&chxp=0,42.3"></img></p>
+			</div>
 	   </div>
 	   <div id="widget-5" class="ui-widget-content widget-container">
-	       <h3 class="ui-widget-header">Test Widget</h3><p class="centeredImage"><img src="http://chart.apis.google.com/chart?chxs=0,676767,11.5,0,l,FFFFFF|1,FFFFFF,11.5,0,_,FFFFFF&chxt=y,x&chbh=a&chs=380x200&cht=bhs&chco=5db7e3&chds=0,100&chxr=0,0,100&chd=t:49.09747292418773,26.714801444043324,11.191335740072201,8.664259927797833,4.332129963898916&chxl=0:|Street Cleaning|Pavement Defect|Illegal Dumping|Abandoned Vehicle|Sidewalk Cleaning&chm=t+12,676767,0,4,11|t+24,676767,0,3,11|t+31,676767,0,2,11|t+74,676767,0,1,11|t+136,676767,0,0,11"></img></p>
+	       <div id="linechart" style="width: 400px; height: 250px">
+	       <h3 class="ui-widget-header">Open + Closed Requests</h3><p class="centeredImage"><img src="http://chart.apis.google.com/chart?chxs=0,303030,12.5&chxt=x&chs=400x200&cht=p&chco=1D8DC3&chd=t:40,60|-1&chl=Closed|Open"></img></p>
+	       </div>
 	   </div>
 	</div>
 
 <script type="text/javascript">
+/*
 var all_widgets = [];
 $(document).ready(function() {
+	
+
+
 	$.getJSON('open_requests_by_type.json', function(data) {
       
       var chart = {
@@ -140,7 +238,7 @@ $(document).ready(function() {
     });	
 });
 
-
+*/
 $(document).ajaxStop(function() {
     $( "#widget_holder" ).sortable({
 		revert: true
@@ -159,7 +257,6 @@ function get_fake_widget(x) {
 	color = Math.floor(Math.random()*16777215).toString(16);
 	return '<h3 class="ui-widget-header">Open Requests by Type '+x+'</h3><img src="http://chart.apis.google.com/chart?chxs=0,'+color+',11.5,0,l,FFFFFF&amp;chxt=x&amp;chbh=a&amp;chs=400x200&amp;cht=bhs&amp;chco='+color+'&amp;chds=0,136&amp;chxr136&amp;chd=t:74,31,136,24,12&amp;chm=t+Sidewalk Cleaning,'+color+',0,4,11|t+Abandoned Vehicle,'+color+',0,3,11|t+Illegal Dumping,'+color+',0,2,11|t+Pavement Defect,'+color+',0,1,11|t+Street Cleaning,'+color+',0,0,11">';
 }
-
 
 </script>
 </body>
