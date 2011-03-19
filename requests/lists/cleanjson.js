@@ -9,13 +9,15 @@ function(head, req) {
 		  "Content-Type": "text/plain"
 		 }
 	});
-	send('{');
+	send("{\n");
 	while(row = getRow()) {
 		total_requests += row.value;
 		json_obj = { service_request_id:row.key[1],service_name:row.key[0],open_requests:row.value}
-		service_requests.push(JSON.stringify(json_obj));		
+		service_requests.push("\n\t\t"+JSON.stringify(json_obj,null,"\t\t\t"));		
 	}
-	send('"total_request":'+total_requests+',');
-	send('"service_requests":['+service_requests+']');
-	send('}');
+	send("\t'total_request':"+total_requests+",\n");
+	send("\t'service_requests':["+service_requests+"]\n");
+	send("}");
+	
+	send(head.toString());
 }
