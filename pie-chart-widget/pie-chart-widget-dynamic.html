@@ -54,7 +54,7 @@ for (i = 0; i < pieces.length; i += 1){
 // Creates canvas 200 × 200 at 0, 0; canvas starts in the upper left hand corner of the browser
 var canvas = Raphael(0, 0, 200, 200);
 
-var sectorSet = canvas.set();
+var sectorSet = canvas.set();  //set() creates an array-like object, to deal with several elements at once.
 
 for (i = 0; i < pieces.length; i += 1){
 	sector = drawSector(startAngle, Radius, CENTER_X, CENTER_Y, deltaAngles[i], {fill: colorArray[i], stroke: "#fff", opacity: 1});
