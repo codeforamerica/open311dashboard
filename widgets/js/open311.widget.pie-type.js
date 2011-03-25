@@ -32,8 +32,6 @@ $.widget("widget.pieType", {
     if (typeof Raphael == 'undefined') {
       return;
     }
-console.log(this);
-    // Draw on DOM element?
     
     // Deal with colors
     if (this.options.pieces.length === 2) {
@@ -55,7 +53,7 @@ console.log(this);
     //Compute the delta angles; the angles for each sector.
     var i = 0;
     deltaAngles = [];
-    for (i = 0; i < this.options.pieces.length; i += 1){
+    for (i = 0; i < this.options.pieces.length; i += 1) {
       deltaAngles[i] = this._convertProportionToDegreesRadian(this.options.pieces[i].fraction);
     }
 
