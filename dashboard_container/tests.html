@@ -1,0 +1,60 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
+										"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<script src="http://code.jquery.com/jquery-latest.js"></script>
+	<link rel="stylesheet" href="http://code.jquery.com/qunit/git/qunit.css" type="text/css" media="screen" />
+<script type="text/javascript" src="http://code.jquery.com/qunit/git/qunit.js"></script>
+
+	<script>
+	$(document).ready(function(){
+		
+module("Module A");
+
+	test("first test within module", function() {
+		function an_empty_test_area() {
+			$('#test-area').empty();
+		}
+		
+		function a_grid_with_four_empty_columns() {
+			$('#test-area').html('<')
+		}
+		
+		function i_ask_for_space_for_a_1x1_item() {
+		}
+		
+		function the_nth_grid_column_should_have_one_empty_cell(n) {
+			equals(cols[n].
+		}
+		
+		function the_grid_columns_should_be_empty(cols) {
+		}
+		
+		// starting from...
+		an_empty_test_area();
+		
+		// given...
+		a_grid_with_four_empty_columns();
+		
+		// when...
+		i_ask_for_space_for_a_1x1_item();
+		
+		// then...
+		the_nth_grid_column_should_have_one_empty_cell(0);
+		the_grid_columns_should_be_empty([1,2,3]);
+	});
+	});
+	</script>
+	
+</head>
+<body>
+	<h1 id="qunit-header">QUnit example</h1>
+ <h2 id="qunit-banner"></h2>
+ <div id="qunit-testrunner-toolbar"></div>
+ <h2 id="qunit-userAgent"></h2>
+ <ol id="qunit-tests"></ol>
+ <div id="qunit-fixture">test markup, will be hidden</div>
+ 
+ <section id="test-area"></section>
+</body>
+</html>
