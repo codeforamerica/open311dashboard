@@ -1,4 +1,32 @@
-
+	
+	Grid = function(columns, items) {
+		this.columns = columns || []
+		this.items = items || []
+		
+		this.add_item = function(item) {
+			/* should determine the top-left most position that the given item can
+			 * be placed within the columns.  For now will just use the first 
+			 * available space (and assume that all items will be 1x1). */
+		
+			var column_to_place_in = null;
+			for (var c in columns) {
+				var current_column = this.columns[c];
+				if (column_to_place_in === null) {
+					column_to_place_in = current_column
+				}
+				else if (
+					current_column.cells.length < column_to_place_in.cells.length) {
+					column_to_place_in = current_column
+				}
+			}
+		
+			var cell = new GridCell($('<li></li>'))
+			cell.item = item
+			column_to_place_in.cells.push(cell)
+			column_to_place_in.jqobject.append(cell.jqobject)
+		}
+	}
+	
 	GridItem = function(jqo, w, h) {
 		this.jqobject = jqo;
 		this.colspan = w
@@ -49,32 +77,6 @@
 			make_space_for(item, columns)
 		});
 		
-		return { 
-			items : items, 
-			columns : columns 
-		}
-	}
-	
-	function make_space_for(item, columns) {
-		/* should determine the top-left most position that the given item can
-		 * be placed within the columns.  For now will just use the first 
-		 * available space (and assume that all items will be 1x1). */
-		
-		var column_to_place_in = null;
-		for (var c in columns) {
-			var current_column = columns[c];
-			if (column_to_place_in === null) {
-				column_to_place_in = current_column
-			}
-			else if (
-				current_column.cells.length < column_to_place_in.cells.length) {
-				column_to_place_in = current_column
-			}
-		}
-		
-		var cell = new GridCell($('<li></li>'))
-		column_to_place_in.cells.push(cell)
-		column_to_place_in.jqobject.append(cell.jqobject)
-		cell.jqobject.addClass('empty-cell')
+		return new Grid(columns, items)
 	}
 
