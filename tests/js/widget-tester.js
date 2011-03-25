@@ -3,7 +3,7 @@
  */
 (function( $, undefined ) {
 
-$('.widget.bargraph-style').bargraph_style();
-alert('hi');
+$('.widget.bargraph-type').bargraphType({dataSource: 'data/open_requests_by_type.json'});
+$('.widget.sparkline').sparkline();
 
 })( jQuery );
