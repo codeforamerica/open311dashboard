@@ -5,57 +5,116 @@
 <body>
     <div id="open_req_by_type"></div>
 
-<script>
+<script type="text/javascript">
 
-$(document).ready(
-    $.getJSON('open_requests_by_type.json', function(data) {
-      
-      var chart = {
-          title: "Open Requests by Type",
-          width: 400,
-          height: 200,
-          type: "bhs",
-          color: "4D89F9"
-      };
-         
-      var params = ['http://chart.apis.google.com/chart'];
+$(document).ready(function() {
+	d1 = new Date("2010-11-11T00:00:00");
+	d2 = new Date("2010-11-11T23:59:59");
+	
+	$.ajax({
+		url: "http://open311.couchone.com/service-requests/_design/requests/_list/requests-json/openbytime",
+	   	dataType: 'jsonp',
+		data: {
+			"startkey":'"'+toRfc3339(d1)+'"',
+			"endkey":'"'+toRfc3339(d2)+'"'
+		},	   	
+	   	success: function(data) {
+			if(data.service_requests.length > 0) {
+				// Parameters for the chart
+				var chart = {
+			        title: "Open Requests by Type",
+			        width: 400,
+		          	height: 200,
+		          	type: "bhs",
+					color: "4D89F9"
+			    };
+			
+				// Setup the params for the Google Chart call
+		      	var params = ['http://chart.apis.google.com/chart'];
 
-      params.push("?chxs=0,676767,11.5,0,l,FFFFFF|1,FFFFFF,11.5,0,_,FFFFFF");
-      params.push("&chxt=y,x&chbh=a");
-      params.push("&chs=" + chart.width + "x" + chart.height);
-      params.push("&cht=" + chart.type);
-      params.push("&chco=" + chart.color);
+			    params.push("?chxs=0,676767,11.5,0,l,FFFFFF|1,FFFFFF,11.5,0,_,FFFFFF");
+				params.push("&chxt=y,x&chbh=a");
+				params.push("&chs=" + chart.width + "x" + chart.height);
+				params.push("&cht=" + chart.type);
+				params.push("&chco=" + chart.color);
+			
+				var dataPar = [];
+			    var axis = [];
+			    var dataLabels = [];
+		      	var maxValue = 0;
+		      	var serviceCount = 0;
+				var request_types = [];
+			
+				// Loop through the returned data and determine the frequency of each service type
+				$(data.service_requests).each(function(index, elm) {
+					if(request_types[elm.service_code] == undefined) {
+						x = { 'service_name':elm.service_name, 'count':1}
+						request_types[elm.service_code] = x;
+					} else {
+						request_types[elm.service_code].count++;
+					}
+					serviceCount++;
+				})
+			
+				// Determine the top ten frequencies
+				var topTen = [];
+				$(request_types).each(function(index, el) {
+			      	if(el != undefined) { topTen.push(el); }
+				});
+			
+				topTen.sort(function(a,b) {
+					if (a.count > b.count) return -1;
+					if (a.count < b.count) return 1;
+					return 0;
+				});
+			
+				topTen = topTen.slice(0,10);
 
-      var serviceCount = data.service_requests.length;
-      var dataPar = [];
-      var axis = [];
-      var dataLabels = [];
-      var maxValue = 0;
-      
-      for (var i = 0; i < serviceCount; i++) {
-          var requestType = data.service_requests[i];
-          dataPar.push((requestType.open_requests/data.total_request)*100);
-          axis.push(requestType.service_name);
-          dataLabels.push("t+" + requestType.open_requests + ',676767,0,' + i + ',11')
-          // find the largest value for the xmax caluclation
-          maxValue = maxValue < requestType.open_requests ? requestType.open_requests : maxValue;
-      }
+				// Now that we have our top 10, we can stack the data points onto our Google Chart url
+			    $(topTen).each(function(index, el) {
+		      		if(el != undefined) {
+						var requestType = el;
+				        dataPar.push((requestType.count/serviceCount)*100);
+				        axis.push(requestType.service_name);
+				        dataLabels.push("t+" + requestType.count + ',676767,0,' + index + ',11')
+				        // find the largest value for the xmax caluclation
+				        maxValue = maxValue < requestType.count ? requestType.count : maxValue;
+					}
+		      	});
+			
+				// Finish putting out chart parameters onto the URL
+			    params.push("&chds=0,100&chxr=0,0,100");
+			    params.push("&chd=t:" + dataPar.join(','));
+			    var reverseAxis = axis.reverse();
+			    params.push("&chxl=0:|" + reverseAxis.join('|'));
+			    var reverseDataLabels = dataLabels.reverse();
+			    params.push("&chm=" + reverseDataLabels.join('|'));
 
-      params.push("&chds=0,100&chxr=0,0,100");
+			    // &chm=t+Service+One,676767,0,4,11|t+Service+Two,676767,0,3,11|t+Service+Three,676767,0,2,11|t+Service+Four,676767,0,1,11|t+Service+Five,676767,0,0,11
 
-      params.push("&chd=t:" + dataPar.join(','));
-      var reverseAxis = axis.reverse();
-      params.push("&chxl=0:|" + reverseAxis.join('|'));
-      var reverseDataLabels = dataLabels.reverse();
-      params.push("&chm=" + reverseDataLabels.join('|'));
-      
-      // &chm=t+Service+One,676767,0,4,11|t+Service+Two,676767,0,3,11|t+Service+Three,676767,0,2,11|t+Service+Four,676767,0,1,11|t+Service+Five,676767,0,0,11
+			    // Insert the chart image into the page
+				$('#open_req_by_type').append('<img src="' + params.join('') + '"></img>');
+			} else {
+				$('#open_req_by_type').append('<h1>No data, sucka.</h1>');
+			}
+	   	}
+	});
 
-      $('#open_req_by_type').append('<img src="' + params.join('') + '"></img>');
-    })
-);
+
+	function toRfc3339(d){
+	 	function pad(n){return n<10 ? '0'+n : n}
+		return d.getUTCFullYear()+'-'
+		      + pad(d.getUTCMonth()+1)+'-'
+		      + pad(d.getUTCDate())+'T'
+		      + pad(d.getUTCHours())+':'
+		      + pad(d.getUTCMinutes())+':'
+		      + pad(d.getUTCSeconds())+'Z'
+
+	}
+});
 
 
 </script>
+<div class="result"></div>
 </body>
 </html>
