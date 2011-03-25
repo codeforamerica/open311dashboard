@@ -21,7 +21,7 @@ $.widget("widget.pieType", {
       {status: "Open", fraction:.6}, 
       {status: "Closed", fraction:.4}
     ],
-    colorArray = []
+    colorArray: []
   },
   
   /**
