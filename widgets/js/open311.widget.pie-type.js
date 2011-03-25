@@ -120,4 +120,4 @@ $.widget("widget.pie-type", {
   }
 });
 
-});
+})( jQuery );

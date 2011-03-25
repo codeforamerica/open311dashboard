@@ -55,4 +55,4 @@ $.widget("widget.example-widget", {
   }
 });
 
-});
+})( jQuery );
