@@ -29,10 +29,10 @@ $.widget("widget.pieType", {
    */
   _create: function() {
     // Check for Raphael
-    if (typeof Rapael == 'undefined') {
+    if (typeof Raphael == 'undefined') {
       return;
     }
-    
+console.log(this);
     // Draw on DOM element?
     
     // Deal with colors
@@ -60,19 +60,19 @@ $.widget("widget.pieType", {
     }
 
     // Creates canvas 200 × 200 at 0, 0; canvas starts in the upper left hand corner of the browser
-    var canvas = Raphael(0, 0, 200, 200);
+    var canvas = Raphael(this.element[0], 200, 200);
     // set() creates an array-like object, to deal with several elements at once.
     var sectorSet = canvas.set();  
 
-    for (i = 0; i < pieces.length; i += 1){
-      sector = this._drawSector(startAngle, Radius, CENTER_X, CENTER_Y, deltaAngles[i], {fill: colorArray[i], stroke: "#fff", opacity: 1});
+    for (i = 0; i < this.options.pieces.length; i += 1){
+      sector = this._drawSector(startAngle, Radius, CENTER_X, CENTER_Y, deltaAngles[i], {fill: this.options.colorArray[i], stroke: "#fff", opacity: 1}, canvas);
       sector.attr({title: this.options.pieces[i].fraction*100 + '% ' + this.options.pieces[i].status});
       sectorSet.push(sector);
       startAngle = startAngle + deltaAngles[i];
     }
 
     // Text that describes various portions of the pie chart
-    var description = canvas.text(100,180, "Open and Closed Service Requests");
+    var description = canvas.text(100, 180, "Open and Closed Service Requests");
     description.attr({"font-size": 12});
 
     //Handle the mouseover
@@ -97,7 +97,7 @@ $.widget("widget.pieType", {
   /**
    * Draw sector
    */
-  _drawSector: function(startAngle, Radius, CENTER_X, CENTER_Y, deltaAngle, displayParameters) {
+  _drawSector: function(startAngle, Radius, CENTER_X, CENTER_Y, deltaAngle, displayParameters, canvas) {
     //Drawing a path; return it so we can do things to it later on.
     var secondX = CENTER_X + Radius * Math.cos(-startAngle);
     var secondY = CENTER_Y + Radius * Math.sin(-startAngle);
