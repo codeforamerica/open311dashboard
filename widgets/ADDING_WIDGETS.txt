@@ -1,0 +1,22 @@
+How to add widgets for the Open 311 Dashboard.
+
+Widget management is handled by leveraging the jQuery UI widget factory 
+system.  You can learn more about this at the following pages:
+
+http://jqueryui.com/docs/Developer_Guide
+http://bililite.com/blog/understanding-jquery-ui-widgets-a-tutorial/
+
+
+## New Widgets ##
+
+To add a new widget, simply create a file with an appropriate name, such as:
+
+js/open311.widget.pie-by-type.js
+
+Checkout existing widgets to get how this is done, or look at the example
+wdiget: open311.widget.example.js
+
+
+## Themes ##
+
+This is not currently utilized
