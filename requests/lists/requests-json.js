@@ -9,6 +9,8 @@ function(head, req) {
 		 }
 	});
 	
+	send(req.query.callback+'(');
+	
 	// Begin formatting the requests
 	send("{\n"+'"service_requests":[');
 	
@@ -21,5 +23,5 @@ function(head, req) {
 	}
 	
 	// Close it all up
-	send("]}");
+	send("]});");
 }
