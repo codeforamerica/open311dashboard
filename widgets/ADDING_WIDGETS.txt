@@ -4,6 +4,7 @@ Widget management is handled by leveraging the jQuery UI widget factory
 system.  You can learn more about this at the following pages:
 
 http://jqueryui.com/docs/Developer_Guide
+http://bililite.com/blog/understanding-jquery-ui-widgets-a-tutorial/
 
 
 ## New Widgets ##
