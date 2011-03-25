@@ -6,7 +6,6 @@
  * Depends:
  *   jquery.ui.core.js
  *   jquery.ui.widget.js
- *   raphael.js
  */
 (function( $, undefined ) {
 
@@ -23,11 +22,6 @@ $.widget("widget.bargraph-type", {
    * Creation code for widget
    */
   _create: function() {
-    // Check for Raphael
-    if (typeof Rapael == 'undefined') {
-      return;
-    }
-    
     // Draw on DOM element?
     $.getJSON(this.options.dataSource, function(data) {
       var chart = {
@@ -84,4 +78,4 @@ $.widget("widget.bargraph-type", {
   }
 });
 
-});
+})( jQuery );
