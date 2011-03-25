@@ -4,7 +4,6 @@
 </head>
 <body>
     <div id="open_req_by_type"></div>
-
 <script>
 
 function convertProportionToDegreesRadian(proportion){
@@ -25,7 +24,7 @@ function drawSector(startAngle, Radius, CENTER_X, CENTER_Y, deltaAngle, displayP
 	return canvas.path(["M",CENTER_X, CENTER_Y, "L", secondX, secondY, "A", Radius, Radius, 0, +(finalAngle - startAngle > Math.PI), 0, thirdX, thirdY, "z"]).attr(displayParameters);
 };
 
-var pieces = [.6,.4];
+var pieces = [{status: "Open", fraction:.6}, {status:"Closed", fraction:.4}]; 
 
 //Deal with colors
 var colorArray = [];
@@ -36,6 +35,7 @@ if (pieces.length === 2){
 } else if (pieces.length === 4) {
 	colorArray = ["#1d8dc3","#3193c3", "#449ac3", "#58a0c3"];
 } else {
+	//fix this later; implement some kind of spectrum for high number of sectors
 	colorArray = ["#1d8dc3","#3193c3", "#449ac3", "#58a0c3","#6ba6c3"];
 }
 
@@ -44,20 +44,38 @@ var Radius = 50;
 var CENTER_X = 100; //X-coordinate of the circle's center
 var CENTER_Y = 100; //Y-coordinate of the circle's center
 
-//Compute the delta angles; the angles for each sector
+//Compute the delta angles; the angles for each sector.
 var i = 0;
 deltaAngles = [];
-for (i=0; i < pieces.length; i += 1){
-	deltaAngles[i] = convertProportionToDegreesRadian(pieces[i]);
+for (i = 0; i < pieces.length; i += 1){
+	deltaAngles[i] = convertProportionToDegreesRadian(pieces[i].fraction);
 }
 
 // Creates canvas 200 × 200 at 0, 0; canvas starts in the upper left hand corner of the browser
 var canvas = Raphael(0, 0, 200, 200);
 
+var sectorSet = canvas.set();  //set() creates an array-like object, to deal with several elements at once.
+
 for (i = 0; i < pieces.length; i += 1){
-	drawSector(startAngle, Radius, CENTER_X, CENTER_Y, deltaAngles[i], {fill: colorArray[i], stroke: "#fff", opacity: 1});
+	sector = drawSector(startAngle, Radius, CENTER_X, CENTER_Y, deltaAngles[i], {fill: colorArray[i], stroke: "#fff", opacity: 1});
+	sector.attr({title: pieces[i].fraction*100 + '% ' + pieces[i].status});
+	sectorSet.push(sector);
 	startAngle = startAngle + deltaAngles[i];
 }
+
+//Text that describes various portions of the pie chart
+var description = canvas.text(100,180, "Open and Closed Service Requests");
+description.attr({"font-size": 12});
+
+//Handle the mouseover
+sectorSet.mouseover(function () {
+	this.animate({scale: [1.05, 1.05, CENTER_X, CENTER_Y], stroke:"#cccccc"}, 250, "cubic-bezier(0.42, 0, 1.0, 1.0)");
+	description.attr({text:this.attr("title")});
+	//alert(typeof this.attr("title"));
+}).mouseout(function () {
+	this.animate({scale: [1, 1, CENTER_X, CENTER_Y], fill:this.attr("fill"), stroke: "#fff"}, 250, "cubic-bezier(0.42, 0, 1.0, 1.0)");
+	description.attr({text:"Open and Closed Service Requests"});
+});
 </script>
 </body>
 </html>
