@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>jQuery UI Draggable - Default functionality</title>
+	<link rel="stylesheet" href="../../themes/base/jquery.ui.all.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.11/jquery-ui.js"></script>
+<!--	<script src="../../ui/jquery.ui.core.js"></script>
+	<script src="../../ui/jquery.ui.widget.js"></script>
+	<script src="../../ui/jquery.ui.mouse.js"></script>
+	<script src="../../ui/jquery.ui.draggable.js"></script>-->
+	<link rel="stylesheet" href="demos.css">
+	<style>
+	#draggable { width: 150px; height: 150px; padding: 0.5em; }
+	.grid-column { width: 50px; margin: 10px; }
+	.grid-column > .grid-cell { width: 50px; height: 50px; margin: 10px; }
+	.grid-cell.occupied { background: grey; }
+	.grid-cell.empty { visible: hidden; }
+	
+	.grid-item { width: 50px; height: 50px; }
+	.wide-2 { width: 100px; }
+	.high-2 { width: 100px; }
+	</style>
+	
+	<script src="dashboard_container.js"></script>
+	<script>
+	$(function() {
+		$( "#draggable" ).draggable();
+		grid = prepare_grid($("#mygrid"), 4);
+	});
+	</script>
+</head>
+<body>
+
+<div class="demo">
+
+<div id="draggable" class="ui-widget-content">
+	<p>Drag me around</p>
+</div>
+
+</div><!-- End demo -->
+
+
+
+<div class="demo-description">
+<p>Enable draggable functionality on any DOM element. Move the draggable object by clicking on it with the mouse and dragging it anywhere within the viewport.</p>
+</div><!-- End demo-description -->
+
+<div id="mygrid">
+	<div><p>test1</p></div>
+	<div><p>test2</p></div>
+</div>
+
+</body>
+</html>
