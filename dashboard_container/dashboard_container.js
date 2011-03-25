@@ -3,7 +3,7 @@
 		this.columns = columns || []
 		this.items = items || []
 		
-		this.add_item = function(item) {
+		this.append_item = function(item) {
 			/* should determine the top-left most position that the given item can
 			 * be placed within the columns.  For now will just use the first 
 			 * available space (and assume that all items will be 1x1). */
@@ -50,7 +50,14 @@
 		
 		jqo.addClass("grid-item");
 		jqo.addClass("ui-widget-content");
-		jqo.draggable();
+		jqo.draggable({
+			start : function (event, ui) {
+				var x = event.clientX
+				var y = event.clientY
+				
+				
+			}
+		});
 		
 	}
 	
@@ -78,6 +85,7 @@
 		for (var n = 0; n < num_cols; n++) {
 			jqobject.find('.grid-columns').append('<ul></ul>')
 		}
+		jqobject.find('.grid-columns').append('<div style="clear: both"></div>')
 		
 		var column_nodes = jqobject.find(".grid-columns > ul")
 		var item_nodes = jqobject.find(".grid-items > *")
@@ -93,7 +101,7 @@
 			item = new GridItem($(item_node))
 			items.push(item)
 			
-			grid.add_item(item)
+			grid.append_item(item)
 		});
 		
 		grid.update_positions()
