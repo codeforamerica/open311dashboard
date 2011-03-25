@@ -27,7 +27,7 @@
 	<script>
 	$(function() {
 		$( "#draggable" ).draggable();
-		grid = prepare_grid($("#mygrid"));
+		grid = prepare_grid($("#mygrid"), 4);
 	});
 	</script>
 </head>
@@ -48,17 +48,8 @@
 </div><!-- End demo-description -->
 
 <div id="mygrid">
-	<div class="grid-columns">
-		<ul></ul>
-		<ul></ul>
-		<ul></ul>
-		<ul></ul>
-	</div>
-
-	<div class="grid-items">
-		<div><p>test1</p></div>
-		<div><p>test2</p></div>
-	</div>
+	<div><p>test1</p></div>
+	<div><p>test2</p></div>
 </div>
 
 </body>

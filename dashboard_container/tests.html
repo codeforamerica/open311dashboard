@@ -3,47 +3,104 @@
 <html>
 <head>
 	<script src="http://code.jquery.com/jquery-latest.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.11/jquery-ui.js"></script>
+	<script src="dashboard_container.js"></script>
 	<link rel="stylesheet" href="http://code.jquery.com/qunit/git/qunit.css" type="text/css" media="screen" />
 <script type="text/javascript" src="http://code.jquery.com/qunit/git/qunit.js"></script>
 
 	<script>
 	$(document).ready(function(){
+	
+	var statements = {
+		an_empty_test_area : function () {
+			this.world = {}
+			this.world.test_area = $('#test-area');
+			this.world.test_area.empty();
+		},
 		
-module("Module A");
+		a_grid_with_four_empty_columns : function () {
+			this.world.grid = prepare_grid(this.world.test_area, 4)
+		},
+		
+		a_grid_with_a_1x1_item_in_the_first_columns : function () {
+			this.world.grid = prepare_grid(this.world.test_area, 4)
+		},
+		
+		i_ask_for_space_for_a_1x1_item : function () {
+			var item = GridItem($('<div></div>'), 1, 1)
+			make_space_for(item, this.world.grid.columns)
+		},
+		
+		the_nth_grid_column_should_have_one_empty_cell : function (n) {
+			var cells = this.world.grid.columns[n].cells
+			
+			equals(cells.length, 1)
+			ok(cells[0].jqobject.hasClass('empty-cell'))
+		},
+		
+		the_grid_should_have_n_columns : function (n) {
+			equals(this.world.grid.columns.length, n)
+		},
+		
+		the_grid_columns_should_be_empty : function (column_indecies) {
+			for (var i in column_indecies) {
+				var ci = column_indecies[i]
+				equals(this.world.grid.columns[ci].cells.length, 0)
+			}
+		}
+	}
+		
+module("Grid Tests");
 
-	test("first test within module", function() {
-		function an_empty_test_area() {
-			$('#test-area').empty();
-		}
-		
-		function a_grid_with_four_empty_columns() {
-			$('#test-area').html('<')
-		}
-		
-		function i_ask_for_space_for_a_1x1_item() {
-		}
-		
-		function the_nth_grid_column_should_have_one_empty_cell(n) {
-			equals(cols[n].
-		}
-		
-		function the_grid_columns_should_be_empty(cols) {
-		}
+	test("make an empty grid with 4 columns", function() {
+		var _ = statements
 		
 		// starting from...
-		an_empty_test_area();
+		_.an_empty_test_area();
 		
 		// given...
-		a_grid_with_four_empty_columns();
-		
-		// when...
-		i_ask_for_space_for_a_1x1_item();
+		_.a_grid_with_four_empty_columns();
 		
 		// then...
-		the_nth_grid_column_should_have_one_empty_cell(0);
-		the_grid_columns_should_be_empty([1,2,3]);
+		_.the_grid_should_have_n_columns(4);
+		_.the_grid_columns_should_be_empty([0,1,2,3]);
 	});
+
+	test("make space in an empty grid for a 1x1 item", function() {
+		var _ = statements
+		
+		// starting from...
+		_.an_empty_test_area();
+		
+		// given...
+		_.a_grid_with_four_empty_columns();
+		
+		// when...
+		_.i_ask_for_space_for_a_1x1_item();
+		
+		// then...
+		_.the_nth_grid_column_should_have_one_empty_cell(0);
+		_.the_grid_columns_should_be_empty([1,2,3]);
 	});
+
+	test("make space in a grid with a 1x1 item for another 1x1 item", function() {
+		var _ = statements
+		
+		// starting from...
+		_.an_empty_test_area();
+		
+		// given...
+		_.a_grid_with_a_1x1_item_in_the_first_columns();
+		
+		// when...
+		_.i_ask_for_space_for_a_1x1_item();
+		
+		// then...
+		_.the_nth_grid_column_should_have_one_empty_cell(0);
+		_.the_nth_grid_column_should_have_one_empty_cell(1);
+		_.the_grid_columns_should_be_empty([2,3]);
+	});
+});
 	</script>
 	
 </head>
