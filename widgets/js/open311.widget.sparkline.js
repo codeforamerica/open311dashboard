@@ -11,7 +11,7 @@
  */
 (function( $, undefined ) {
 
-$.widget( "ui.sparkline", {
+$.widget( "widget.sparkline", {
 	options: {
 	},
 
