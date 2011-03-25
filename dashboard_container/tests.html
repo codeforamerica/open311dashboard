@@ -23,19 +23,20 @@
 		},
 		
 		a_grid_with_a_1x1_item_in_the_first_columns : function () {
-			this.world.grid = prepare_grid(this.world.test_area, 4)
+			this.a_grid_with_four_empty_columns()
+			this.i_add_a_1x1_item()
 		},
 		
-		i_ask_for_space_for_a_1x1_item : function () {
-			var item = GridItem($('<div></div>'), 1, 1)
-			make_space_for(item, this.world.grid.columns)
+		i_add_a_1x1_item : function () {
+			this.world.item = GridItem($('<div></div>'), 1, 1)
+			this.world.grid.add_item(this.world.item)
 		},
 		
-		the_nth_grid_column_should_have_one_empty_cell : function (n) {
+		the_nth_grid_column_should_have_one_cell_with_the_1x1_item : function (n) {
 			var cells = this.world.grid.columns[n].cells
 			
 			equals(cells.length, 1)
-			ok(cells[0].jqobject.hasClass('empty-cell'))
+			equals(cells[0].item, this.world.item)
 		},
 		
 		the_grid_should_have_n_columns : function (n) {
@@ -76,10 +77,10 @@ module("Grid Tests");
 		_.a_grid_with_four_empty_columns();
 		
 		// when...
-		_.i_ask_for_space_for_a_1x1_item();
+		_.i_add_a_1x1_item();
 		
 		// then...
-		_.the_nth_grid_column_should_have_one_empty_cell(0);
+		_.the_nth_grid_column_should_have_one_cell_with_the_1x1_item(0);
 		_.the_grid_columns_should_be_empty([1,2,3]);
 	});
 
@@ -93,11 +94,10 @@ module("Grid Tests");
 		_.a_grid_with_a_1x1_item_in_the_first_columns();
 		
 		// when...
-		_.i_ask_for_space_for_a_1x1_item();
+		_.i_add_a_1x1_item();
 		
 		// then...
-		_.the_nth_grid_column_should_have_one_empty_cell(0);
-		_.the_nth_grid_column_should_have_one_empty_cell(1);
+		_.the_nth_grid_column_should_have_one_cell_with_the_1x1_item(1);
 		_.the_grid_columns_should_be_empty([2,3]);
 	});
 });

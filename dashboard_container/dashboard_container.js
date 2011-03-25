@@ -1,4 +1,48 @@
-
+	
+	Grid = function(columns, items) {
+		this.columns = columns || []
+		this.items = items || []
+		
+		this.add_item = function(item) {
+			/* should determine the top-left most position that the given item can
+			 * be placed within the columns.  For now will just use the first 
+			 * available space (and assume that all items will be 1x1). */
+		
+			// Determine which column to place the item in
+			var column_to_place_in = null;
+			for (var c in columns) {
+				var current_column = this.columns[c];
+				if (column_to_place_in === null) {
+					column_to_place_in = current_column
+				}
+				else if (
+					current_column.cells.length < column_to_place_in.cells.length) {
+					column_to_place_in = current_column
+				}
+			}
+			
+			// Create cell(s) to place the item
+			var cell = new GridCell($('<li></li>'))
+			cell.item = item
+			column_to_place_in.cells.push(cell)
+			column_to_place_in.jqobject.append(cell.jqobject)
+		}
+		
+		this.update_positions = function() {
+			for (var i in this.columns) {
+				var column = columns[i]
+				for (var j in column.cells) {
+					var cell = column.cells[j]
+					
+					var item = cell.item
+					if (item) {
+						item.jqobject.offset(cell.jqobject.offset())
+					}
+				}
+			}
+		}
+	}
+	
 	GridItem = function(jqo, w, h) {
 		this.jqobject = jqo;
 		this.colspan = w
@@ -7,6 +51,7 @@
 		jqo.addClass("grid-item");
 		jqo.addClass("ui-widget-content");
 		jqo.draggable();
+		
 	}
 	
 	GridColumn = function(jqo, index) {
@@ -29,7 +74,7 @@
 		
 		// alter the dom
 		jqobject.children().wrapAll('<div class="grid-items"></div>')
-		jqobject.append('<div class="grid-columns"></div>')
+		jqobject.prepend('<div class="grid-columns"></div>')
 		for (var n = 0; n < num_cols; n++) {
 			jqobject.find('.grid-columns').append('<ul></ul>')
 		}
@@ -42,39 +87,17 @@
 			columns.push(column)
 		});
 		
+		var grid = new Grid(columns)
+		
 		item_nodes.each(function(index, item_node) {
 			item = new GridItem($(item_node))
 			items.push(item)
 			
-			make_space_for(item, columns)
+			grid.add_item(item)
 		});
 		
-		return { 
-			items : items, 
-			columns : columns 
-		}
-	}
-	
-	function make_space_for(item, columns) {
-		/* should determine the top-left most position that the given item can
-		 * be placed within the columns.  For now will just use the first 
-		 * available space (and assume that all items will be 1x1). */
+		grid.update_positions()
 		
-		var column_to_place_in = null;
-		for (var c in columns) {
-			var current_column = columns[c];
-			if (column_to_place_in === null) {
-				column_to_place_in = current_column
-			}
-			else if (
-				current_column.cells.length < column_to_place_in.cells.length) {
-				column_to_place_in = current_column
-			}
-		}
-		
-		var cell = new GridCell($('<li></li>'))
-		column_to_place_in.cells.push(cell)
-		column_to_place_in.jqobject.append(cell.jqobject)
-		cell.jqobject.addClass('empty-cell')
+		return grid
 	}
 
