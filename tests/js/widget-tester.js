@@ -3,7 +3,10 @@
  */
 (function( $, undefined ) {
 
-$('.widget.bargraph-style').bargraph_style();
-alert('hi');
+$('.bargraph-type').bargraphType({dataSource: 'data/open_requests_by_type.json'});
+$('.sparkline').sparkline();
+$('.pie-type').pieType();
+$('.map').map();
+$('.top-open-requests').topOpenRequests();
 
 })( jQuery );

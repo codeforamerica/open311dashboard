@@ -9,7 +9,7 @@
  */
 (function( $, undefined ) {
 
-$.widget("widget.bargraph-type", {
+$.widget("widget.bargraphType", {
   /**
    * Default options for the widget.  We need some way
    * of communicating the data source across all widgets.
@@ -22,8 +22,11 @@ $.widget("widget.bargraph-type", {
    * Creation code for widget
    */
   _create: function() {
-    // Draw on DOM element?
+    var self = this;
+    
+    // Get the data
     $.getJSON(this.options.dataSource, function(data) {
+      
       var chart = {
         title: "Open Requests by Type",
         width: 400,
@@ -62,10 +65,9 @@ $.widget("widget.bargraph-type", {
       var reverseDataLabels = dataLabels.reverse();
       params.push("&chm=" + reverseDataLabels.join('|'));
       
-      // &chm=t+Service+One,676767,0,4,11|t+Service+Two,676767,0,3,11|t+Service+Three,676767,0,2,11|t+Service+Four,676767,0,1,11|t+Service+Five,676767,0,0,11
-
       // Add image to widget
-      this.element.append('<img src="' + params.join('') + '"></img>');
+      self.valueDiv = $('<img src="' + params.join('') + '"></img>')
+			 .appendTo(self.element);
     })  
   },
   

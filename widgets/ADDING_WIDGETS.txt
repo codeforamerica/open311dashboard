@@ -5,6 +5,7 @@ system.  You can learn more about this at the following pages:
 
 http://jqueryui.com/docs/Developer_Guide
 http://bililite.com/blog/understanding-jquery-ui-widgets-a-tutorial/
+http://www.devpatch.com/2010/03/communication-between-jquery-ui-widgets/
 
 
 ## New Widgets ##
@@ -14,9 +15,11 @@ To add a new widget, simply create a file with an appropriate name, such as:
 js/open311.widget.pie-by-type.js
 
 Checkout existing widgets to get how this is done, or look at the example
-wdiget: open311.widget.example.js
+widget: open311.widget.example.js
 
 
 ## Themes ##
 
-This is not currently utilized
+This is not currently utilized.  For future use, check out this:
+http://jqueryui.com/docs/Theming
+http://jqueryui.com/docs/Theming/API

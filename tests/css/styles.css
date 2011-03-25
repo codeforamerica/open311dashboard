@@ -1,0 +1,12 @@
+/**
+ * Some simple CSS for test pages.
+ */
+.ui-widget {
+  width: 500px;
+  float: left;
+  border: 1px solid #666666;
+  padding: 10px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  box-shadow: 3px 3px 4px #000;
+}
