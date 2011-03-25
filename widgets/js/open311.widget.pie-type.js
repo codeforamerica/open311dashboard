@@ -36,15 +36,15 @@ $.widget("widget.pie-type", {
     // Draw on DOM element?
     
     // Deal with colors
-    if (pieces.length === 2) {
-      this.colorArray = ["#D2E9F3", "#1d8dc3"];
-    } else if (pieces.length === 3) {
-      this.colorArray = ["#1d8dc3","#449ac3","#6ba6c3"];
-    } else if (pieces.length === 4) {
-      this.colorArray = ["#1d8dc3","#3193c3", "#449ac3", "#58a0c3"];
+    if (this.options.pieces.length === 2) {
+      this.options.colorArray = ["#D2E9F3", "#1d8dc3"];
+    } else if (this.options.pieces.length === 3) {
+      this.options.colorArray = ["#1d8dc3","#449ac3","#6ba6c3"];
+    } else if (this.options.pieces.length === 4) {
+      this.options.colorArray = ["#1d8dc3","#3193c3", "#449ac3", "#58a0c3"];
     } else {
       // fix this later; implement some kind of spectrum for high number of sectors
-      this.colorArray = ["#1d8dc3","#3193c3", "#449ac3", "#58a0c3","#6ba6c3"];
+      this.options.colorArray = ["#1d8dc3","#3193c3", "#449ac3", "#58a0c3","#6ba6c3"];
     }
 
     var startAngle = 0; //Start Angle of Each Slice
@@ -55,8 +55,8 @@ $.widget("widget.pie-type", {
     //Compute the delta angles; the angles for each sector.
     var i = 0;
     deltaAngles = [];
-    for (i = 0; i < pieces.length; i += 1){
-      deltaAngles[i] = this._convertProportionToDegreesRadian(pieces[i].fraction);
+    for (i = 0; i < this.options.pieces.length; i += 1){
+      deltaAngles[i] = this._convertProportionToDegreesRadian(this.options.pieces[i].fraction);
     }
 
     // Creates canvas 200 × 200 at 0, 0; canvas starts in the upper left hand corner of the browser
@@ -66,7 +66,7 @@ $.widget("widget.pie-type", {
 
     for (i = 0; i < pieces.length; i += 1){
       sector = this._drawSector(startAngle, Radius, CENTER_X, CENTER_Y, deltaAngles[i], {fill: colorArray[i], stroke: "#fff", opacity: 1});
-      sector.attr({title: pieces[i].fraction*100 + '% ' + pieces[i].status});
+      sector.attr({title: this.options.pieces[i].fraction*100 + '% ' + this.options.pieces[i].status});
       sectorSet.push(sector);
       startAngle = startAngle + deltaAngles[i];
     }
