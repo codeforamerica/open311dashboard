@@ -1,7 +1,7 @@
 /**
  * Pie Chart by Type for Open311 Dashboard
  *
- * This provides a pie chart by open311 types.
+ * This provides a pie chart of the proportion of open and closed service requests.
  *
  * Depends:
  *   jquery.ui.core.js
