@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import httplib
 import urllib2
 import urllib
@@ -5,8 +7,11 @@ import xml.dom.minidom as dom
 import json
 import datetime as dt
 
-def get_time_range():
-    end = dt.datetime.utcnow().replace(microsecond=0)
+def get_time_range(on_day=None):
+    if on_day is None:
+        on_day = dt.datetime.utcnow()
+    
+    end = on_day.replace(hour=0, minute=0, second=0, microsecond=0)
     start = end - dt.timedelta(days=1)
     
     return (start, end)
