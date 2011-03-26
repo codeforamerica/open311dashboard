@@ -22,13 +22,9 @@ $.widget("Open311.gauge", {
   _create: function() {
 	var self = this;
 	self._bindEvents();
-	this.element
-		.addClass("ui-widget")
-		.attr({
-			role: "gauge",
-		})
-
+	  self._render();
 },
+
  _bindEvents: function(){
      var self = this;
     
@@ -48,16 +44,10 @@ $.widget("Open311.gauge", {
   },
   
   _destroy: function(){ 
-  	this.element
-			.removeClass( "ui-widget" )
-			.removeAttr( "role" );
-
-		this.valueDiv.remove();
+  	$.Widget.prototype.destroy.apply(this, arguments); // default destroy
+      // now do other stuff particular to this widget
 	}
 });
 
-$.extend( $.ui.progressbar, {
-	version: "@VERSION"
-});
 
 })( jQuery );
