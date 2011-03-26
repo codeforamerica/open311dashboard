@@ -13,7 +13,7 @@ $.widget('Open311.gaugeGoogleActualEstResponseTime', $.Open311.gaugeGoogle, {
    * of communicating the data source across all widgets.
    */
   options: {
-	  /*dataSource: "ClosedServiceRequests_By_SingleServiceType_Slice.json"*/
+	  dataSource: "ClosedServiceRequests_By_SingleServiceType_Slice.json"
   },
   
   /**
@@ -33,10 +33,16 @@ $.widget('Open311.gaugeGoogleActualEstResponseTime', $.Open311.gaugeGoogle, {
     });
   },
   
+   _loadData: function() {
+    jQuery.getJSON('data/ServiceRequests_Complete.json', this._render(dataSource));
+  },
+  
    _render: function(data) {
    
     var self = this;
    
+   var numRequests = dataSource.requests.length();
+   console.log(numRequests);
    var chart = {
      width: 200,
      height: 125,
