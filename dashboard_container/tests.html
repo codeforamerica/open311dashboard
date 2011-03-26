@@ -41,6 +41,13 @@
 			this.world.grid.append_item(this.world.item)
 		},
 		
+		i_add_m_1x1_items_to_the_nth_column : function(m, n) {
+			for (var i = 0; i < m; i++) {
+				var item = new GridItem($('<div></div>'), 1, 1)
+				this.world.grid.append_item(item, n)
+			}
+		},
+		
 		the_nth_grid_column_should_have_one_cell_with_the_1x1_item : function (n) {
 			var cells = this.world.grid.columns[n].cells
 			
@@ -141,6 +148,22 @@ module("Grid Tests");
 		// then...
 		_.the_nth_grid_column_should_have_pth_cells_with_the_1x1_item(1,1);
 		_.the_grid_columns_should_have_respective_cells([2,2,1,1]);
+	});
+
+	test("add several items to the second column of a grid with five 1x1 items", function() {
+		var _ = statements
+		
+		// starting from...
+		_.an_empty_test_area();
+		
+		// given...
+		_.a_grid_with_five_1x1_items_in_the_first_four_columns();
+		
+		// when...
+		_.i_add_m_1x1_items_to_the_nth_column(5, 1);
+		
+		// then...
+		_.the_grid_columns_should_have_respective_cells([2,6,1,1]);
 	});
 });
 	</script>

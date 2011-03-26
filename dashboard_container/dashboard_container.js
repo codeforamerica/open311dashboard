@@ -3,22 +3,33 @@
 		this.columns = columns || []
 		this.items = items || []
 		
-		this.append_item = function(item) {
+		this.get_lowest_column = function() {
+			var lowest_column = null;
+			for (var c in columns) {
+				var current_column = this.columns[c];
+				if (lowest_column === null) {
+					lowest_column = current_column
+				}
+				else if (
+					current_column.cells.length < lowest_column.cells.length) {
+					lowest_column = current_column
+				}
+			}
+			return lowest_column
+		}
+		
+		this.append_item = function(item, column_index) {
 			/* should determine the top-left most position that the given item can
 			 * be placed within the columns.  For now will just use the first 
 			 * available space (and assume that all items will be 1x1). */
 		
 			// Determine which column to place the item in
-			var column_to_place_in = null;
-			for (var c in columns) {
-				var current_column = this.columns[c];
-				if (column_to_place_in === null) {
-					column_to_place_in = current_column
-				}
-				else if (
-					current_column.cells.length < column_to_place_in.cells.length) {
-					column_to_place_in = current_column
-				}
+			var column_to_place_in
+			if (column_index !== undefined) {
+				column_to_place_in = this.columns[column_index]
+			}
+			else {
+				column_to_place_in = this.get_lowest_column()
 			}
 			
 			// Create cell(s) to place the item
