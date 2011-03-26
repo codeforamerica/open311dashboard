@@ -58,20 +58,22 @@ $.widget('Open311.mapGoogle', $.Open311.base, {
   /**
    * Add markers, given map and data
    */
-  addMarkers: function(map, data, self) {
+  addMarkers: function(data, self) {
+    var map = (typeof this.map != 'undefined') ? this.map : self.map;
+  
     var markers = [];
-    for (i = 0; i < data.requests.length; i++) {
-      if (data.requests[i].status === 'Open') {
+    for (i = 0; i < data.service_requests.length; i++) {
+      if (typeof data.service_requests[i].lat != 'undefined' && typeof data.service_requests[i].long != 'undefined') {
         // TODO: template this out
-        var infoContent = "<h2 style='color:#10394b; text-align: center' >" + data.requests[i].service_name + " at " + data.requests[i].address + "</h2>";
-        var latlng = new google.maps.LatLng(data.requests[i].lat, data.requests[i].lon);
+        var infoContent = "<h2 style='color:#10394b; text-align: center' >" + data.service_requests[i].service_name + " at " + data.service_requests[i].address + "</h2>";
+        var latlng = new google.maps.LatLng(data.service_requests[i].lat, data.service_requests[i].long);
         var infowindow = new google.maps.InfoWindow({
           content: infoContent
         });
         markers[i] = new google.maps.Marker({
           position: latlng,
           map: map,
-          title: data.requests[i].service_name
+          title: data.service_requests[i].service_name
         });
         google.maps.event.addListener(markers[i], 'click', function() {
           infowindow.open(map, markers[i]);
