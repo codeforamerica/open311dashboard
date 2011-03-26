@@ -11,7 +11,7 @@
  */
 (function( $, undefined ) {
 
-$.widget( "ui.map", {
+$.widget( "Open311.map", {
 	options: {
 	},
 

@@ -9,7 +9,7 @@
  */
 (function( $, undefined ) {
 
-$.widget("widget.bargraphType", {
+$.widget("Open311.bargraphType", {
   /**
    * Default options for the widget.  We need some way
    * of communicating the data source across all widgets.
