@@ -1,9 +1,13 @@
 /**
  * Base Widget for Open311
+ *
+ * Depends:
+ *   jquery.ui.core.js
+ *   jquery.ui.widget.js
  */
 (function( $, undefined ) {
 
-$.widget( "Open311.base", {
+$.widget('Open311.base', {
   /**
    * Default options for the widget.  We need some way
    * of communicating the data source across all widgets.
