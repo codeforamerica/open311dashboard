@@ -11,18 +11,16 @@
  */
 (function( $, undefined ) {
 
-$.widget( "Open311.mapGoogle", {
+$.widget('Open311.mapGoogle', $.Open311.base, {
 	options: {
-    dataSource: '',
     id: 'map-google-container',
+    title: 'Google Map of Incidents'
 	},
 
 	_create: function() {
-    this.element
-			.attr({role: "map"});
+    this.updateTitle();
     // Add an element to create map on
-		this.containerDiv = $('<div id="' + this.options.id + '" style="width: auto; height: 250px"></div>')
-		  .appendTo(this.element);
+		this.updateContent('<div id="' + this.options.id + '" style="width: auto; height: 250px"></div>');
     
     // Load data.
     this._loadData();
