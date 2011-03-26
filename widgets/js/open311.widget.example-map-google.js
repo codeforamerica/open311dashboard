@@ -22,11 +22,26 @@ $.widget('Open311.mapGoogleExample', $.Open311.mapGoogle, {
     this.createMapContainer();
     this.createMap();
     
-    // Load data.
-    jQuery.getJSON(this.options.dataSource, function(data) {
-      self.addMarkers(map, data, self);
+    self._bindEvents();
+  },
+  
+  /**
+   * Bind events
+   */
+  _bindEvents: function(){
+    var self = this;
+    $($.Open311).bind('open311-data-update', function(event, data){
+      self._render(data);
     });
-	},
+  },
+  
+  /**
+   * Render function
+   */
+  _render: function(data) {
+    var self = this;
+    self.addMarkers(data, self);
+  },
   
   /**
    * Destroy widget
