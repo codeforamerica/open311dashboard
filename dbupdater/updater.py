@@ -8,11 +8,13 @@ import json
 import datetime as dt
 
 def get_time_range(on_day=None):
+    ONE_DAY = dt.timedelta(days=1)
+    
     if on_day is None:
-        on_day = dt.datetime.utcnow()
+        on_day = dt.datetime.utcnow() - ONE_DAY
     
     end = on_day.replace(hour=0, minute=0, second=0, microsecond=0)
-    start = end - dt.timedelta(days=1)
+    start = end - ONE_DAY
     
     return (start, end)
 
@@ -99,4 +101,6 @@ if __name__ == '__main__':
     start, end = get_time_range()
     requests_stream = get_requests_from_SF(start, end)
     requests = parse_requests_doc(requests_stream)
-    print upload_requests_to_couch(requests)
+    response_json = upload_requests_to_couch(requests)
+    
+    print response_json
