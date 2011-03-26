@@ -53,18 +53,18 @@ $.widget('Open311.base', {
    * Loading
    */
   loading: function(value) {
-    // Check for title, update or create.
-    $(this.element).removeClass(this.options.loadedClass);
-    $(this.element).addClass(this.options.loadingClass);
+    $(this.element).removeClass(this.options.loadedClass)
+      .addClass(this.options.loadingClass)
+      .trigger('loading');
   },
 
   /**
    * Loaded
    */
   loaded: function(value) {
-    // Check for title, update or create.
-    $(this.element).removeClass(this.options.loadingClass);
-    $(this.element).addClass(this.options.loadedClass);
+    $(this.element).removeClass(this.options.loadingClass)
+      .addClass(this.options.loadedClass)
+      .trigger('loaded');
   }
 });
 
