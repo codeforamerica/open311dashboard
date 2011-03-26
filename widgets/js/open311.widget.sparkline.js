@@ -11,7 +11,7 @@
  */
 (function( $, undefined ) {
 
-$.widget( "widget.sparkline", {
+$.widget( "Open311.sparkline", {
 	options: {
 	},
 

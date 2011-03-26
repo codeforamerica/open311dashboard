@@ -8,7 +8,7 @@
  */
 (function( $, undefined ) {
 
-$.widget("widget.searchType", {
+$.widget("Open311.searchType", {
   /**
    * Default options for the widget.  We need some way
    * of communicating the data source across all widgets.
@@ -58,16 +58,17 @@ $.widget("widget.searchType", {
   
   //Search for 311 requests by date range and publish them
   search: function(fromDate, toDate){
-    var toRfc3339 = function(d){
-  	 	function pad(n){return n<10 ? '0'+n : n;};
+    var self = this,
+      toRfc3339 = function(d){
+  	 	  function pad(n){return n<10 ? '0'+n : n;};
 
-  		return d.getUTCFullYear()+'-' + 
-        pad(d.getUTCMonth()+1)+'-' + 
-        pad(d.getUTCDate())+'T' + 
-        pad(d.getUTCHours())+':' + 
-        pad(d.getUTCMinutes())+':' + 
-        pad(d.getUTCSeconds())+'Z';
-  	};
+    		return d.getUTCFullYear()+'-' + 
+          pad(d.getUTCMonth()+1)+'-' + 
+          pad(d.getUTCDate())+'T' + 
+          pad(d.getUTCHours())+':' + 
+          pad(d.getUTCMinutes())+':' + 
+          pad(d.getUTCSeconds())+'Z';
+    	};
     
     $.ajax({
       url: 'http://open311.couchone.com/service-requests/_design/requests/_list/requests-json/openbytime',
@@ -77,7 +78,7 @@ $.widget("widget.searchType", {
   			endkey:'"'+toRfc3339(toDate)+'"'
   		},
 	   	success: function(data) {
-			  console.log(data);
+        $($.Open311).trigger('open311-data-update', [data]);
 			}
 		});
   },
