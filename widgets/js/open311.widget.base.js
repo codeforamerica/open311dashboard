@@ -30,7 +30,7 @@ $.widget('Open311.base', {
       $(this.titleContainer).val(title);
     } else {
       this.titleContainer = $('<h2 class="' + this.options.titleClass + '">' + title + '</h2>')
-        .appendTo(this.element);
+        .prependTo(this.element);
     }
   },
 

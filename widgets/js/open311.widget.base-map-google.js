@@ -22,6 +22,13 @@ $.widget('Open311.mapGoogle', $.Open311.base, {
     centerLon: -122.417,
     map: null
   },
+  
+  /**
+   * Init functions for all map google widgets.
+   */
+  _init: function() {
+    this.updateTitle();
+  },
 
   /**
    * Create map container
