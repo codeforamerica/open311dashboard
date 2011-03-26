@@ -7,7 +7,7 @@
  */
 (function( $, undefined ) {
 
-$.widget("Open311.gauge", {
+$.widget('Open311.gaugeGoogleActualEstResponseTime', $.Open311.gaugeGoogle, {
   /**
    * Default options for the widget.  We need some way
    * of communicating the data source across all widgets.
