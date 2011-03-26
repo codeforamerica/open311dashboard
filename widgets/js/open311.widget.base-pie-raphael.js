@@ -22,6 +22,7 @@ $.widget('Open311.pieRaphael', $.Open311.base, {
    */
   _init: function() {
     this.updateTitle();
+    $(this.element).addClass('open311-pie-raphael');
   },
 
   /**

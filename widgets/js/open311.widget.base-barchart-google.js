@@ -23,6 +23,7 @@ $.widget('Open311.barchartGoogle', $.Open311.base, {
    */
   _init: function() {
     this.updateTitle();
+    $(this.element).addClass('open311-barchart-google');
   },
 });
 

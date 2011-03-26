@@ -26,7 +26,15 @@ $.widget('Open311.mapGoogleExample', $.Open311.mapGoogle, {
     jQuery.getJSON(this.options.dataSource, function(data) {
       self.addMarkers(map, data, self);
     });
-	}
+	},
+  
+  /**
+   * Destroy widget
+   */
+  destroy: function() {
+    // Default destroy
+    $.Widget.prototype.destroy.apply(this, arguments);
+  }
 
 });
 

@@ -85,8 +85,8 @@ $.widget('Open311.searchType', $.Open311.globalInput, {
    * Destroy widget
    */
   destroy: function() {
-     $.Widget.prototype.destroy.apply(this, arguments); // default destroy
-      // now do other stuff particular to this widget
+    // Default destroy
+    $.Widget.prototype.destroy.apply(this, arguments);
   }
 });
 

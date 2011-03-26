@@ -28,6 +28,7 @@ $.widget('Open311.mapGoogle', $.Open311.base, {
    */
   _init: function() {
     this.updateTitle();
+    $(this.element).addClass('open311-map-google');
   },
 
   /**

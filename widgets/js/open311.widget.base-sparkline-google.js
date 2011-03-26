@@ -21,6 +21,8 @@ $.widget('Open311.sparklineGoogle', $.Open311.base, {
    */
   _init: function() {
     this.updateTitle();
+    this.loading();
+    $(this.element).addClass('open311-sparkline-google');
   }
 });
 

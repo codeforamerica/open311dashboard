@@ -14,9 +14,11 @@ $.widget('Open311.base', {
    */
   options: {
     title: 'Widget Title',
+    dataSource: '',
     titleClass: 'ui-widget-header',
     contentClass: 'ui-widget-content',
-    dataSource: ''
+    loadingClass: 'ui-loading',
+    loadedClass: 'ui-loaded'
   },
 
   /**
@@ -45,6 +47,24 @@ $.widget('Open311.base', {
       this.contentContainer = $('<div class="' + this.options.contentClass + '">' + value + '</div>')
         .appendTo(this.element);
     }
+  },
+
+  /**
+   * Loading
+   */
+  loading: function(value) {
+    // Check for title, update or create.
+    $(this.element).removeClass(this.options.loadedClass);
+    $(this.element).addClass(this.options.loadingClass);
+  },
+
+  /**
+   * Loaded
+   */
+  loaded: function(value) {
+    // Check for title, update or create.
+    $(this.element).removeClass(this.options.loadingClass);
+    $(this.element).addClass(this.options.loadedClass);
   }
 });
 
