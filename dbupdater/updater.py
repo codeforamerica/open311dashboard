@@ -8,11 +8,13 @@ import json
 import datetime as dt
 
 def get_time_range(on_day=None):
+    ONE_DAY = dt.timedelta(days=1)
+    
     if on_day is None:
-        on_day = dt.datetime.utcnow()
+        on_day = dt.datetime.utcnow() - ONE_DAY
     
     end = on_day.replace(hour=0, minute=0, second=0, microsecond=0)
-    start = end - dt.timedelta(days=1)
+    start = end - ONE_DAY
     
     return (start, end)
 
