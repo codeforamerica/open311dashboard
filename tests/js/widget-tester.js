@@ -9,7 +9,7 @@ $('.sparkline').sparklineExample();
 $('.open-vs-closed').pieRaphaelOpenClosed();
 $('#search').searchType();
 
-$('.gauge').gaugeGoogleActualEstResponseTime();
+$('.gauge').gaugeGoogleActualEstResponseTime({dataSource: 'data/ServiceRequests_Complete.json'});
 // $('.map').map();
 
 
