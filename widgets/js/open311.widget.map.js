@@ -19,8 +19,6 @@ $.widget( "Open311.map", {
   CENTER_LATITUDE: 37.76,
   CENTER_LONGITUDE: -122.44,
   INITIAL_ZOOM_LEVEL: 11,
-  
-	i: 0,
 
 	_create: function() {
 		this.element
@@ -41,7 +39,7 @@ $.widget( "Open311.map", {
   _initMap: function(data) {
     //Getting our custom map tiles from CloudMade.  We're using a special API key for Short Stack.
     var cloudmade = new CM.Tiles.CloudMade.Web({
-      key: '62f1c690198043daa6a4fecfbfd29f0d',
+      key: '90480db8a5a4470d87c3c21800806e02',
       styleId: 1714,
       copyright: 'Map tiles &copy; 2011 CloudMade Map data CC-BY-SA OpenStreetMap.org ',
       minZoomLevel: 9
@@ -49,6 +47,7 @@ $.widget( "Open311.map", {
 
     //Creating and centering the map
     var map = new CM.Map('map_container', cloudmade);
+    
     map.setCenter(new CM.LatLng(this.CENTER_LATITUDE, this.CENTER_LONGITUDE), this.INITIAL_ZOOM_LEVEL);
 
     //Using default map controls for now
@@ -76,7 +75,8 @@ $.widget( "Open311.map", {
     map.addOverlay(sampleMarker);
 
     var markers = [];
-    for (i=0; i < data.requests.length; i++){
+    var len = data.requests.length;
+    for (var i=0; i < len; i++){
         if(data.requests[i].status === "Open"){
           markers[i] = new CM.Marker(new CM.LatLng(data.requests[i].lat, data.requests[i].lon), {
 						title: data.requests[i].service_name,
