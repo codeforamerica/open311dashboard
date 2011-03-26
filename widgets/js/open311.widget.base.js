@@ -28,6 +28,9 @@ $.widget('Open311.base', {
     // Check for title, update or create.
     if (this.titleContainer) {
       $(this.titleContainer).val(title);
+    } else if (this.contentContainer) {
+      this.titleContainer = $('<h2 class="' + this.options.titleClass + '">' + title + '</h2>')
+        .prependTo(this.contentContainer);
     } else {
       this.titleContainer = $('<h2 class="' + this.options.titleClass + '">' + title + '</h2>')
         .appendTo(this.element);

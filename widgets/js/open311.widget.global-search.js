@@ -8,7 +8,7 @@
  */
 (function( $, undefined ) {
 
-$.widget("Open311.searchType", {
+$.widget('Open311.searchType', $.Open311.globalInput, {
   /**
    * Default options for the widget.  We need some way
    * of communicating the data source across all widgets.
@@ -20,11 +20,9 @@ $.widget("Open311.searchType", {
   //Create the widget
   _create: function() {
     var self = this, dates;
-    
-    $('<label for="open311-fromdate">From</label><input type="text" class="open311-fromdate" name="open311-fromdate"/>' +
+    this.updateContent('<label for="open311-fromdate">From</label><input type="text" class="open311-fromdate" name="open311-fromdate"/>' +
       '<label for="open311-todate">to</label><input type="text" class="open311-todate" name="open311-todate"/>' +
-      '<button class="open311-search-button">Search</button></div>')
-      .appendTo(this.element);
+      '<button class="open311-search-button">Search</button></div>');
         
     dates = $( '.open311-fromdate, .open311-todate', this.element ).datepicker({
 			changeMonth: true,

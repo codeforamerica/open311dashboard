@@ -1,5 +1,5 @@
 /**
- * Base Widget for Google Bar Charts for Open311
+ * Base Widget for Global Inputs, like search
  *
  * Depends:
  *   jquery.ui.core.js
@@ -7,15 +7,13 @@
  */
 (function( $, undefined ) {
 
-$.widget('Open311.barchartGoogle', $.Open311.base, {
+$.widget('Open311.globalInput', $.Open311.base, {
   /**
    * Default options for the widget.  We need some way
    * of communicating the data source across all widgets.
    */
   options: {
-    title: 'Bar Chart',
-    chartWidth: '300',
-    chartWidth: '250'
+    title: 'Global Input'
   },
   
   /**
@@ -23,7 +21,7 @@ $.widget('Open311.barchartGoogle', $.Open311.base, {
    */
   _init: function() {
     this.updateTitle();
-  },
+  }
 });
 
 })( jQuery );
