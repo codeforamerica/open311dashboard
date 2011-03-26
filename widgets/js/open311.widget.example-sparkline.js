@@ -11,8 +11,9 @@
  */
 (function( $, undefined ) {
 
-$.widget( "Open311.sparkline", {
-	options: {
+$.widget('Open311.sparklineExample', $.Open311.sparklineGoogle, {
+  options: {
+    title: 'Sparkline Example'
 	},
 
 	_create: function() {
