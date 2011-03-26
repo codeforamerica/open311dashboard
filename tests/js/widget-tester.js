@@ -4,7 +4,7 @@
 (function( $, undefined ) {
 
 
-$('.widget.gauge').gauge();
+$('.gauge').gauge();
 $('#search').searchType();
 $('.bargraph-type').bargraphType({dataSource: 'data/open_requests_by_type.json'});
 $('.sparkline').sparkline();

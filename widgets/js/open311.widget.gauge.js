@@ -13,7 +13,7 @@ $.widget("Open311.gauge", {
    * of communicating the data source across all widgets.
    */
   options: {
-	  dataSource: "ClosedServiceRequests_By_SingleServiceType_Slice.json"
+	  /*dataSource: "ClosedServiceRequests_By_SingleServiceType_Slice.json"*/
   },
   
   /**
@@ -27,6 +27,8 @@ $.widget("Open311.gauge", {
 		.attr({
 			role: "gauge",
 		})
+
+},
  _bindEvents: function(){
      var self = this;
     
@@ -35,17 +37,13 @@ $.widget("Open311.gauge", {
     });
   },
   
-   $.getJSON(this.options.dataSource, function(data) {
-        var requestCount = data.requests.length;
-       
-       console.log(requestCount);
-        
-        
-        
-})//close getJson
-	this.valueDiv = $("<img src='https://chart.googleapis.com/chart?chs=200x125&amp;cht=gom&amp;chd=t:70|50&chls=3|2,8,8|10|0&amp;chco=FFFFFF,1d8dc3&amp;chxt=x&amp;chxl=0:|Actual|Estimated'></img>")
+   _render: function(data) {
+    var self = this;
+    $(self.element).empty();
 
-   	.appendTo( this.element );
+	self.valueDiv = $('<img src="https://chart.googleapis.com/chart?chs=200x125&amp;cht=gom&amp;chd=t:70|50&chls=3|2,8,8|10|0&amp;chco=FFFFFF,1d8dc3&amp;chxt=x&amp;chxl=0:|Actual|Estimated"></img>')
+
+   	.appendTo( self.element );
     // can use this.options
   },
   
