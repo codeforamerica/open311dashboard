@@ -8,7 +8,7 @@
  */
 (function( $, undefined ) {
 
-$.widget("Open311.topOpenRequests", {
+$.widget('Open311.barchartGoogleTopOpenRequests', $.Open311.barchartGoogle, {
   /**
    * Default options for the widget.  We need some way
    * of communicating the data source across all widgets.
