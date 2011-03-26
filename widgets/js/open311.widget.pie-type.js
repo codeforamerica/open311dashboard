@@ -10,7 +10,7 @@
  */
 (function( $, undefined ) {
 
-$.widget("widget.pieType", {
+$.widget("Open311.pieType", {
   /**
    * Default options for the widget.  We need some way
    * of communicating the data source across all widgets.

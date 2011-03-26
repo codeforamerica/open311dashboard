@@ -7,7 +7,7 @@
  */
 (function( $, undefined ) {
 
-$.widget("widget.exampleWidget", {
+$.widget("Open311.exampleWidget", {
   /**
    * Default options for the widget.  We need some way
    * of communicating the data source across all widgets.
