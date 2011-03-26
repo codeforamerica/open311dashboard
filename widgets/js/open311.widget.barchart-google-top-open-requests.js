@@ -14,7 +14,8 @@ $.widget('Open311.barchartGoogleTopOpenRequests', $.Open311.barchartGoogle, {
    * of communicating the data source across all widgets.
    */
   options: {
-	  topX:10
+    title: 'Top Ten Frequency',
+	  topX: 10
 	},
   
   /**
@@ -36,8 +37,6 @@ $.widget('Open311.barchartGoogleTopOpenRequests', $.Open311.barchartGoogle, {
   
   _render: function(data) {
     var self = this;
-    
-    $(self.element).empty();
     
 		if(data.service_requests.length > 0) {
 			  // Parameters for the chart
@@ -111,11 +110,9 @@ $.widget('Open311.barchartGoogleTopOpenRequests', $.Open311.barchartGoogle, {
 		    params.push("&chm=" + reverseDataLabels.join('|'));
   
 		    // Add image to widget
-		    self.valueDiv = $('<img src="' + params.join('') + '"></img>')
-				  .appendTo(self.element);
+		    self.updateContent('<img src="' + params.join('') + '"></img>');
 	    } else {
-  		  self.valueDiv = $('<div class="no-data">No data, sucka.</div>')
-				  .appendTo(self.element);
+		    self.updateContent('No data found');
 		  }
   },
   
