@@ -13,4 +13,14 @@ $('.gauge').gaugeGoogleActualEstResponseTime({dataSource: 'data/ServiceRequests_
 // $('.map').map();
 
 
+// Example loading events (Doesnt work)
+/*
+$('#dashboard div').bind('loading', function() {
+  alert('loading...');
+});
+$('#dashboard div').bind('loaded', function() {
+  alert('loaded');
+});
+*/
+
 })( jQuery );

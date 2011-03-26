@@ -121,8 +121,8 @@ $.widget('widget.pieRaphaelOpenClosed', $.Open311.pieRaphael, {
    * Destroy widget
    */
   destroy: function() {
-     $.Widget.prototype.destroy.apply(this, arguments); // default destroy
-      // now do other stuff particular to this widget
+    // Default destroy
+    $.Widget.prototype.destroy.apply(this, arguments);
   }
 });
 
