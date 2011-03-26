@@ -9,8 +9,18 @@ $('.sparkline').sparklineExample();
 $('.open-vs-closed').pieRaphaelOpenClosed();
 $('#search').searchType();
 
-$('.gauge').gauge();
+$('.gauge').gaugeGoogleActualEstResponseTime();
 // $('.map').map();
 
+
+// Example loading events (Doesnt work)
+/*
+$('#dashboard div').bind('loading', function() {
+  alert('loading...');
+});
+$('#dashboard div').bind('loaded', function() {
+  alert('loaded');
+});
+*/
 
 })( jQuery );

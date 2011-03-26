@@ -1,5 +1,5 @@
 /**
- * Base Widget for Sparklines with Google Charts
+ * Base Widget for Google Gauge for Open311
  *
  * Depends:
  *   jquery.ui.core.js
@@ -7,23 +7,23 @@
  */
 (function( $, undefined ) {
 
-$.widget('Open311.sparklineGoogle', $.Open311.base, {
+$.widget('Open311.gaugeGoogle', $.Open311.base, {
   /**
    * Default options for the widget.  We need some way
    * of communicating the data source across all widgets.
    */
   options: {
-    title: 'Sparkline Chart'
+    title: 'Gauge',
+    chartWidth: '300',
+    chartWidth: '250'
   },
   
   /**
-   * Init functions for all barchart google widgets.
+   * Init functions for all gauge google widgets.
    */
   _init: function() {
     this.updateTitle();
-    this.loading();
-    $(this.element).addClass('open311-sparkline-google');
-  }
+  },
 });
 
 })( jQuery );

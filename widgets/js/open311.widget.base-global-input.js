@@ -21,6 +21,7 @@ $.widget('Open311.globalInput', $.Open311.base, {
    */
   _init: function() {
     this.updateTitle();
+    $(this.element).addClass('open311-global-input');
   }
 });
 
