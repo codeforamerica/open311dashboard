@@ -8,5 +8,6 @@ $('.sparkline').sparkline();
 $('.pie-type').pieType();
 $('.map').map();
 $('.top-open-requests').topOpenRequests();
+$('.open-vs-closed').openVsClosed();
 
 })( jQuery );
