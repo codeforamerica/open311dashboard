@@ -35,3 +35,8 @@ h2 {
 ui.loading {
   border: 3px solid #222222;
 }
+
+.input-widgets {
+  border-bottom: 3px solid #BBBBBB;
+  margin-bottom: 10px;
+}
