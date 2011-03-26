@@ -1,10 +1,14 @@
 /**
  * Some simple CSS for test pages.
  */
+#dashboard {
+  padding: 10px;
+}
+
 .ui-widget {
   width: 500px;
   border: 1px solid #666666;
-  padding: 10px;
+  padding: 5px;
   margin-right: 10px;
   margin-bottom: 10px;
   box-shadow: 3px 3px 4px #000;
@@ -13,6 +17,14 @@
 .column-1, .column-2 {
   width: 530px;
   float: left;
+}
+
+h1 {
+  font-size: 30px;
+  text-align: right;
+  padding: 10px 20px;
+  background-color: #666666;
+  color: #FFFFFF;
 }
 
 h2 {
