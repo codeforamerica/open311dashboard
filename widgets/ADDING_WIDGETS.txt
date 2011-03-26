@@ -20,4 +20,6 @@ widget: open311.widget.example.js
 
 ## Themes ##
 
-This is not currently utilized
+This is not currently utilized.  For future use, check out this:
+http://jqueryui.com/docs/Theming
+http://jqueryui.com/docs/Theming/API
