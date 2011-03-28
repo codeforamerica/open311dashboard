@@ -10,7 +10,7 @@ $('.open-vs-closed').pieRaphaelOpenClosed();
 $('#search').searchType();
 
 
-$('.gauge').gaugeGoogleActualEstResponseTime({dataSource: 'data/ClosedServiceRequests_By_SingleServiceType_Slice'});
+//$('.gauge').gaugeGoogleActualEstResponseTime({dataSource: 'data/ClosedServiceRequests_By_SingleServiceType_Slice'});
 
 // $('.map').map();
 

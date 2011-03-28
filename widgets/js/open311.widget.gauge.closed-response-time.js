@@ -40,16 +40,16 @@ $.widget('Open311.gaugeGoogleActualEstResponseTime', $.Open311.gaugeGoogle, {
   },
   
    _render: function(data) {
-  var dog = 0;   
+
    $.getJSON('data/ClosedServiceRequests_By_SingleServiceType_Slice.json', function(data) {
-  var items = [];
-  var count =0;
-  var totaltime = 0.0;
-  var expectedtime = 0.0;
-  var closuretime = 0;
-  expectedtime =  data.requests[1].updated_datetime - data.requests[1].expected_datetime;
-  console.log("expected: " + expectedtime);
-  $.each(data.requests, function(key, val) {
+	var items = [];
+	var count =0;
+	var totaltime = 0.0;
+	var expectedtime = 0.0;
+	var closuretime = 0;
+	expectedtime =  data.requests[1].updated_datetime - data.requests[1].expected_datetime;
+	console.log("expected: " + expectedtime);
+	$.each(data.requests, function(key, val) {
 		if (val.status == "Closed"){
 			count++;
 			//closuretime = val.updated_datetime.getTime() - val.requested_datetime.getTime());
@@ -65,7 +65,7 @@ $.widget('Open311.gaugeGoogleActualEstResponseTime', $.Open311.gaugeGoogle, {
    
 
    //var numRequests = data.requests.length();
-//   console.log(numRequests);
+   //console.log(numRequests);
 
    var chart = {
      width: 200,
