@@ -13,7 +13,7 @@
 
 $.widget('Open311.mapGoogleExample', $.Open311.mapGoogle, {
 	options: {
-    title: 'Google Map of Incidents'
+    title: 'Map of Incidents'
 	},
 
 	_create: function() {
@@ -30,7 +30,8 @@ $.widget('Open311.mapGoogleExample', $.Open311.mapGoogle, {
    */
   _bindEvents: function(){
     var self = this;
-    $($.Open311).bind('open311-data-update', function(event, data){
+    this.loading();
+    $($.Open311).bind('open311-data-update', function(event, data) {
       self._render(data);
     });
   },
@@ -39,8 +40,8 @@ $.widget('Open311.mapGoogleExample', $.Open311.mapGoogle, {
    * Render function
    */
   _render: function(data) {
-    var self = this;
-    self.addMarkers(data, self);
+    this.addMarkers(data, this);
+    this.loaded();
   },
   
   /**

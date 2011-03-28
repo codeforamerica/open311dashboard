@@ -60,7 +60,6 @@ $.widget('Open311.mapGoogle', $.Open311.base, {
    */
   addMarkers: function(data, self) {
     var map = (typeof this.map != 'undefined') ? this.map : self.map;
-  
     var markers = [];
     for (i = 0; i < data.service_requests.length; i++) {
       if (typeof data.service_requests[i].lat != 'undefined' && typeof data.service_requests[i].long != 'undefined') {

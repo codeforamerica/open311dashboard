@@ -63,8 +63,10 @@ $.widget('Open311.gaugeGoogleActualEstResponseTime', $.Open311.gaugeGoogle, {
 
     var self = this;
    
+
    //var numRequests = data.requests.length();
 //   console.log(numRequests);
+
    var chart = {
      width: 200,
      height: 125,

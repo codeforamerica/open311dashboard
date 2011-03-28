@@ -89,7 +89,7 @@ $.widget('widget.pieRaphaelOpenClosed', $.Open311.pieRaphael, {
 
 			    for (i = 0; i < pieces.length; i += 1){
 			      sector = self.drawSector(startAngle, Radius, CENTER_X, CENTER_Y, deltaAngles[i], {fill: colorArray[i], stroke: "#fff", opacity: 1}, canvas);
-			      sector.attr({title: pieces[i].fraction*100 + '% ' + pieces[i].status});
+			      sector.attr({title: (pieces[i].fraction*100).toFixed(2) + '% ' + pieces[i].status});
 			      sectorSet.push(sector);
 			      startAngle = startAngle + deltaAngles[i];
 			    }
