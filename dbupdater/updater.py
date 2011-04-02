@@ -76,6 +76,8 @@ def parse_requests_doc(stream):
                 key = request_attr.tagName
                 value = request_attr.childNodes[0].data
                 request[key] = value
+        
+        request['jurisdiction_id'] = 'sfgov.org'
         requests.append(request)
     
     return requests
@@ -98,7 +100,14 @@ def upload_requests_to_couch(requests):
     return upload_response.read()
 
 if __name__ == '__main__':
-    start, end = get_time_range()
+    import sys
+    
+    if len(sys.argv) >= 2:
+        start, end = get_time_range(dt.datetime.strptime(sys.argv[1], '%Y-%m-%d'))
+        print start, end
+    else:
+        start, end = get_time_range()
+        
     requests_stream = get_requests_from_SF(start, end)
     requests = parse_requests_doc(requests_stream)
     response_json = upload_requests_to_couch(requests)
