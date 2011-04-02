@@ -20,8 +20,10 @@ ONE_DAY = dt.timedelta(days=1)
     
 def get_time_range(on_day=None):
     if on_day is None:
-        on_day = dt.datetime.utcnow() - ONE_DAY
+        on_day = dt.datetime.utcnow()
     
+    # End at the begining of on_day; start at the beginning of the previous
+    # day.
     end = on_day.replace(hour=0, minute=0, second=0, microsecond=0)
     start = end - ONE_DAY
     
