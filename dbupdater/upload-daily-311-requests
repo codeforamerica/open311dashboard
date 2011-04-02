@@ -86,6 +86,7 @@ def parse_requests_doc(stream):
                 value = request_attr.childNodes[0].data
                 request[key] = value
         
+        request['_id'] = request['service_request_id']
         request['jurisdiction_id'] = 'sfgov.org'
         requests.append(request)
     
