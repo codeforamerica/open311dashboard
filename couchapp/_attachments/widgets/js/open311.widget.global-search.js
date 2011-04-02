@@ -25,21 +25,25 @@ $.widget('Open311.searchType', $.Open311.globalInput, {
       '<button class="open311-search-button">Search</button></div>');
         
     dates = $( '.open311-fromdate, .open311-todate', this.element ).datepicker({
-			changeMonth: true,
-			onSelect: function( selectedDate ) {
-				var $this = $(this),
-				    option = $this.hasClass('open311-fromdate') ? 'minDate' : 'maxDate',
-					  instance = $this.data( 'datepicker' ),
-					  date = $.datepicker.parseDate(
-						  instance.settings.dateFormat ||
-  						$.datepicker._defaults.dateFormat,
-  						selectedDate, instance.settings );
-				    
-				    dates.not(this).datepicker('option', option, date );
-			}
-		});
-
+      changeMonth: true,
+      onSelect: function( selectedDate ) {
+        var $this = $(this),
+            option = $this.hasClass('open311-fromdate') ? 'minDate' : 'maxDate',
+            instance = $this.data( 'datepicker' ),
+            date = $.datepicker.parseDate(
+              instance.settings.dateFormat ||
+              $.datepicker._defaults.dateFormat,
+              selectedDate, instance.settings );
+            
+            dates.not(this).datepicker('option', option, date );
+      }
+    });
+    
+    this._$fromDate = $(dates[0]).datepicker('setDate', '-1m');
+    this._$toDate = $(dates[1]).datepicker('setDate', '-1d');
+    
     self._bindEvents();
+    self.search();
   },
   
   //Bind any needed events
@@ -48,8 +52,6 @@ $.widget('Open311.searchType', $.Open311.globalInput, {
     var self = this;
     
     $('.open311-search-button', this.element).click(function(){
-      var fromDate = $('.open311-fromdate', this.element).datepicker('getDate'), 
-          toDate = $('.open311-todate', this.element).datepicker('getDate');
       self.search(fromDate, toDate);
     });
   },
@@ -58,27 +60,30 @@ $.widget('Open311.searchType', $.Open311.globalInput, {
   search: function(fromDate, toDate){
     var self = this,
       toRfc3339 = function(d){
-  	 	  function pad(n){return n<10 ? '0'+n : n;};
+         function pad(n){return n<10 ? '0'+n : n;};
 
-    		return d.getUTCFullYear()+'-' + 
+        return d.getUTCFullYear()+'-' + 
           pad(d.getUTCMonth()+1)+'-' + 
           pad(d.getUTCDate())+'T' + 
           pad(d.getUTCHours())+':' + 
           pad(d.getUTCMinutes())+':' + 
           pad(d.getUTCSeconds())+'Z';
-    	};
+      };
+
+    fromDate = fromDate || self._$fromDate.datepicker('getDate'); 
+    toDate = toDate || self._$toDate.datepicker('getDate');
     
     $.ajax({
-      url: 'http://open311.couchone.com/service-requests/_design/requests/_list/requests-json/openbytime',
+      url: 'http://open311.couchone.com/service-requests/_design/requests/_list/requests-json/allbytime',
       dataType: 'jsonp',
       data: {
-  			startkey:'"'+toRfc3339(fromDate)+'"',
-  			endkey:'"'+toRfc3339(toDate)+'"'
-  		},
-	   	success: function(data) {
+        startkey:'"'+toRfc3339(fromDate)+'"',
+        endkey:'"'+toRfc3339(toDate)+'"'
+      },
+       success: function(data) {
         $($.Open311).trigger('open311-data-update', [data]);
-			}
-		});
+      }
+    });
   },
   
   /**
