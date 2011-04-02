@@ -36,7 +36,7 @@ $.widget('Open311.mapGoogle', $.Open311.base, {
    */
   createMapContainer: function() {
     // Add an element to create map on
-		this.updateContent('<div id="' + this.options.containerID + '" style="width: ' + this.options.mapWidth + '; height: ' + this.options.mapHeight + '"></div>');
+    this.updateContent('<div id="' + this.options.containerID + '" style="width: ' + this.options.mapWidth + '; height: ' + this.options.mapHeight + '"></div>');
   },
 
   /**
@@ -55,30 +55,49 @@ $.widget('Open311.mapGoogle', $.Open311.base, {
     }
   },
   
+  clearMarkers: function() {
+    var i = 0;
+    
+    if (this.markers && this.markers.length){
+      for (i=0; i<this.markers.length; i++){
+        this.markers[i].setMap(null);
+      }
+    }
+  },
+  
   /**
    * Add markers, given map and data
    */
   addMarkers: function(data, self) {
-    var map = (typeof this.map != 'undefined') ? this.map : self.map;
-    var markers = [];
-    for (i = 0; i < data.service_requests.length; i++) {
-      if (typeof data.service_requests[i].lat != 'undefined' && typeof data.service_requests[i].long != 'undefined') {
+    var map = this.map || self.map;
+    var markers = this.markers = this.markers || [];
+    var openWindow;
+    
+    $.each(data.service_requests, function(i, service_req) {
+      if (service_req.lat && service_req.long) {
         // TODO: template this out
-        var infoContent = "<h2 style='color:#10394b; text-align: center' >" + data.service_requests[i].service_name + " at " + data.service_requests[i].address + "</h2>";
-        var latlng = new google.maps.LatLng(data.service_requests[i].lat, data.service_requests[i].long);
+        var infoContent = "<h2 style='color:#10394b; text-align: center' >" + service_req.service_name + " at " + service_req.address + "</h2>";
+        var latlng = new google.maps.LatLng(service_req.lat, service_req.long);
         var infowindow = new google.maps.InfoWindow({
-          content: infoContent
+          content: infoContent,
+          position: latlng,
+          maxWidth: 300
         });
         markers[i] = new google.maps.Marker({
           position: latlng,
           map: map,
-          title: data.service_requests[i].service_name
+          title: service_req.service_name
         });
         google.maps.event.addListener(markers[i], 'click', function() {
+          if (openWindow) {
+            openWindow.close();
+          }
+          
+          openWindow = infowindow;
           infowindow.open(map, markers[i]);
         });
       }
-    }
+    });
   }
 });
 
