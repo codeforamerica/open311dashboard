@@ -1,5 +1,14 @@
 #!/usr/bin/python
 
+"""
+Usage: upload-daily-311-requests [OnDay [NumDays]]
+
+    OnDay   - The last day that you want downloaded. The format for specifying
+              the day is YYYY-MM-DD. The default is today.
+    NumDays - The number of days before the last day that you want downloaded.
+              The default is 1.
+"""
+
 import httplib
 import urllib2
 import urllib
@@ -7,9 +16,9 @@ import xml.dom.minidom as dom
 import json
 import datetime as dt
 
-def get_time_range(on_day=None):
-    ONE_DAY = dt.timedelta(days=1)
+ONE_DAY = dt.timedelta(days=1)
     
+def get_time_range(on_day=None):
     if on_day is None:
         on_day = dt.datetime.utcnow() - ONE_DAY
     
@@ -104,12 +113,20 @@ if __name__ == '__main__':
     
     if len(sys.argv) >= 2:
         start, end = get_time_range(dt.datetime.strptime(sys.argv[1], '%Y-%m-%d'))
-        print start, end
     else:
         start, end = get_time_range()
-        
-    requests_stream = get_requests_from_SF(start, end)
-    requests = parse_requests_doc(requests_stream)
-    response_json = upload_requests_to_couch(requests)
     
-    print response_json
+    if len(sys.argv) >= 3:
+        num_days = int(sys.argv[2])
+    else:
+        num_days = 1
+    
+    for _ in xrange(num_days):
+        requests_stream = get_requests_from_SF(start, end)
+        requests = parse_requests_doc(requests_stream)
+        response_json = upload_requests_to_couch(requests)
+        
+        start -= ONE_DAY
+        end -= ONE_DAY
+        
+        print response_json
