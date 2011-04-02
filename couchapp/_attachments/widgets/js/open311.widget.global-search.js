@@ -52,7 +52,7 @@ $.widget('Open311.searchType', $.Open311.globalInput, {
     var self = this;
     
     $('.open311-search-button', this.element).click(function(){
-      self.search(fromDate, toDate);
+      self.search();
     });
   },
   

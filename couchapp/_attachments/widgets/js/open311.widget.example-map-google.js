@@ -40,6 +40,7 @@ $.widget('Open311.mapGoogleExample', $.Open311.mapGoogle, {
    * Render function
    */
   _render: function(data) {
+    this.clearMarkers();
     this.addMarkers(data, this);
     this.loaded();
   },
