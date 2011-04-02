@@ -38,6 +38,8 @@ $.widget('widget.pieRaphaelOpenClosed', $.Open311.pieRaphael, {
   
    _render: function(data) {     
   var self = this;
+  this.updateContent('');
+      
   if(data.service_requests.length > 0) {
     var openReqs = closedReqs = 0;
     
@@ -94,7 +96,7 @@ $.widget('widget.pieRaphaelOpenClosed', $.Open311.pieRaphael, {
     //console.log(closedReqs);
   
     // Creates canvas 200 × 200 at 0, 0; canvas starts in the upper left hand corner of the browser
-    var canvas = Raphael(self.element[0], 200, 200);
+    var canvas = Raphael(self.contentContainer[0], 200, 200);
     // set() creates an array-like object, to deal with several elements at once.
     var sectorSet = canvas.set();  
   
@@ -123,7 +125,7 @@ $.widget('widget.pieRaphaelOpenClosed', $.Open311.pieRaphael, {
     
   } else {
     self.valueDiv = $('<div class="no-data">No data.</div>')
-    .appendTo(self.element);
+    .appendTo(self.contentContainer);
   }
   
   },
