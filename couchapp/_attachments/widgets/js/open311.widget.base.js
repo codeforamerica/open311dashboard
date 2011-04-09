@@ -25,7 +25,7 @@ $.widget('Open311.base', {
    * Update title
    */
   updateTitle: function(value) {
-    var title = (typeof value == 'undefined') ? this.options.title : value;
+    var title = this.options.title || value;
 
     // Check for title, update or create.
     if (this.titleContainer) {

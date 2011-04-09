@@ -8,6 +8,7 @@ $('.map-google-example').mapGoogleExample({dataSource: 'data/ServiceRequests_Com
 $('.sparkline').sparklineExample();
 $('.open-vs-closed').pieRaphaelOpenClosed();
 $('.available-data').barchartGoogleAvailableData();
+$('.choropleth-example').choroplethMap();
 
 //$('.gauge').gaugeGoogleActualEstResponseTime({dataSource: 'data/ClosedServiceRequests_By_SingleServiceType_Slice'});
 
