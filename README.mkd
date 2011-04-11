@@ -4,6 +4,6 @@ We are creating a set of interactive widgets to help people visualize and analyz
 
 More Information
 ----------------
-Visit our [project page](http://codeforamerica.org/?cfa_project=open311-dashboard).
+Visit our [project page](http://codeforamerica.org/?cfa_project=open311-dashboard) and our [homepage](http://www.311dashboard.com).
 
 Join the [official Open311 Dashboard mailing list](http://groups.google.com/group/open311-dashboard).
