@@ -1,11 +1,12 @@
 /**
- * Top ten open service requests for a given timespan for Open311 Dashboard
+ * Top ten open service requests for a given timespan for Open311 Dashboard -- these are ALL (open and closed) requests now
  *
  *
  * Depends:
  *   jquery.ui.core.js
  *   jquery.ui.widget.js
  */
+ 
 (function( $, undefined ) {
 
 $.widget('Open311.barchartGoogleTopOpenRequests', $.Open311.barchartGoogle, {
@@ -57,48 +58,60 @@ $.widget('Open311.barchartGoogleTopOpenRequests', $.Open311.barchartGoogle, {
 		    params.push("&chco=" + chart.color);
 
 		    var dataPar = [],
-		      axis = [],
-		      dataLabels = [],
-	      	maxValue = 0,
-	      	serviceCount = 0,
+		        axis = [],
+		        dataLabels = [],
+	      	    maxValue = 0,
+	      	    totalServiceCount = 0,
 			    request_types = [];
 			
-			  // Loop through the returned data and determine the frequency of each service type
-  			$(data.service_requests).each(function(index, elm) {
-  				if(request_types[elm.service_code] == undefined) {
-  					x = { 'service_name':elm.service_name, 'count':1};
-  					request_types[elm.service_code] = x;
-  				} else {
-  					request_types[elm.service_code].count++;
-  				}
-  				serviceCount++;
-  			});
+			totalServiceCount = data.service_requests.length; //do a null test? This should be done on the server anyway.
+			
+			var service_list = [];
+				
+			service_list[0] = data.service_requests[0].service_name;
+			for (var i = 0, l = data.service_requests.length; i < l; i++){
+				//do a null test for totalServiceCount here?
+				if(service_list.indexOf(data.service_requests[i].service_name) == -1){
+					service_list.push(data.service_requests[i].service_name);
+				}
+			}
+			
+			//console.log(service_list); Create a master list of service requests.
+			
+			var service_counts = [],
+				count = 0;
 
-  			// Determine the top ten frequencies
-  			var topTen = [];
-  			$(request_types).each(function(index, el) {
-  		      	if(el != undefined) { topTen.push(el); }
-  			});
-
-  			topTen.sort(function(a,b) {
-  				if (a.count > b.count) return -1;
-  				if (a.count < b.count) return 1;
-  				return 0;
-  			});
+			 //TODO: Compare against an array of service request names in the master list.
+			for(var j = 0, l = service_list.length; j < l; j++){ //switch up this loop
+					for (i = 0; i < l; i++){
+						if (service_list[j] == data.service_requests[i].service_name){
+							count++;
+						}
+						service_counts[j] = {"service_name": service_list[j], "count": count};
+					}
+					count = 0; //reset count
+			}
+			
+			//console.log(service_counts[5].service_name + ' ' + service_counts[5].count);
+			
+			var topTen = service_counts.sort(function(a,b){ //pass in an anonymous function
+				return b.count - a.count; //defines increasing order in the reverse: high to low
+			});
+			
 
   			topTen = topTen.slice(0,10);
   
-			  // Now that we have our top 10, we can stack the data points onto our Google Chart url
+			// Now that we have our top 10, we can stack the data points onto our Google Chart url
 		    $(topTen).each(function(index, el) {
 	      		if(el) {
-					    var requestType = el;
-			        dataPar.push((requestType.count/serviceCount)*100);
+					    var requestType = el; //why is this declared here?
+			        dataPar.push((requestType.count/totalServiceCount)*100);
 			        axis.push(requestType.service_name);
 			        dataLabels.push("t+" + requestType.count + ',676767,0,' + index + ',11');
 			        // find the largest value for the xmax caluclation
 			        maxValue = maxValue < requestType.count ? requestType.count : maxValue;
 				    }
-      	});
+      		});
 
 		    params.push("&chds=0,100&chxr=0,0,100");
 		    params.push("&chd=t:" + dataPar.join(','));
