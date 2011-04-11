@@ -66,11 +66,10 @@ $.widget('Open311.barchartGoogleTopOpenRequests', $.Open311.barchartGoogle, {
 			
 			totalServiceCount = data.service_requests.length; //do a null test? This should be done on the server anyway.
 			
-			var service_list = [],
-				i = 0;
+			var service_list = [];
 				
 			service_list[0] = data.service_requests[0].service_name;
-			for (i=0; i < data.service_requests.length; i++){ //switch up this loop
+			for (var i = 0, l = data.service_requests.length; i < l; i++){
 				//do a null test for totalServiceCount here?
 				if(service_list.indexOf(data.service_requests[i].service_name) == -1){
 					service_list.push(data.service_requests[i].service_name);
@@ -80,18 +79,17 @@ $.widget('Open311.barchartGoogleTopOpenRequests', $.Open311.barchartGoogle, {
 			//console.log(service_list); Create a master list of service requests.
 			
 			var service_counts = [],
-				count = 0,
-				j = 0;
+				count = 0;
 
 			 //TODO: Compare against an array of service request names in the master list.
-			for(j = 0; j < service_list.length; j++){ //switch up this loop
-					count = 0; //reset count
-					for (i = 0; i < data.service_requests.length; i++){
+			for(var j = 0, l = service_list.length; j < l; j++){ //switch up this loop
+					for (i = 0; i < l; i++){
 						if (service_list[j] == data.service_requests[i].service_name){
 							count++;
 						}
 						service_counts[j] = {"service_name": service_list[j], "count": count};
 					}
+					count = 0; //reset count
 			}
 			
 			//console.log(service_counts[5].service_name + ' ' + service_counts[5].count);
