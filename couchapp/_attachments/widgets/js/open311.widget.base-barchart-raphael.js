@@ -24,4 +24,5 @@ $.widget('Open311.barRaphael', $.Open311.base, {
     this.updateTitle();
     $(this.element).addClass('open311-bar-raphael');
   }
-)( jQuery );
+});
+})( jQuery );

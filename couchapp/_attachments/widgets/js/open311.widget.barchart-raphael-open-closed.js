@@ -8,7 +8,7 @@
  */
 (function( $, undefined ) {
 
-$.widget('widget.pieRaphaelOpenClosed', $.Open311.pieRaphael, {
+$.widget('widget.barRaphaelOpenClosed', $.Open311.barRaphael, {
   /**
    * Default options for the widget.  We need some way
    * of communicating the data source across all widgets.
@@ -41,17 +41,27 @@ $.widget('widget.pieRaphaelOpenClosed', $.Open311.pieRaphael, {
   this.updateContent('');
       
   if(data.service_requests.length > 0) {
-    var openReqs = closedReqs = 0;
-    
-      // Loop through the returned data and count open vs closed
-    $(data.service_requests).each(function(index, elm) {
-      if (elm.status == "Open") {
-        openReqs++;
-      } else if (elm.status == 'Closed'){ 
-        closedReqs++;
+    //var openReqs = closedReqs = [];
+    var days = {};
+    var dayOrder = [];
+    // Loop through the returned data and count open vs closed
+    for (var i = 0; i < data.service_requests.length; i++) {
+      var elm = data.service_requests[i];
+      var day = elm.requested_datetime.split(' ')[0].split('-');
+      var daystring = day[0] + day[1] + day[2];
+      if (days[daystring]) {
+        if (elm.status == "Open") {
+          days[daystring].open++;
+        } else if (elm.status == "Closed") {
+          days[daystring].closed++;
+        }
+      } else {
+        days[daystring] = {open:0,closed:0};
+        dayOrder.push(daystring);
       }
-    });
+    }
             
+    var CANVAS_HEIGHT = 250;
     var origin = 5;
     var barWidth = 10;
     var spacing = 2;
@@ -59,15 +69,12 @@ $.widget('widget.pieRaphaelOpenClosed', $.Open311.pieRaphael, {
     var bottomLineLength = 28*(10) + 27 * 3;
     var CANVAS_WIDTH = bottomLineLength + 50;
 
-    var sampleArray = [.5,.5,1,1,2,2,2,3,3,3,4,5,6,7,6,5,5,4,4,3,3,3,2,2,2,1,1,1,.5,.5];
-
-    var colorArray = [];
-            
-      // Check for Raphael
+    // Check for Raphael
     if (typeof Raphael == 'undefined') {
       return;
     }
-
+    
+    var paper = Raphael(self.contentContainer[0], CANVAS_WIDTH, CANVAS_HEIGHT);
   	var bars = paper.set();
 	
   	var bottomLine = paper.path("M0 70L" + bottomLineLength + " 70");
@@ -75,20 +82,18 @@ $.widget('widget.pieRaphaelOpenClosed', $.Open311.pieRaphael, {
   	//https://github.com/DmitryBaranovskiy/raphael/blob/master/plugins/raphael.shadow.js
   	bottomLine.attr({fill:"black", "stroke-width":"2"});
 
-    // Up bars
-    var openReqLen = openReqs.length;
-    for (var i=0; i < openReqLen; i++){
-      var bar = paper.rect(origin+(10+spacing)*i,70-10*sampleArray[i],barWidth,10*sampleArray[i]);
-  		bar.attr({cursor:"pointer", fill:"#0000ff", title:"Intensity: " + sampleArray[i], opacity:"1",stroke:"none"});		
-      bars.push(bar);
-    }
-
-    // Down bars
-    var closedReqLen = closedReqs.length;
-    for (var i = 0; i < closedReqLen; i++) {
-      var bar = paper.rect(origin+(10+spacing)*i,70,barWidth,10*sampleArray[i]);
-  		bar.attr({cursor:"pointer", fill:"#ff0000", title:"Intensity: " + sampleArray[i], opacity:"1",stroke:"none"});		
-      bars.push(bar);
+    var bar1, bar2;
+    var dayLen = dayOrder.length;
+    for (var i = 0; i < dayLen; i++){
+      var dayBar = days[dayOrder[i]];
+      // Up bar
+      bar1 = paper.rect(origin+(10+spacing)*i,70-(dayBar.open/10),barWidth,(dayBar.open/10));
+      bar1.attr({cursor:"pointer", fill:"#0000ff", title:"Intensity: " + dayBar.open, opacity:"1",stroke:"none"});		
+      bars.push(bar1);
+      // Down bar
+      bar2 = paper.rect(origin+(10+spacing)*i,70,barWidth,(dayBar.closed/10));
+  		bar2.attr({cursor:"pointer", fill:"#ff0000", title:"Intensity: " + dayBar.closed, opacity:"1",stroke:"none"});		
+      bars.push(bar2);
     }
 	
   	//Mouse Events for bars

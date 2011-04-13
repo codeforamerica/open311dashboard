@@ -9,6 +9,7 @@ $('.sparkline').sparklineExample();
 $('.open-vs-closed').pieRaphaelOpenClosed();
 $('.available-data').barchartGoogleAvailableData();
 $('.choropleth-example').choroplethMap();
+$('.open-vs-closed-bar').barRaphaelOpenClosed();
 
 //$('.gauge').gaugeGoogleActualEstResponseTime({dataSource: 'data/ClosedServiceRequests_By_SingleServiceType_Slice'});
 
