@@ -49,6 +49,7 @@ $.widget('widget.barRaphaelOpenClosed', $.Open311.barRaphael, {
       var elm = data.service_requests[i];
       var day = elm.requested_datetime.split(' ')[0].split('-');
       var daystring = day[0] + day[1] + day[2];
+      console.log(daystring);
       if (days[daystring]) {
         if (elm.status == "Open") {
           days[daystring].open++;
@@ -60,11 +61,12 @@ $.widget('widget.barRaphaelOpenClosed', $.Open311.barRaphael, {
         dayOrder.push(daystring);
       }
     }
+    console.log(days);
             
     var CANVAS_HEIGHT = 250;
     var origin = 5;
     var barWidth = 10;
-    var spacing = 2;
+    var spacing = 1;
 
     var bottomLineLength = 28*(10) + 27 * 3;
     var CANVAS_WIDTH = bottomLineLength + 50;
@@ -76,11 +78,12 @@ $.widget('widget.barRaphaelOpenClosed', $.Open311.barRaphael, {
     
     var paper = Raphael(self.contentContainer[0], CANVAS_WIDTH, CANVAS_HEIGHT);
   	var bars = paper.set();
+	var bars2 = paper.set();
 	
   	var bottomLine = paper.path("M0 70L" + bottomLineLength + " 70");
   	//bottomLine.toBack();
   	//https://github.com/DmitryBaranovskiy/raphael/blob/master/plugins/raphael.shadow.js
-  	bottomLine.attr({fill:"black", "stroke-width":"2"});
+  	bottomLine.attr({fill:"grey", "stroke-width":"1"});
 
     var bar1, bar2;
     var dayLen = dayOrder.length;
@@ -88,12 +91,12 @@ $.widget('widget.barRaphaelOpenClosed', $.Open311.barRaphael, {
       var dayBar = days[dayOrder[i]];
       // Up bar
       bar1 = paper.rect(origin+(10+spacing)*i,70-(dayBar.open/10),barWidth,(dayBar.open/10));
-      bar1.attr({cursor:"pointer", fill:"#0000ff", title:"Intensity: " + dayBar.open, opacity:"1",stroke:"none"});		
+      bar1.attr({cursor:"pointer", fill:"#1d8dc3", opacity:.9, title:dayBar.open + " open cases", stroke:"none"});		
       bars.push(bar1);
       // Down bar
       bar2 = paper.rect(origin+(10+spacing)*i,70,barWidth,(dayBar.closed/10));
-  		bar2.attr({cursor:"pointer", fill:"#ff0000", title:"Intensity: " + dayBar.closed, opacity:"1",stroke:"none"});		
-      bars.push(bar2);
+  		bar2.attr({cursor:"pointer", fill:"#ff0033", opacity:.9, title:dayBar.closed + " closed cases", stroke:"none"});		
+      bars2.push(bar2);
     }
 	
   	//Mouse Events for bars
@@ -101,8 +104,16 @@ $.widget('widget.barRaphaelOpenClosed', $.Open311.barRaphael, {
   		this.attr({fill:"white",stroke:"grey"});
   	});
 	
+	bars2.mouseover(function () {
+  		this.attr({fill:"white",stroke:"grey"});
+  	});
+	
   	bars.mouseout(function() {
-  		this.attr({fill:"#DBDBDB",stroke:"none"});
+  		this.attr({fill:"#1d8dc3", stroke:"none"});
+  	});
+	
+	bars2.mouseout(function() {
+		this.attr({fill:"#ff0033", stroke:"none"});
   	});
   }
    },
