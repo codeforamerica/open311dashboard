@@ -91,11 +91,11 @@ $.widget('widget.barRaphaelOpenClosed', $.Open311.barRaphael, {
       var dayBar = days[dayOrder[i]];
       // Up bar
       bar1 = paper.rect(origin+(10+spacing)*i,70-(dayBar.open/10),barWidth,(dayBar.open/10));
-      bar1.attr({cursor:"pointer", fill:"#1d8dc3", opacity:.9, title:dayBar.open + " open cases", stroke:"none"});		
+      bar1.attr({cursor:"pointer", fill:"#1d8dc3", opacity:.9, title:dayBar.open + " open cases", href: "http://www.311dashboard.com/" + dayBar.open, stroke:"none"});		
       bars.push(bar1);
       // Down bar
       bar2 = paper.rect(origin+(10+spacing)*i,70,barWidth,(dayBar.closed/10));
-  		bar2.attr({cursor:"pointer", fill:"#ff0033", opacity:.9, title:dayBar.closed + " closed cases", stroke:"none"});		
+  		bar2.attr({cursor:"pointer", fill:"#ff0033", opacity:.9, title:dayBar.closed + " closed cases", href: "http://www.311dashboard.com/" + dayBar.closed, stroke:"none"});		
       bars2.push(bar2);
     }
 	
