@@ -40,8 +40,8 @@ $.widget('Open311.barchartGoogleTopOpenRequests', $.Open311.barchartGoogle, {
     var self = this;
     
 		if(data.service_requests.length > 0) {
-			  // Parameters for the chart
- 			 	var chart = {
+		    // Parameters for the chart
+ 		    var chart = {
 		        title: "Open Requests by Type",
 		        width: 400,
 		        height: 200,
@@ -49,7 +49,7 @@ $.widget('Open311.barchartGoogleTopOpenRequests', $.Open311.barchartGoogle, {
 		        color: "4D89F9"
 		    };
   
-	      // Create google chart data
+		    // Create google chart data
 		    var params = ['http://chart.apis.google.com/chart'];
 		    params.push("?chxs=0,676767,11.5,0,l,FFFFFF|1,FFFFFF,11.5,0,_,FFFFFF");
 		    params.push("&chxt=y,x&chbh=a");
@@ -60,35 +60,35 @@ $.widget('Open311.barchartGoogleTopOpenRequests', $.Open311.barchartGoogle, {
 		    var dataPar = [],
 		        axis = [],
 		        dataLabels = [],
-	      	    maxValue = 0,
-	      	    totalServiceCount = 0,
-			    request_types = [];
+			maxValue = 0,
+			totalServiceCount = 0,
+			request_types = [];
 			
 			totalServiceCount = data.service_requests.length; //do a null test? This should be done on the server anyway.
-			
+		      
 			var service_list = [];
 				
 			service_list[0] = data.service_requests[0].service_name;
-			for (var i = 0, l = data.service_requests.length; i < l; i++){
+			for (var i = 0; i < data.service_requests.length; i++){
 				//do a null test for totalServiceCount here?
 				if(service_list.indexOf(data.service_requests[i].service_name) == -1){
 					service_list.push(data.service_requests[i].service_name);
 				}
 			}
 			
-			//console.log(service_list); Create a master list of service requests.
+			//console.log(service_list); //Create a master list of service requests.
 			
 			var service_counts = [],
-				count = 0;
+			    count = 0;
 
 			 //TODO: Compare against an array of service request names in the master list.
-			for(var j = 0, l = service_list.length; j < l; j++){ //switch up this loop
-					for (i = 0; i < l; i++){
+			for(var j = 0; j < service_list.length; j++){ //switch up this loop
+					for (i = 0; i < data.service_requests.length; i++){
 						if (service_list[j] == data.service_requests[i].service_name){
 							count++;
 						}
-						service_counts[j] = {"service_name": service_list[j], "count": count};
 					}
+					service_counts[j] = {"service_name": service_list[j], "count": count};
 					count = 0; //reset count
 			}
 			
@@ -97,7 +97,6 @@ $.widget('Open311.barchartGoogleTopOpenRequests', $.Open311.barchartGoogle, {
 			var topTen = service_counts.sort(function(a,b){ //pass in an anonymous function
 				return b.count - a.count; //defines increasing order in the reverse: high to low
 			});
-			
 
   			topTen = topTen.slice(0,10);
   
