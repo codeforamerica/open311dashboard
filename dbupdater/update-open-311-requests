@@ -140,7 +140,12 @@ def get_updates_to_couch_requests(requests):
             
             # You should damn-well have an object in request_update, unless SF
             # deleted the record for the given request.
-            assert request_update
+            if not request_update:
+                continue
+                # TODO: This is not the right thing to do.  Really, if there's a
+                # request in our system that is for some odd reason no longer in
+                # San Francisco's, then we need to mark that in our system in 
+                # some way
             
             request_update['_id'] = request['_id']
             request_update['_rev'] = request['_rev']
