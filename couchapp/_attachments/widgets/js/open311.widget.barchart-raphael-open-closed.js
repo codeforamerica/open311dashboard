@@ -61,7 +61,7 @@ $.widget('widget.barRaphaelOpenClosed', $.Open311.barRaphael, {
         dayOrder.push(daystring);
       }
     }
-    //console.log(days);
+    console.log(days);
             
     var CANVAS_HEIGHT = 200;
     var origin = 5;
@@ -83,7 +83,7 @@ $.widget('widget.barRaphaelOpenClosed', $.Open311.barRaphael, {
   	var bottomLine = paper.path("M0 70L" + bottomLineLength + " 70");
   	//bottomLine.toBack();
   	//https://github.com/DmitryBaranovskiy/raphael/blob/master/plugins/raphael.shadow.js
-  	bottomLine.attr({fill:"grey", "stroke-width":"1"});
+  	bottomLine.attr({fill:"grey", "stroke-width":"0"});
 
     var bar1, bar2;
     var dayLen = dayOrder.length;
