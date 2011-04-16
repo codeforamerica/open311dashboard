@@ -63,12 +63,12 @@ $.widget('widget.barRaphaelOpenClosed', $.Open311.barRaphael, {
     }
     console.log(days);
             
-    var CANVAS_HEIGHT = 250;
+    var CANVAS_HEIGHT = 200;
     var origin = 5;
     var barWidth = 10;
     var spacing = 1;
 
-    var bottomLineLength = 28*(10) + 27 * 3;
+    var bottomLineLength = 22*(10) + 22 * 3; //28, 27
     var CANVAS_WIDTH = bottomLineLength + 50;
 
     // Check for Raphael
