@@ -36,6 +36,11 @@
  
 }
 
+.sparkline {
+	width: 410px;
+	height: 100px;
+}
+
 .ui-widget-header {
    /* background: url("images/ui-bg_gloss-wave_35_f6a828_500x100.png") repeat-x scroll 50% 50% #F6A828;
    */ 
