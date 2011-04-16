@@ -49,7 +49,7 @@ $.widget('widget.barRaphaelOpenClosed', $.Open311.barRaphael, {
       var elm = data.service_requests[i];
       var day = elm.requested_datetime.split(' ')[0].split('-');
       var daystring = day[0] + day[1] + day[2];
-      console.log(daystring);
+      //console.log(daystring);
       if (days[daystring]) {
         if (elm.status == "Open") {
           days[daystring].open++;
@@ -61,7 +61,7 @@ $.widget('widget.barRaphaelOpenClosed', $.Open311.barRaphael, {
         dayOrder.push(daystring);
       }
     }
-    console.log(days);
+    //console.log(days);
             
     var CANVAS_HEIGHT = 250;
     var origin = 5;

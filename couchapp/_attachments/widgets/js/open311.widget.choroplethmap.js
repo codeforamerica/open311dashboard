@@ -72,6 +72,10 @@ $.widget('Open311.choroplethMap', $.Open311.base, {
     });
 
     var styledBaseLayer = new OpenLayers.Layer.Google('Styled Base Layer', { type: 'choropleth-base' });
+    //
+    //alert(styledBaseLayer.transitionEffect);
+    //alert("hi")
+    //
     self.map.addLayers([styledBaseLayer]);
     styledBaseLayer.mapObject.mapTypes.set('choropleth-base', gmapStyledMapType);
 
