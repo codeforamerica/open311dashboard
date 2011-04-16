@@ -14,7 +14,9 @@ $.widget('Open311.searchType', $.Open311.globalInput, {
    * of communicating the data source across all widgets.
    */
   options: {
-    title: 'Global Time Range'
+    title: 'Global Time Range',
+    titleClass: 'ui-input-widget-header',
+   contentClass: 'ui-input-widget-content'
   },
   
   //Create the widget

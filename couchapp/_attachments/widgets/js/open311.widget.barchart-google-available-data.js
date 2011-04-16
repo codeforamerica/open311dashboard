@@ -48,10 +48,10 @@ $.widget('Open311.barchartGoogleAvailableData', $.Open311.barchartGoogle, {
 			  // Parameters for the chart
  			 	var chart = {
 		        title: "Available Data",
-		        width: 500,
-		        height: 100,
+		        width: 290,
+		        height: 200,
 		        type: "bvg",
-		        color: "4D89F9"
+		        color: "1d8dc3"
 		    };
   
         /*

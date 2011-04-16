@@ -43,10 +43,10 @@ $.widget('Open311.barchartGoogleTopOpenRequests', $.Open311.barchartGoogle, {
 		    // Parameters for the chart
  		    var chart = {
 		        title: "Open Requests by Type",
-		        width: 400,
+		        width: 290,
 		        height: 200,
 		        type: "bhs",
-		        color: "4D89F9"
+		        color: "1d8dc3"
 		    };
   
 		    // Create google chart data

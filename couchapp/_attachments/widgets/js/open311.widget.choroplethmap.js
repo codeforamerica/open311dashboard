@@ -57,7 +57,7 @@ $.widget('Open311.choroplethMap', $.Open311.base, {
     
     self._bindEvents();    
     self.updateTitle();
-    $(self.element).append('<div id="open311-choropleth-map" class="ui-widget-content" style="height:250px;"></div>');
+    $(self.element).append('<div id="open311-choropleth-map" class="ui-widget-content" style="height:750px;"></div>');
     
     gmapStyledMapType = new google.maps.StyledMapType(self.options.gmapBaseStyle.def, {name: self.options.gmapBaseStyle.name});
     

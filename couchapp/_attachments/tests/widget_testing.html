@@ -25,8 +25,9 @@
 
   <!-- CSS: implied media="all" -->
   <link rel="stylesheet" href="css/reset.css">
-  <link rel="stylesheet" href="css/styles.css">
+
   <link rel="stylesheet" href="js/libs/jquery-ui-1.8.11/css/ui-lightness/jquery-ui-1.8.11.custom.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/styles.css">
 
   <!-- Uncomment if you are specifically targeting less enabled mobile browsers
   <link rel="stylesheet" media="handheld" href="css/handheld.css?v=2">  -->
@@ -39,28 +40,34 @@
 <body>
 
   <div id="container">
-    <header>
-      <h1>Testing Widgets</h1>
-    </header>
-    <div id="dashboard">
+
+    <div id="dashboard">	  
       <div class="input-widgets">
-        <div id="search" class="ui-widget"></div>
-        <div class="ui-widget available-data"></div>
-      </div>
-      <div class="column-1">
-        <div class="ui-widget choropleth-example"></div>
-        <div class="ui-widget map-google-example"></div>
-        <div class="ui-widget sparkline"></div>
-        <!-- <div class="ui-widget map"></div> -->
-      </div>
-      <div class="column-2">
-        <div class="ui-widget top-open-requests"></div>
-        <div class="ui-widget gauge"></div>
-        <div class="ui-widget open-vs-closed"></div>
-        <div class="ui-widget open-vs-closed-bar"></div>
+      	  <h1>Open311 Dashboard</h1>
+        <div id="search" class="open311-global-input"></div>
 
       </div>
-    </div>
+      <div class="widget-container">
+		  <div class="column-1">
+			<div class="ui-widget choropleth-example"></div>
+		<!--    <div class="ui-widget map-google-example"></div> -->
+			<div class="ui-widget sparkline"></div>
+			<!-- <div class="ui-widget map"></div> -->
+		  </div>
+		  <div class="column-2">
+			<div class="ui-widget available-data"></div>
+			<div class="ui-widget top-open-requests"></div>
+			<div class="ui-widget gauge"></div>
+			<div class="ui-widget open-vs-closed"></div>
+			<div class="ui-widget open-vs-closed-bar"></div>
+		  </div>
+		  <div class="column-3">
+			<div class="ui-widget open-vs-closed"></div>
+			<div class="ui-widget open-vs-closed-bar"></div>
+		  </div>
+		</div><!-- end widget-container -->
+		  
+		</div>
     <footer>
 
     </footer>
@@ -80,7 +87,7 @@
 
   <!-- widget bases -->
   <script src="../widgets/js/open311.widget.base.js"></script>
-  <script src="../widgets/js/open311.widget.base-map-google.js"></script>
+ <script src="../widgets/js/open311.widget.base-map-google.js"></script> 
   <script src="../widgets/js/open311.widget.base-barchart-google.js"></script>
   <script src="../widgets/js/open311.widget.base-global-input.js"></script>
   <script src="../widgets/js/open311.widget.base-sparkline-google.js"></script>
@@ -88,7 +95,7 @@
   <script src="../widgets/js/open311.widget.base-barchart-raphael.js"></script>
 
   <!-- example widgets -->
-  <script src="../widgets/js/open311.widget.example-map-google.js"></script>
+  <script src="../widgets/js/open311.widget.example-map-google.js"></script> 
   <script src="../widgets/js/open311.widget.example-sparkline.js"></script>
   
   <!-- others -->
@@ -99,7 +106,7 @@
   <script src="../widgets/js/open311.widget.barchart-google-available-data.js"></script>
   <script src="../widgets/js/open311.widget.choroplethmap.js"></script>
   <!--<script src="../widgets/js/open311.widget.gauge.closed-response-time.js"></script>-->
-  <script src="../widgets/js/open311.widget.map.js"></script>
+<!--  <script src="../widgets/js/open311.widget.map.js"></script> -->
   
   <!-- create widgets -->
   <script src="js/widget-tester.js"></script>
