@@ -68,12 +68,12 @@ $.widget('Open311.neighborhoodsSCTrends', $.Open311.neighborhoodsTrends, {
         labels.push(elem.key);
         data_bars.push("t+" + elem.value + ',676767,0,' + i + ',11');
 
-        console.log("(" + elem.key + "," + elem.value + ")");
+        //console.log("(" + elem.key + "," + elem.value + ")");
       }
 
-      var img_query_string = '<img src="http://chart.apis.google.com/chart?chxs=0,676767,11.5,0,l,FFFFFF|1,FFFFFF,11.5,0,_,FFFFFF&cht=bhs&chxt=y,x&chbh=a&chs=290x200&chco=1d8dc3&chds=0,400&chxr=0,0,400&chd=t:' + data_points.join(',') + '&chxl=0:|' + labels.reverse().join('|') + '&chm=' + data_bars.reverse().join('|') + '></img>';
+      var img_query_string = '<img src=' + '\"' + 'http://chart.apis.google.com/chart?chxs=0,676767,11.5,0,l,FFFFFF|1,FFFFFF,11.5,0,_,FFFFFF&cht=bhs&chxt=y,x&chbh=a&chs=290x200&chco=1d8dc3&chds=0,400&chxr=0,0,400&chd=t:' + data_points.join(',') + '&chxl=0:|' + labels.reverse().join('|') + '&chm=' + data_bars.reverse().join('|') + '\"></img>';
 
-      console.log(img_query_string);
+      //console.log(img_query_string);
 
       self.updateContent(img_query_string);
 
