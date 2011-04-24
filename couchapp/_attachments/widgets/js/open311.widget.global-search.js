@@ -77,6 +77,7 @@ $.widget('Open311.searchType', $.Open311.globalInput, {
     
     $.ajax({
       url: 'http://open311.couchone.com/service-requests/_design/requests/_list/requests-json/allbytime',
+      //send each widget the dates to look at; not the data
       dataType: 'jsonp',
       data: {
         startkey:'"'+toRfc3339(fromDate)+'"',
