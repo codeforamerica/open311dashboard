@@ -70,10 +70,23 @@ $.widget('Open311.searchType', $.Open311.globalInput, {
           pad(d.getUTCHours())+':' + 
           pad(d.getUTCMinutes())+':' + 
           pad(d.getUTCSeconds())+'Z';
+      },
+      
+      //Convert to a format of MMDDYYYY
+      convertDate = function(d){
+        function pad(n){return n<10 ? '0'+n : n;};
+
+        return pad(d.getUTCMonth()+1) +
+          pad(d.getUTCDate()) +
+          d.getUTCFullYear();
       };
 
     fromDate = fromDate || self._$fromDate.datepicker('getDate'); 
     toDate = toDate || self._$toDate.datepicker('getDate');
+    
+    console.log('fromDate:' + convertDate(fromDate) + 'toDate:' + convertDate(toDate));
+    //trigger before the ajax call
+    $($.Open311).trigger('open311-pass-dates', [convertDate(fromDate), convertDate(toDate)]);
     
     $.ajax({
       url: 'http://open311.couchone.com/service-requests/_design/requests/_list/requests-json/allbytime',

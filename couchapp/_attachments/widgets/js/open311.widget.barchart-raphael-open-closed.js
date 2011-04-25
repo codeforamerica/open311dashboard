@@ -30,39 +30,54 @@ $.widget('widget.barRaphaelOpenClosed', $.Open311.barRaphael, {
   _bindEvents: function(){
     var self = this;
     
-    $($.Open311).bind('open311-data-update', function(event, data){
-      self._render(data); //controlled by date control
+    $($.Open311).bind('open311-pass-dates', function(event, fromDate, toDate){
+      //console.log('event getting called');
+      var dataOpen;
+      var dataClosed;
+      function getOpenData(){
+	return $.ajax({
+		  url: 'http://open311.couchone.com/service-requests/_design/requests/_view/open_byday_ordered?group=true&startkey="' + fromDate + '"&endkey="' + toDate + '"',
+		  dataType: 'jsonp',
+		  success: function(data) {
+		    dataOpen = data;
+		  }
+		});
+      }
+      
+      function getClosedData(){
+	return $.ajax({
+		  url: 'http://open311.couchone.com/service-requests/_design/requests/_view/closed_byday_ordered?group=true&startkey="' + fromDate + '"&endkey="' + toDate + '"',
+		  dataType: 'jsonp',
+		  success: function(data) {
+		    dataClosed = data;
+		  }
+		});
+      }
+      
+      $.when(getOpenData(), getClosedData())
+	  .then(function(){
+	      self._render(dataOpen, dataClosed);
+	  })
+	  .fail(function(){
+	      console.log('Simultaneous AJAX call failed.');
+	  })
     });
   
   },
   
-   _render: function(data) {     
-  var self = this;
-  this.updateContent('');
-      
-  if(data.service_requests.length > 0) {
-    //var openReqs = closedReqs = [];
-    var days = {};
-    var dayOrder = [];
-    // Loop through the returned data and count open vs closed
-    for (var i = 0; i < data.service_requests.length; i++) {
-      var elm = data.service_requests[i];
-      var day = elm.requested_datetime.split(' ')[0].split('-');
-      var daystring = day[0] + day[1] + day[2];
-      //console.log(daystring);
-      if (days[daystring]) {
-        if (elm.status == "Open") {
-          days[daystring].open++;
-        } else if (elm.status == "Closed") {
-          days[daystring].closed++;
-        }
-      } else {
-        days[daystring] = {open:0,closed:0};
-        dayOrder.push(daystring);
-      }
-    }
-    //console.log(days);
-            
+   _render: function(dataOpen, dataClosed) {     
+     var self = this;
+     this.updateContent('');
+    
+     var totalData = [];
+     for (i=0; i<dataOpen.rows.length; i++){
+	totalData[i] = ({"date":dataOpen.rows[i].key, "openCount": dataOpen.rows[i].value});
+     }
+     
+     for (i=0; i<dataClosed.rows.length; i++){
+	totalData[i].closedCount = dataClosed.rows[i].value;
+     }
+    
     var CANVAS_HEIGHT = 200;
     var origin = 50;
     var barWidth = 10;
@@ -86,16 +101,15 @@ $.widget('widget.barRaphaelOpenClosed', $.Open311.barRaphael, {
   	bottomLine.attr({fill:"grey", "stroke-width":"0"});
 
     var barTop, barBottom;
-    var dayLen = dayOrder.length;
+    var dayLen = totalData.length;
     for (var i = 0; i < dayLen; i++){
-      var dayBar = days[dayOrder[i]];
       // Top bar
-      barTop = paper.rect(origin+(barWidth+spacing)*i,70-(dayBar.open/10),barWidth,(dayBar.open/10));
-      barTop.attr({cursor:"pointer", fill:"#1d8dc3", opacity:.9, href: "http://www.311dashboard.com/" + dayBar.open, stroke:"none"});		
+      barTop = paper.rect(origin+(barWidth+spacing)*i,70-(totalData[i].openCount/10),barWidth,(totalData[i].openCount/10));
+      barTop.attr({cursor:"pointer", fill:"#1d8dc3", opacity:.9, href: "http://www.311dashboard.com/" + totalData[i].closedCount, stroke:"none"});		
       barsTop.push(barTop);
       // Bottom bar
-      barBottom = paper.rect(origin+(barWidth+spacing)*i,70,barWidth,(dayBar.closed/10));
-      barBottom.attr({cursor:"pointer", fill:"#ff0033", opacity:.9, href: "http://www.311dashboard.com/" + dayBar.closed, stroke:"none"});		
+      barBottom = paper.rect(origin+(barWidth+spacing)*i,70,barWidth,(totalData[i].closedCount/10)); //70 problem with the bar tooltip
+      barBottom.attr({cursor:"pointer", fill:"#ff0033", opacity:.9, href: "http://www.311dashboard.com/" + totalData[i].closedCount, stroke:"none"});		
       barsBottom.push(barBottom);
     }
     
@@ -120,12 +134,10 @@ $.widget('widget.barRaphaelOpenClosed', $.Open311.barRaphael, {
 		//Calculate index for bar text
 		//graphWidth = (origin + dayLen*barWidth + (dayLen-1)*spacing); //Math.floor?? 357, 28 bars, 28 days
 		//28 * 10 + (28 - 1)*1 + 50 = 357
-		index = ((this.attr('x')/graphWidth) * graphWidth - origin)/(barWidth + spacing);
-		console.log('index: ' + index);
-		//alert(this.attr('y'));
+		index = Math.round(((this.attr('x')/graphWidth) * graphWidth - origin)/(barWidth + spacing));
+		//console.log('index: ' + index);
 		tooltip.attr({x: this.attr('x')-.5*tooltip.attr('width') + .5*barWidth,y: this.attr('y') - tooltip.attr('height') - 10});
-                //tooltip_text.attr({text: this.attr('height') + ' Incidents\n ' + this.attr('x'), x: this.attr('x') + .5*barWidth, y:this.attr('y') - tooltip.attr('height') - 10 + 10});
-		tooltip_text.attr({text: days[dayOrder[index]].open + ' Open Requests', x: this.attr('x') + .5*barWidth, y:this.attr('y') - tooltip.attr('height') + 5});
+		tooltip_text.attr({text: totalData[index].openCount + ' Open Requests', x: this.attr('x') + .5*barWidth, y:this.attr('y') - tooltip.attr('height') + 5});
 	});
 	
 	barsBottom.mouseover(function () {
@@ -133,12 +145,11 @@ $.widget('widget.barRaphaelOpenClosed', $.Open311.barRaphael, {
 		tooltip.show();
 		tooltip_text.show();
 		
-		//Calculate index
-		index = ((this.attr('x')/graphWidth) * graphWidth - origin)/(barWidth + spacing);
-		//alert(this.attr('y'));
+		index = Math.round(((this.attr('x')/graphWidth) * graphWidth - origin)/(barWidth + spacing));
+		
 		tooltip.attr({x: this.attr('x')-.5*tooltip.attr('width') + .5*barWidth,y: (this.attr('y')-20) + this.attr('height') + tooltip.attr('height') + 20 - 10});
                 //tooltip_text.attr({text: this.attr('height') + ' Incidents\n ' + this.attr('x'), x: this.attr('x') + .5*barWidth, y: this.attr('y') + tooltip.attr('height') + 10 - 10});
-		tooltip_text.attr({text: days[dayOrder[index]].closed + ' Closed Requests', x: this.attr('x') + .5*barWidth, y: (this.attr('y')-20) + this.attr('height') + tooltip.attr('height') +20 + 5});
+		tooltip_text.attr({text: totalData[index].closedCount + ' Closed Requests', x: this.attr('x') + .5*barWidth, y: (this.attr('y')-20) + this.attr('height') + tooltip.attr('height') +20 + 5});
 	});
 	
   	barsTop.mouseout(function() {
@@ -152,7 +163,6 @@ $.widget('widget.barRaphaelOpenClosed', $.Open311.barRaphael, {
 		tooltip.hide();
 		tooltip_text.hide();
   	});
-  }
    },
   /**
    * Destroy widget
