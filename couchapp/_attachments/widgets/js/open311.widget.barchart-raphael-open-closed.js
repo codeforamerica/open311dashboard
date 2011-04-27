@@ -88,12 +88,14 @@ $.widget('widget.barRaphaelOpenClosed', $.Open311.barRaphael, {
     var spacing = 1;
 
     var bottomLineLength = 22*(10) + 22 * 3; //28, 27
-    var CANVAS_WIDTH = bottomLineLength + 50 + 200;
+    var CANVAS_WIDTH = bottomLineLength + 50 + 200 + 400; //make this dynamic, based on number of bars
 
     // Check for Raphael
     if (typeof Raphael == 'undefined') {
       return;
     }
+    
+    //add option for no data
     
 	var paper = Raphael(self.contentContainer[0], CANVAS_WIDTH, CANVAS_HEIGHT);
   	var barsTop = paper.set();
@@ -133,7 +135,8 @@ $.widget('widget.barRaphaelOpenClosed', $.Open311.barRaphael, {
 	
 	var graphWidth = (origin + dayLen*barWidth + (dayLen-1)*spacing);
 	var index;
-	var date = new Date(validateDate(fromDate));
+	var date = new Date(validateDate(fromDate)); //this doesn't work when we don't have data starting with the fromDate
+						     //also doesn't work when there is no data for a day
 	var FROM_DATE_IN_MS = date.getTime();
 	//var NUMBER_OF_MS_PER_DAY = 8.64 * 10e7;
 	var NUMBER_OF_MS_PER_DAY = 86400000; //24*60*60*1000
