@@ -112,14 +112,14 @@ $.widget('widget.barRaphaelOpenClosed', $.Open311.barRaphael, {
       //***PUT IN OPTION FOR 0 OPEN or 0 CLOSED***
       // Top bar
       barTop = paper.rect(origin+(barWidth+spacing)*i,70,barWidth,0);
-      barTop.attr({cursor:"pointer", fill:"#1d8dc3", opacity:.9, href: "http://www.311dashboard.com/" + totalData[i].date, stroke:"none"});		
-      barTop.animate({y: 70-(totalData[i].openCount/10), height: (totalData[i].openCount/10)}, 1000, ">");
+      barTop.attr({cursor:"pointer", fill:"#1d8dc3", opacity:.9, href: "http://www.311dashboard.com/closed/" + totalData[i].date, stroke:"none"});		
+      barTop.animate({y: 70-(totalData[i].closedCount/10), height: (totalData[i].closedCount/10)}, 1000, ">");
       barsTop.push(barTop);
       // Bottom bar
       barBottom = paper.rect(origin+(barWidth+spacing)*i,70,barWidth,0); //70 problem with the bar tooltip
-      barBottom.attr({cursor:"pointer", fill:"#ff0033", opacity:.9, href: "http://www.311dashboard.com/" + totalData[i].date, stroke:"none"});		
+      barBottom.attr({cursor:"pointer", fill:"#ff0033", opacity:.9, href: "http://www.311dashboard.com/open/" + totalData[i].date, stroke:"none"});		
       //cubic-bezier(0.42, 0, 1.0, 1.0)
-      barBottom.animate({y: 70, height: (totalData[i].closedCount/10)}, 1000, ">");
+      barBottom.animate({y: 70, height: (totalData[i].openCount/10)}, 1000, ">");
       barsBottom.push(barBottom);
     }
     
@@ -161,7 +161,7 @@ $.widget('widget.barRaphaelOpenClosed', $.Open311.barRaphael, {
 		date.setTime(FROM_DATE_IN_MS + index*NUMBER_OF_MS_PER_DAY);
 		//console.log('index: ' + index);
 		tooltip.attr({x: this.attr('x')-.5*tooltip.attr('width') + .5*barWidth,y: this.attr('y') - tooltip.attr('height') - 10});
-		tooltip_text.attr({text: totalData[index].openCount + ' Open Requests\non ' + date.toDateString(), x: this.attr('x') + .5*barWidth, y:this.attr('y') - tooltip.attr('height') + 5});
+		tooltip_text.attr({text: totalData[index].closedCount + ' Closed Requests\non ' + date.toDateString(), x: this.attr('x') + .5*barWidth, y:this.attr('y') - tooltip.attr('height') + 5});
 	});
 	
 	barsBottom.mouseover(function () {
@@ -175,7 +175,7 @@ $.widget('widget.barRaphaelOpenClosed', $.Open311.barRaphael, {
 		
 		tooltip.attr({x: this.attr('x')-.5*tooltip.attr('width') + .5*barWidth,y: (this.attr('y')-20) + this.attr('height') + tooltip.attr('height') + 20 - 10});
                 //tooltip_text.attr({text: this.attr('height') + ' Incidents\n ' + this.attr('x'), x: this.attr('x') + .5*barWidth, y: this.attr('y') + tooltip.attr('height') + 10 - 10});
-		tooltip_text.attr({text: totalData[index].closedCount + ' Closed Requests\non ' + date.toDateString(), x: this.attr('x') + .5*barWidth, y: (this.attr('y')-20) + this.attr('height') + tooltip.attr('height') +20 + 5});
+		tooltip_text.attr({text: totalData[index].openCount + ' Open Requests\non ' + date.toDateString(), x: this.attr('x') + .5*barWidth, y: (this.attr('y')-20) + this.attr('height') + tooltip.attr('height') +20 + 5});
 	});
 	
   	barsTop.mouseout(function() {

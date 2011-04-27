@@ -58,7 +58,7 @@ $.widget('Open311.sparklineExample', $.Open311.sparklineGoogle, {
 	    monthly_values = monthly_values.concat(old_monthly_values,new_monthly_values_sorted);
 	    var last_month_count = new_monthly_values_sorted[new_monthly_values_sorted.length-1];
 
-	    self.updateContent('<img src="http://chart.apis.google.com/chart?cht=lc&chs=400x70&chds=0,2438&chd=t:' + monthly_values.join(',') + '&chco=336699&chls=1,1,0&chm=o,990000,0,13,4&chxt=r,x,y&chxs=0,990000,11,0,_|1,990000,1,0,_|2,990000,1,0,_&chxl=0:|' + last_month_count + '|1:||2:||&chxp=0,45.80"></img>');
+	    self.updateContent('<img src="http://chart.apis.google.com/chart?cht=lc&chs=400x70&chds=0,' + Math.max.apply(Math,monthly_values) + '&chd=t:' + monthly_values.join(',') + '&chco=336699&chls=1,1,0&chm=o,990000,0,13,4&chxt=r,x,y&chxs=0,990000,11,0,_|1,990000,1,0,_|2,990000,1,0,_&chxl=0:|' + last_month_count + '|1:||2:||&chxp=0,45.80"></img>');
 
 	} else {
 	    self.valueDiv = $('<div class="no-data">No data.</div>')
