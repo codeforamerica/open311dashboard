@@ -109,12 +109,15 @@ $.widget('widget.barRaphaelOpenClosed', $.Open311.barRaphael, {
     for (var i = 0; i < dayLen; i++){
       //***PUT IN OPTION FOR 0 OPEN or 0 CLOSED***
       // Top bar
-      barTop = paper.rect(origin+(barWidth+spacing)*i,70-(totalData[i].openCount/10),barWidth,(totalData[i].openCount/10));
+      barTop = paper.rect(origin+(barWidth+spacing)*i,70,barWidth,0);
       barTop.attr({cursor:"pointer", fill:"#1d8dc3", opacity:.9, href: "http://www.311dashboard.com/" + totalData[i].closedCount, stroke:"none"});		
+      barTop.animate({y: 70-(totalData[i].openCount/10), height: (totalData[i].openCount/10)}, 1000, ">");
       barsTop.push(barTop);
       // Bottom bar
-      barBottom = paper.rect(origin+(barWidth+spacing)*i,70,barWidth,(totalData[i].closedCount/10)); //70 problem with the bar tooltip
+      barBottom = paper.rect(origin+(barWidth+spacing)*i,70,barWidth,0); //70 problem with the bar tooltip
       barBottom.attr({cursor:"pointer", fill:"#ff0033", opacity:.9, href: "http://www.311dashboard.com/" + totalData[i].closedCount, stroke:"none"});		
+      //cubic-bezier(0.42, 0, 1.0, 1.0)
+      barBottom.animate({y: 70, height: (totalData[i].closedCount/10)}, 1000, ">");
       barsBottom.push(barBottom);
     }
     
