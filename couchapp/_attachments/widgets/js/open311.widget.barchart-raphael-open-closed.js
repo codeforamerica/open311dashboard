@@ -135,7 +135,15 @@ $.widget('widget.barRaphaelOpenClosed', $.Open311.barRaphael, {
 	
 	var graphWidth = (origin + dayLen*barWidth + (dayLen-1)*spacing);
 	var index;
-	var date = new Date(validateDate(fromDate)); //this doesn't work when we don't have data starting with the fromDate
+	var firstDateInData = dataOpen.rows[0].key;
+	console.log('first date: ' + firstDateInData);
+	var date;
+	if (firstDateInData < fromDate){
+	  date = new Date(validateDate(fromDate));
+	} else {
+	  date = new Date(validateDate(firstDateInData));
+	}
+	//var date = new Date(validateDate(fromDate)); //this doesn't work when we don't have data starting with the fromDate
 						     //also doesn't work when there is no data for a day
 	var FROM_DATE_IN_MS = date.getTime();
 	//var NUMBER_OF_MS_PER_DAY = 8.64 * 10e7;
