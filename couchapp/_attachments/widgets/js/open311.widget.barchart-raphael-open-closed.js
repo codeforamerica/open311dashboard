@@ -112,12 +112,12 @@ $.widget('widget.barRaphaelOpenClosed', $.Open311.barRaphael, {
       //***PUT IN OPTION FOR 0 OPEN or 0 CLOSED***
       // Top bar
       barTop = paper.rect(origin+(barWidth+spacing)*i,70,barWidth,0);
-      barTop.attr({cursor:"pointer", fill:"#1d8dc3", opacity:.9, href: "http://www.311dashboard.com/" + totalData[i].closedCount, stroke:"none"});		
+      barTop.attr({cursor:"pointer", fill:"#1d8dc3", opacity:.9, href: "http://www.311dashboard.com/" + totalData[i].date, stroke:"none"});		
       barTop.animate({y: 70-(totalData[i].openCount/10), height: (totalData[i].openCount/10)}, 1000, ">");
       barsTop.push(barTop);
       // Bottom bar
       barBottom = paper.rect(origin+(barWidth+spacing)*i,70,barWidth,0); //70 problem with the bar tooltip
-      barBottom.attr({cursor:"pointer", fill:"#ff0033", opacity:.9, href: "http://www.311dashboard.com/" + totalData[i].closedCount, stroke:"none"});		
+      barBottom.attr({cursor:"pointer", fill:"#ff0033", opacity:.9, href: "http://www.311dashboard.com/" + totalData[i].date, stroke:"none"});		
       //cubic-bezier(0.42, 0, 1.0, 1.0)
       barBottom.animate({y: 70, height: (totalData[i].closedCount/10)}, 1000, ">");
       barsBottom.push(barBottom);
@@ -136,7 +136,7 @@ $.widget('widget.barRaphaelOpenClosed', $.Open311.barRaphael, {
 	var graphWidth = (origin + dayLen*barWidth + (dayLen-1)*spacing);
 	var index;
 	var firstDateInData = dataOpen.rows[0].key;
-	console.log('first date: ' + firstDateInData);
+	//console.log('first date: ' + firstDateInData);
 	var date;
 	if (firstDateInData < fromDate){
 	  date = new Date(validateDate(fromDate));
