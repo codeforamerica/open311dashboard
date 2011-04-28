@@ -14,7 +14,7 @@ $.widget('widget.barRaphaelOpenClosed', $.Open311.barRaphael, {
    * of communicating the data source across all widgets.
    */
   options: {
-    title: 'Open vs Closed'
+    title: 'Open and Closed Service Requests'
   },
 
   /**
@@ -124,11 +124,13 @@ $.widget('widget.barRaphaelOpenClosed', $.Open311.barRaphael, {
     }
     
         var tooltip = paper.rect(10, 10, 110, 30); //draw as a path
+	/*
 	//M10 10L110 10L110 30L55 30L60 22L45 30L10 30
 	//var tooltop = paper.path("M10 10L110 10L110 30L55 30L60 22L45 30L10 30L10 10");
 	var tooltop = paper.path("M10 10L110 10L110 30L65 30L60 38L55 30L10 30L10 10");
 	tooltop.attr({fill: "#DBDBDB", opacity: .8,stroke:"none"});
-        var tooltip_text = paper.text(10,10,""); //draw as a path
+	*/
+	var tooltip_text = paper.text(10,10,""); //draw as a path
 	tooltip.attr({fill: "#DBDBDB", opacity: .8,stroke:"none"});
 	tooltip.hide();
         tooltip_text.hide();
@@ -149,9 +151,10 @@ $.widget('widget.barRaphaelOpenClosed', $.Open311.barRaphael, {
 	  label_text_from_string = validateDate(firstDateInData);
 	}
 	
+	/*
 	var graph_label = paper.text(200,110,label_text_from_string + " to " + validateDate(toDate));
 	graph_label.attr({"font-size": 12});
-	
+	*/
 	//var date = new Date(validateDate(fromDate)); //this doesn't work when we don't have data starting with the fromDate
 						     //also doesn't work when there is no data for a day
 	var FROM_DATE_IN_MS = date.getTime();

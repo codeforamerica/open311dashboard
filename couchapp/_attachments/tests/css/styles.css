@@ -80,7 +80,7 @@ h1 {
   padding: 10px 20px;
   color: #666;
   text-shadow: 0px 1px 2px #fefefe;
-  font-family:Trebuchet;
+  font-family:Helevetica,sans-serif;
   font-variant:small-caps;
 }
 
@@ -100,13 +100,12 @@ ui.loading {
 }*/
 .input-widgets{
   width: 100%;
-  background: #ddd;
+  background: #fff;
    /*margin-right: 10px;*/
   margin-bottom: 10px;
-  -moz-box-shadow: 2px 2px 2px #ccc;
-  -webkit-box-shadow: 2px 2px 2px #ccc;
-    font-family: Trebuchet MS,Tahoma,Verdana,Arial,sans-serif;
-    text-shadow:
+  /*-moz-box-shadow: 2px 2px 2px #ccc;
+  -webkit-box-shadow: 2px 2px 2px #ccc;*/
+    font-family: Helevetica,Arial,sans-serif;
     font-size: 1.1em;
     color: #333;
     padding: 10px;
@@ -116,6 +115,13 @@ ui.loading {
 /*  height: 100px; */
   padding: 4px;
   margin-right: 14px;
+  font-family: Helevetica,Arial,sans-serif;
 /*background: url("images/ui-bg_highlight-soft_100_eeeeee_1x100.png") repeat-x scroll 50% top #EEEEEE;*/
+}
+
+.open311-fromdate, .open311-todate{
+  border: 1px solid #999999;
+  font: 10px, "Helvetica", "sans-serif";
+  padding: 2px 2px 2px;
 }
 

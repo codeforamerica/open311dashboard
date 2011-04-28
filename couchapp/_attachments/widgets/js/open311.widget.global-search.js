@@ -14,7 +14,7 @@ $.widget('Open311.searchType', $.Open311.globalInput, {
    * of communicating the data source across all widgets.
    */
   options: {
-    title: 'Global Time Range',
+    title: ' ',
     titleClass: 'ui-input-widget-header',
    contentClass: 'ui-input-widget-content'
   },
@@ -22,8 +22,8 @@ $.widget('Open311.searchType', $.Open311.globalInput, {
   //Create the widget
   _create: function() {
     var self = this, dates;
-    this.updateContent('<label for="open311-fromdate">From</label><input type="text" class="open311-fromdate" name="open311-fromdate"/>' +
-      '<label for="open311-todate">to</label><input type="text" class="open311-todate" name="open311-todate"/>' +
+    this.updateContent('<label for="open311-fromdate"></label><input type="text" class="open311-fromdate" name="open311-fromdate"/>' +
+      '<label for="open311-todate"> - </label><input type="text" class="open311-todate" name="open311-todate"/>' +
       '<button class="open311-search-button">Search</button></div>');
         
     dates = $( '.open311-fromdate, .open311-todate', this.element ).datepicker({
@@ -41,7 +41,8 @@ $.widget('Open311.searchType', $.Open311.globalInput, {
       }
     });
     
-    this._$fromDate = $(dates[0]).datepicker('setDate', '-1m');
+    //this._$fromDate = $(dates[0]).datepicker('setDate', '-1m');
+    this._$fromDate = $(dates[0]).datepicker('setDate', '-60d');
     this._$toDate = $(dates[1]).datepicker('setDate', '-1d');
     
     self._bindEvents();
@@ -84,7 +85,7 @@ $.widget('Open311.searchType', $.Open311.globalInput, {
     fromDate = fromDate || self._$fromDate.datepicker('getDate'); 
     toDate = toDate || self._$toDate.datepicker('getDate');
     
-    console.log('fromDate:' + convertDate(fromDate) + 'toDate:' + convertDate(toDate));
+    //console.log('fromDate:' + convertDate(fromDate) + 'toDate:' + convertDate(toDate));
     //trigger before the ajax call
     $($.Open311).trigger('open311-pass-dates', [convertDate(fromDate), convertDate(toDate)]);
     /*
