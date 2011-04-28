@@ -87,7 +87,7 @@ $.widget('Open311.searchType', $.Open311.globalInput, {
     console.log('fromDate:' + convertDate(fromDate) + 'toDate:' + convertDate(toDate));
     //trigger before the ajax call
     $($.Open311).trigger('open311-pass-dates', [convertDate(fromDate), convertDate(toDate)]);
-    
+    /*
     $.ajax({
       url: 'http://open311.couchone.com/service-requests/_design/requests/_list/requests-json/allbytime',
       //send each widget the dates to look at; not the data
@@ -100,6 +100,7 @@ $.widget('Open311.searchType', $.Open311.globalInput, {
         $($.Open311).trigger('open311-data-update', [data]);
       }
     });
+    */
   },
   
   /**
