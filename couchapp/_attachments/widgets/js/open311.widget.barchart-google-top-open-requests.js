@@ -76,7 +76,7 @@ $.widget('Open311.barchartGoogleTopOpenRequests', $.Open311.barchartGoogle, {
 				}
 			}
 			
-			//console.log(service_list); //Create a master list of service requests.
+			console.log(service_list); //Create a master list of service requests.
 			
 			var service_counts = [],
 			    count = 0;

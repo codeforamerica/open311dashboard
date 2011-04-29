@@ -119,9 +119,13 @@ ui.loading {
 /*background: url("images/ui-bg_highlight-soft_100_eeeeee_1x100.png") repeat-x scroll 50% top #EEEEEE;*/
 }
 
-.open311-fromdate, .open311-todate{
+.open311-fromdate, .open311-todate {
   border: 1px solid #999999;
   font: 10px, "Helvetica", "sans-serif";
   padding: 2px 2px 2px;
+}
+
+.open311-fromdate:focus, .open311-todate:focus {
+  border: 2px solid #050505;
 }
 
