@@ -156,7 +156,7 @@ $.widget('widget.barRaphaelOpenClosed', $.Open311.barRaphael, {
 	graph_label.attr({"font-size": 12});
 	*/
 	//var date = new Date(validateDate(fromDate)); //this doesn't work when we don't have data starting with the fromDate
-						     //also doesn't work when there is no data for a day
+						       //also doesn't work when there is no data for a day
 	var FROM_DATE_IN_MS = date.getTime();
 	//var NUMBER_OF_MS_PER_DAY = 8.64 * 10e7;
 	var NUMBER_OF_MS_PER_DAY = 86400000; //24*60*60*1000

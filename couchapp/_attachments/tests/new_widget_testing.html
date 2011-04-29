@@ -11,7 +11,7 @@
        Remove this if you use the .htaccess -->
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-  <title></title>
+  <title>Open311 Dashboard</title>
   <meta name="description" content="">
   <meta name="author" content="">
 
@@ -43,7 +43,7 @@
     <div id="dashboard">	  
       <div class="input-widgets">
       	  <h1>Open311 Dashboard</h1>
-	  <h2 id="last-updated"></h2>
+	  <h2 id="last-updated">Loading...</h2>
         <div id="search" class="open311-global-input"></div>
 	<div class="ui-widget open-vs-closed-bar"></div>
       </div>
@@ -64,25 +64,29 @@
 
 
   <!-- JavaScript at the bottom for fast page loading -->
-   <script src="js/libs/jquery-ui-1.8.11/js/jquery-1.5.1.min.js"></script>
+  <script src="js/libs/jquery-ui-1.8.11/js/jquery-1.5.1.min.js"></script>
   <script>
-  //ajax request
+  //Display last update date
   $(document).ready(function(){
       $.ajax({
-    url: 'http://open311.couchone.com/service-requests/_design/requests/_view/open_byday_ordered_ms?group=true',
-    //cache: true,
-    dataType: 'jsonp',
-    success: function(data){
-	      insert_update(data);
-	     }
+	      url: 'http://open311.couchone.com/service-requests/_design/requests/_view/open_byday_ordered_ms?group=true',
+	      //cache: true,
+	      dataType: 'jsonp',
+	      success: function(data){
+			  insert_update(data);
+		       }
     });  
+    
+    function insert_update(data){
+      var last_date = new Date(data.rows[data.rows.length-1].key); //dates in ms
+      var day = last_date.getDate();
+      var year = last_date.getFullYear();
+      var month_array = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+      var month = month_array[last_date.getMonth()];
+      var formatted_last_date = month + ' ' + day + ', ' + year;
+      $('#last-updated').html("<b>Last updated on " + formatted_last_date + "</b>");
+    }  
   });
-  
-  function insert_update(data){
-    //console.log(data.rows.length);
-    var length = data.rows.length;
-    $('#last-updated').html("<b>Last updated on " + data.rows[length-1].key + "</b>");
-  }  
   </script>
 
   <!-- Libraries -->
