@@ -16,6 +16,8 @@ import xml.dom.minidom as dom
 import json
 import datetime as dt
 
+from xml.parsers.expat import ExpatError
+#module => class
 ONE_DAY = dt.timedelta(days=1)
     
 def get_time_range(on_day=None):
@@ -71,27 +73,32 @@ def parse_requests_doc(stream):
     import xml.dom
     
     requests = []
-    requests_root = dom.parse(stream).documentElement
+    xml_string = stream.read()
+    try:
+        requests_root = dom.parseString(xml_string).documentElement
+    except ExpatError:
+        print(xml_string)
+        raise
     
     for request_node in requests_root.childNodes:
         if request_node.nodeType != xml.dom.Node.ELEMENT_NODE:
             continue
-        
+    
         request = {}
-        
+    
         if request_node.tagName != 'request':
             raise Exception('Unexpected node: %s' % requests_root.toprettyxml())
-        
+    
         for request_attr in request_node.childNodes:
             if request_attr.childNodes:
                 key = request_attr.tagName
                 value = request_attr.childNodes[0].data
                 request[key] = value
-        
+    
         request['_id'] = request['service_request_id']
         request['jurisdiction_id'] = 'sfgov.org'
         requests.append(request)
-    
+
     return requests
 
 def upload_requests_to_couch(requests):
