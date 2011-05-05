@@ -54,7 +54,7 @@ def get_requests_from_SF(start,end):
     validate_dt_value(start)
     validate_dt_value(end)
     
-    url = r'https://open311.sfgov.org/dev/v2/requests.xml'
+    url = r'https://open311.sfgov.org/dev/Open311/v2/requests.xml'
     query_data = {
         'start_date' : start.isoformat() + 'Z',
         'end_date' : end.isoformat() + 'Z',
