@@ -15,7 +15,7 @@ def get_requests_from_SF(request_ids):
     Returns a stream containing the content from the API call.
     """
     
-    url = r'https://open311.sfgov.org/dev/v2/requests.xml'
+    url = r'https://open311.sfgov.org/dev/Open311/v2/requests.xml'
     query_data = {
         'service_request_id' : ','.join(request_ids),
         'jurisdiction_id' : 'sfgov.org',
