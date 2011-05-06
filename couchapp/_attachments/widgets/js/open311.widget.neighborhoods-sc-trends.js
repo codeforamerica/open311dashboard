@@ -6,7 +6,7 @@
  *   jquery.ui.widget.js
  */
 (function( $, undefined ) {
-
+//refactor this code for new event handling
 $.widget('Open311.neighborhoodsSCTrends', $.Open311.neighborhoodsTrends, {
   options: {
       title: 'Sidewalk Cleaning Trends in SF Neighborhoods',
