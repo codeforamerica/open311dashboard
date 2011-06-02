@@ -2,6 +2,7 @@ var features_coordinates = []; //dom ready
 var features_rect_bounds = [];
 var neighborhood_features = [];
 var highlighted = -1;
+var $neighborhoodStats = $('#neighborhood-stats');
 
 function insideRectBounds(feature_rect_bounds,mp_ll){
     var lon = mp_ll[0];
@@ -34,12 +35,12 @@ function insidePolygon(mp_ll,index){
         vertexA = features_coordinates[index][i];
         vertexB = features_coordinates[index][j];
 
-        	if(((vertexA[0] < mp_ll[0]) && (vertexB[0] >= mp_ll[0])) || ((vertexB[0] < mp_ll[0]) && (vertexA[0] >= mp_ll[0]))) {
-			if(vertexA[1] + (((mp_ll[0] - vertexA[0]) / (vertexB[0] - vertexA[0])) * (vertexB[1] - vertexA[1])) < mp_ll[1]) {
-					 inside = !inside;
-			}
-		}
-		j = i;
+          if(((vertexA[0] < mp_ll[0]) && (vertexB[0] >= mp_ll[0])) || ((vertexB[0] < mp_ll[0]) && (vertexA[0] >= mp_ll[0]))) {
+      if(vertexA[1] + (((mp_ll[0] - vertexA[0]) / (vertexB[0] - vertexA[0])) * (vertexB[1] - vertexA[1])) < mp_ll[1]) {
+           inside = !inside;
+      }
+    }
+    j = i;
     }
 
     return inside;
@@ -49,7 +50,7 @@ function onloadneighborhoods(e){
     var lon = [];
     var lat = [];
     for(var i = 0; i < e.features.length; i++) {
-        neighborhood_features[i] = e.features[i].element;
+        neighborhood_features[i] = e.features[i];
 
         features_coordinates[i] = e.features[i].data.geometry.coordinates;
         
@@ -63,12 +64,13 @@ function onloadneighborhoods(e){
         e.features[i].element.onmousemove = testNeighborhood;
         e.features[i].element.onmouseout = testNeighborhood;
     }
-};
+}
+
+function updateNeighborhoodStats(feature) {
+  $neighborhoodStats.html(feature.data.properties.neighborhood);
+}
 
 function testNeighborhood(e){
-
-    console.log("map zoom level", map.zoom()); //at least zoom level 14
-
     var mp_ll = [map.pointLocation(map.mouse(e)).lon,map.pointLocation(map.mouse(e)).lat];
 
     for(var i = 0; i < features_coordinates.length; i++){
@@ -90,6 +92,7 @@ function handleHighlight(i){
 
     if (i !== -1){
         highlightNeighborhood(i);
+        updateNeighborhoodStats(neighborhood_features[i]);
     }
     highlighted = i;
 
@@ -97,13 +100,13 @@ function handleHighlight(i){
 
 function highlightNeighborhood(i){
     //console.log('i',i);
-    neighborhood_features[i].setAttribute('stroke-opacity','.75');
-    neighborhood_features[i].setAttribute('stroke-width','2px');
-    neighborhood_features[i].setAttribute('stroke','#fff');
+    neighborhood_features[i].element.setAttribute('stroke-opacity','.75');
+    neighborhood_features[i].element.setAttribute('stroke-width','2px');
+    neighborhood_features[i].element.setAttribute('stroke','#fff');
 }
 
 function unhighlightNeighborhood(i){
-    neighborhood_features[i].setAttribute('stroke-opacity','0');
+    neighborhood_features[i].element.setAttribute('stroke-opacity','0');
     //neighborhood_features[i].setAttribute('stroke','#fff');
 };
 
@@ -114,8 +117,13 @@ function follow(e){
     console.log(e.target.offset);
     
     $('#tooltip').css({
+<<<<<<< HEAD
         top: (e.layerY) + "px",
         left: (e.layerX + 15) + "px"
+=======
+        top: (e.offsetY || e.layerY) + "px",
+        left: ((e.offsetX || e.layerX) + 15) + "px"
+>>>>>>> e8a0a112569b476bfa56eb93f9e346767a373b5f
     });
 }
 
