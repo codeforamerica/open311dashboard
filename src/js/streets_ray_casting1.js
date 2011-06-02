@@ -120,7 +120,7 @@ function follow(e){
 
 function setsparkline(score){
       var myvalues = [10,8,5,7,4,4,score];
-      $('.dynamicsparkline1').sparkline(myvalues,{width:100}) //why does this work here?
+      $('.dynamicsparkline1').sparkline(myvalues,{width:100}); //why does this work here?
 }
 
 function onload(e){
@@ -142,10 +142,10 @@ function onload(e){
 
         if (e.features[i].data.properties.score < 8){
             e.features[i].element.setAttribute("stroke",colorArray[0]);
-            e.features[i].element.setAttribute("stroke-opacity",.75);
+            e.features[i].element.setAttribute("stroke-opacity", 0.75);
         } else {
             e.features[i].element.setAttribute("stroke",colorArray[1]);
-            e.features[i].element.setAttribute("stroke-opacity",.8);
+            e.features[i].element.setAttribute("stroke-opacity", 0.8);
         }
 
 
@@ -159,7 +159,7 @@ function setStreetContent(e,score,index){
     testNeighborhood(e);
 
     var myvalues = [10,8,5,7,4,4,1];
-    $('.dynamicsparkline1').sparkline(myvalues)
+    $('.dynamicsparkline1').sparkline(myvalues);
 
     $('#tooltip').html('<strong>'+score+'</strong></br><span class="dynamicsparkline1">Loading..</span>');
     $('#tooltip').show();
