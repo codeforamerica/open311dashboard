@@ -117,13 +117,8 @@ function follow(e){
     console.log(e.target.offset);
     
     $('#tooltip').css({
-<<<<<<< HEAD
-        top: (e.layerY) + "px",
-        left: (e.layerX + 15) + "px"
-=======
         top: (e.offsetY || e.layerY) + "px",
         left: ((e.offsetX || e.layerX) + 15) + "px"
->>>>>>> e8a0a112569b476bfa56eb93f9e346767a373b5f
     });
 }
 
