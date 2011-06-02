@@ -111,9 +111,11 @@ function follow(e){
 
 //    var myvalues = [10,8,5,7,4,4,1];
   //  $('.dynamicsparkline1').sparkline(myvalues) //why does this work here?
+    console.log(e.target.offset);
+    
     $('#tooltip').css({
-        top: (e.offsetY) + "px",
-        left: (e.offsetX + 15) + "px"
+        top: (e.layerY) + "px",
+        left: (e.layerX + 15) + "px"
     });
 }
 
