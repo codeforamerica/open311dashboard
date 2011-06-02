@@ -111,10 +111,9 @@ function follow(e){
 
 //    var myvalues = [10,8,5,7,4,4,1];
   //  $('.dynamicsparkline1').sparkline(myvalues) //why does this work here?
-    
     $('#tooltip').css({
-        top: (e.pageY) + "px",
-        left: (e.pageX + 15) + "px"
+        top: (e.offsetY) + "px",
+        left: (e.offsetX + 15) + "px"
     });
 }
 
@@ -197,7 +196,7 @@ map.add(po.image().url(po.url("http://ec2-184-73-13-139.compute-1.amazonaws.com:
 //http://ec2-184-73-13-139.compute-1.amazonaws.com:8888/1.0.0/open311_test/{Z}/{X}/{T}.png
 
 map.add(po.geoJson()
-    .url("sf_polygons_geojson.json")
+    .url("data/sf_polygons_geojson.json")
     .id("neighborhoods")
     .zoom(12)
     .tile(false)
@@ -208,7 +207,7 @@ map.add(po.geoJson()
     ));
 
 map.add(po.geoJson()
-    .url("scored_centerlines_sub.json")
+    .url("data/scored_centerlines_sub.json")
     .id("streets")
     .zoom(12)
     .tile(false)
