@@ -17,6 +17,24 @@
   <!-- CSS: implied media="all" -->
   <link rel="stylesheet" href="css/polymaps.css">
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="js/selectmenu/themes/base/jquery.ui.all.css">
+  <link rel="stylesheet" href="js/selectmenu/themes/base/jquery.ui.selectmenu.css">
+
+  	<style type="text/css"> 
+		/*demo styles*/
+		fieldset { border:0; margin: 20px 0 0 0;}	
+		label,select,.ui-select-menu { float: left; margin-right: 10px; }
+		select { width: 150px; }
+		
+		/*select with custom icons*/
+		body a.customicons { height: 2.8em;}
+		body .customicons li a, body a.customicons span.ui-selectmenu-status { line-height: 2em; padding-left: 30px !important; }
+		body .video .ui-selectmenu-item-icon, body .podcast .ui-selectmenu-item-icon, body .rss .ui-selectmenu-item-icon { height: 24px; width: 24px; }
+		body .video .ui-selectmenu-item-icon { background: url(images/24-video-square.png) 0 0 no-repeat; }
+		body .podcast .ui-selectmenu-item-icon { background: url(images/24-podcast-square.png) 0 0 no-repeat; }
+		body .rss .ui-selectmenu-item-icon { background: url(images/24-rss-square.png) 0 0 no-repeat; }
+	</style> 
+  
 </head>
 
 <body>
@@ -31,6 +49,17 @@
           Legend is here
         </div>
         <div id="neighborhood-stats">
+          	<form action="#"> 
+		<fieldset> 
+			<label for="speedA"></label> 
+			<select name="speedA" id="speedA"> 
+				<option value="0">Density</option> 
+				<option value="1">Response</option> 
+			</select> 
+		</fieldset> 
+	</form> 
+	
+	<div id="result_data"></div> 
           Neighborhood stats are here
         </div>
       </div>
@@ -58,5 +87,44 @@
   <script type="text/javascript" src="js/lib/polymaps.js"></script>
   <script type="text/javascript" src="js/lib/jquery.sparkline.min.js"></script>
   <script src="js/streets_ray_casting1.js"></script>
+  <script src="js/lib/jquery.ui.core.js"></script>
+  <script src="js/lib/jquery.ui.widget.js"></script>
+  <script src="js/lib/jquery.ui.position.js"></script>
+  <script src="js/lib/jquery.ui.selectmenu.js"></script>
+
+  	<script type="text/javascript">
+  	    var response_time_map = po.image().url(po.url("http://ec2-184-73-13-139.compute-1.amazonaws.com:8888/1.0.0/open311_test2_548404/{Z}/{X}/{T}.png"));
+		$(function(){		
+						
+			var speedA = $('select#speedA').selectmenu({
+				select: function(event, options) {
+				    //alert("hi");
+				    //alert(options.value); //0,1
+                    if(options.value == 1){
+				        map.remove(density_map);
+				        map.add(response_time_map);
+                    } else {
+                        map.remove(response_time_map);
+				        map.add(density_map);
+                    }
+				    /*
+					$.ajax({
+						data: "get_data=" + options.value,
+						type: "GET",
+						// you need a serversite script which checks the username
+						url: "ajax/get_data.php",
+						success: function(value) {
+							// add the returned HTML (the new select)
+							$("#result_data").html(value).find("select").selectmenu();
+							
+						}
+					});
+					*/
+				}
+			});
+			
+		});		
+		
+	</script> 
 </body>
 </html>

@@ -2,7 +2,7 @@ var features_coordinates = []; //dom ready
 var features_rect_bounds = [];
 var neighborhood_features = [];
 var highlighted = -1;
-var $neighborhoodStats = $('#neighborhood-stats');
+var $neighborhoodStats = $('#result_data');
 
 function insideRectBounds(feature_rect_bounds,mp_ll){
     var lon = mp_ll[0];
@@ -122,9 +122,9 @@ function follow(e){
     });
 }
 
-function setsparkline(score){
-      var myvalues = [10,8,5,7,4,4,score];
-      $('.dynamicsparkline1').sparkline(myvalues,{width:100}); //why does this work here?
+function setsparkline(score,months){
+      var monthly_values = [months[11],months[0],months[1],months[2],months[3],months[4]];
+      $('.dynamicsparkline1').sparkline(monthly_values,{width:100}); //why does this work here?
 }
 
 function onload(e){
@@ -133,18 +133,18 @@ function onload(e){
     var colorArray = ['#D92B04','#A61103'];
     
     for(var i = 0; i < e.features.length; i++) {
-        var streetMouseOver = function(score,index){
+        var streetMouseOver = function(score,months, index){
             return function(evt){
-              setStreetContent(evt,score,index);  
+              setStreetContent(evt,score,months,index);  
             };
-        }(e.features[i].data.properties.score,i);
+        }(e.features[i].data.properties.score,e.features[i].data.properties.months,i);
 
         e.features[i].element.onmouseover = streetMouseOver;
         e.features[i].element.onmousemove = follow;
         e.features[i].element.onmouseout = hideStreetContent;
         
 
-        if (e.features[i].data.properties.score < 8){
+        if (e.features[i].data.properties.score < 600){
             e.features[i].element.setAttribute("stroke",colorArray[0]);
             e.features[i].element.setAttribute("stroke-opacity", 0.75);
         } else {
@@ -157,7 +157,7 @@ function onload(e){
     }
 }
 
-function setStreetContent(e,score,index){
+function setStreetContent(e,score,months,index){
     //console.log('e',e);
 
     testNeighborhood(e);
@@ -167,7 +167,7 @@ function setStreetContent(e,score,index){
 
     $('#tooltip').html('<strong>'+score+'</strong></br><span class="dynamicsparkline1">Loading..</span>');
     $('#tooltip').show();
-    setsparkline(score);
+    setsparkline(score,months);
 }
 
 function hideStreetContent(e){
@@ -196,9 +196,15 @@ map.add(po.image()
     + "/38747/256/{Z}/{X}/{Y}.png")
     .hosts(["a.", "b.", "c.", ""])));
 
-map.add(po.image().url(po.url("http://ec2-184-73-13-139.compute-1.amazonaws.com:8888/1.0.0/open311_test/{Z}/{X}/{T}.png")));
+//var density_map = po.image().url(po.url("http://ec2-184-73-13-139.compute-1.amazonaws.com:8888/1.0.0/open311_test/{Z}/{X}/{T}.png"));
+var density_map = po.image().url(po.url("http://ec2-184-73-13-139.compute-1.amazonaws.com:8888/1.0.0/Open311_Density_Final/{Z}/{X}/{T}.png"));
+map.add(density_map);
 
 //http://ec2-184-73-13-139.compute-1.amazonaws.com:8888/1.0.0/open311_test/{Z}/{X}/{T}.png
+
+//http://ec2-184-73-13-139.compute-1.amazonaws.com:8888/1.0.0/open311_test2_548404/{z}/{x}/{y}
+
+//map.add(po.image().url(po.url("http://ec2-184-73-13-139.compute-1.amazonaws.com:8888/1.0.0/open311_test2_548404/{Z}/{X}/{T}.png")));
 
 map.add(po.geoJson()
     .url("data/sf_polygons_geojson.json")
@@ -212,7 +218,7 @@ map.add(po.geoJson()
     ));
 
 map.add(po.geoJson()
-    .url("data/scored_centerlines_sub.json")
+    .url("data/scored_centerlines_sub_final.json")
     .id("streets")
     .zoom(12)
     .tile(false)
