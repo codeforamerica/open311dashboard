@@ -23,6 +23,20 @@ body { height:100%; overflow:hidden; margin:0; padding:0; background:#fff;}
     stroke-width: 1.5px;
   }
 
+  #responses {
+     fill: rgba(255,255,255,0)
+  }
+
+  #responses path {
+    fill: #fff
+    stroke-width: 1.5px;
+  }
+
+  #responses path:hover {
+      stroke-width: 2px;
+      stroke: #fff
+  }
+
   /*
   #streets path {
     stroke: #f00;

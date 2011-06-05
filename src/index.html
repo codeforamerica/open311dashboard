@@ -9,7 +9,7 @@
 
   <title></title>
   <meta name="description" content="Visualization of San Francisco 311 data.">
-  <meta name="author" content="Michael Evans">
+  <meta name="author" content="Michael Lawrence Evans">
 
   <!-- Mobile viewport optimized: j.mp/bplateviewport -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -40,7 +40,7 @@
 <body>
   <div id="container">
     <header>
-      Header
+      San Francisco: 311 Requests in 2011
     </header>
 
     <div id="main" role="main">
@@ -93,7 +93,6 @@
   <script src="js/lib/jquery.ui.selectmenu.js"></script>
 
   	<script type="text/javascript">
-  	    var response_time_map = po.image().url(po.url("http://ec2-184-73-13-139.compute-1.amazonaws.com:8888/1.0.0/open311_test2_548404/{Z}/{X}/{T}.png"));
 		$(function(){		
 						
 			var speedA = $('select#speedA').selectmenu({
@@ -101,11 +100,19 @@
 				    //alert("hi");
 				    //alert(options.value); //0,1
                     if(options.value == 1){
-				        map.remove(density_map);
-				        map.add(response_time_map);
+				        //map.remove(density_map);
+				        //map.add(response_time_map);
+				        response_time_map.visible(true);
+				        response_lines.visible(true);
+				        density_map.visible(false);
+				        density_lines.visible(false);
                     } else {
-                        map.remove(response_time_map);
-				        map.add(density_map);
+                        //map.remove(response_time_map);
+				        //map.add(density_map);
+				        response_time_map.visible(false);
+				        response_lines.visible(false);
+				        density_map.visible(true);
+				        density_lines.visible(true);
                     }
 				    /*
 					$.ajax({
