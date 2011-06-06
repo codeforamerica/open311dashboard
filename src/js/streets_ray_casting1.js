@@ -49,11 +49,13 @@ function insidePolygon(mp_ll,index){
 };
 
 function onloadneighborhoods(e){
-    var lon = [];
-    var lat = [];
-    for(var i = 0; i < e.features.length; i++) {
+    var lon = [],
+      lat = [],
+      i;
+      
+    for(i = 0; i < e.features.length; i++) {
         neighborhood_features[i] = e.features[i];
-
+        
         features_coordinates[i] = e.features[i].data.geometry.coordinates;
         
         for (var j=0; j < e.features[i].data.geometry.coordinates.length; j++){
@@ -65,6 +67,14 @@ function onloadneighborhoods(e){
         e.features[i].element.onmouseover = testNeighborhood;
         e.features[i].element.onmousemove = testNeighborhood;
         e.features[i].element.onmouseout = testNeighborhood;
+    }
+
+    
+    for (i=0; i<neighborhood_features.length; i++) {
+      if (neighborhood_features[i].data.properties.rank === 1) {
+        updateNeighborhoodStats(neighborhood_features[i]);
+        break;
+      }
     }
 }
 
@@ -141,7 +151,7 @@ function setbarchart(score){
         //range = [100,200,300,200,100,20];
         //range = [11850,1816,976,500,329,881]
         //range = [9.3,7.5,6.88,6.2,5.79,6.7]
-        range = [93,75,68,62,57,67]
+        range = [93,75,68,62,57,67];
         
         if (score < 96){
             cMap = ["red","green","green","green","green","green"];
