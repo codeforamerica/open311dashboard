@@ -132,7 +132,10 @@ function setbarchart(score){
        //var monthly_values = [months[11],months[0],months[1],months[2],months[3],months[4]];
        //range is an array: range[0],range[1],range[2],range[3],range[4],range[5]
 
-        range = [100,200,300,200,100,20];
+        //range = [100,200,300,200,100,20];
+        //range = [11850,1816,976,500,329,881]
+        //range = [9.3,7.5,6.88,6.2,5.79,6.7]
+        range = [93,75,68,62,57,67]
         
         if (score < 96){
             cMap = ["red","green","green","green","green","green"];
@@ -148,12 +151,12 @@ function setbarchart(score){
             cMap = ["green","green","green","green","green","red"];
         };
        
-      $('.dynamicbarchart').sparkline(range,{type:'bar',width:100,colorMap:cMap}); //why does this work here?
+      $('.dynamicbarchart').sparkline(range,{type:'bar',width:100,barSpacing:1,barWidth:5,colorMap:cMap}); //why does this work here?
 }
 
 function onload(e){
     //var scores = [];
-    alert('onload');
+    //alert('onload');
 
     var colorArray = ['#D92B04','#A61103'];
     
@@ -199,8 +202,7 @@ function hideStreetContent(e){
 }
 
 function onresponseload(e){
-
-    alert('onresponseload');
+    //alert('onresponseload');
     var colorArray = ['#000000','#FF0000'];
     
     for(var i = 0; i < e.features.length; i++) {
@@ -231,7 +233,7 @@ function onresponseload(e){
 function setResponseContent(e,score,start_street,end_street,street){
     testNeighborhood(e);
 
-    $('#tooltip').html('<span>'+parseInt(start_street,10) +' - ' + parseInt(end_street,10) + ' ' + street+'</span><br><strong>'+score+'</strong></br>Total Requests <span class="dynamicbarchart">Loading..</span>');
+    $('#tooltip').html('<span>'+parseInt(start_street,10) +' - ' + parseInt(end_street,10) + ' ' + street+'</span><br><strong>Average Response Time: '+Math.floor(score/24)+' days</strong></br>Total Requests <span class="dynamicbarchart">Loading..</span>');
 
     $('#tooltip').show();
 
@@ -334,7 +336,7 @@ map.add(po.geoJson()
     ));
 */
 map.add(response_lines);
-//response_lines.visible(false);
+response_lines.visible(false);
 
 map.add(po.compass()
     .pan("none"));

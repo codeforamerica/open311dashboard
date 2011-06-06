@@ -67,7 +67,8 @@ body { height:100%; overflow:hidden; margin:0; padding:0; background:#fff;}
   }
   */
   #copy, #copy a {
-    color: #1AA398;
+    color: #050505;
+    text-decoration: none;
   }
 
   #tooltip {
