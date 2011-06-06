@@ -80,7 +80,19 @@ function onloadneighborhoods(e){
 
 function updateNeighborhoodStats(feature) {
 //'<strong>'+score+'</strong></br><span class="dynamicsparkline1">Loading..</span>'
-  $neighborhoodStats.html('<span>'+feature.data.properties.neighborhood+'</span><table><tr><th>Total</th><th>Rank</th></tr><tr><td>'+feature.data.properties.total+'</td><td>'+feature.data.properties.rank+'</td></tr></table><br><table><tr><th>Request</th><th>Total</th></tr><tr><td>'+feature.data.properties.top_five[4][0]+'</td><td>'+feature.data.properties.top_five[4][1]+'</td></tr><tr><td>'+feature.data.properties.top_five[3][0]+'</td><td>'+feature.data.properties.top_five[3][1]+'</td></tr><tr><td>'+feature.data.properties.top_five[2][0]+'</td><td>'+feature.data.properties.top_five[2][1]+'</td></tr><tr><td>'+feature.data.properties.top_five[1][0]+'</td><td>'+feature.data.properties.top_five[1][1]+'</td></tr><tr><td>'+feature.data.properties.top_five[0][0]+'</td><td>'+feature.data.properties.top_five[0][1]+'</td></tr></table>');
+  var i, 
+    html = '<div class="neighborhood-title">'+feature.data.properties.neighborhood+'</div>' + 
+      '<table><tr><th class="stats-key">Total</th><th class="stats-val">Rank</th></tr>' + 
+      '<tr class="total-stats-row"><td class="stats-key">'+feature.data.properties.total+'</td><td class="stats-val stats-rank">'+feature.data.properties.rank+'</td></tr>' + 
+      '<tr><th class="stats-key">Request</th><th class="stats-val">Total</th></tr>';
+    
+    for (i=feature.data.properties.top_five.length-1; i>=0; i--) {
+      html += '<tr><td class="stats-key">'+feature.data.properties.top_five[i][0]+'</td><td class="stats-val">'+feature.data.properties.top_five[i][1]+'</td></tr>';
+    }
+    
+    html += '</table>';
+
+  $neighborhoodStats.html(html);
 }
 
 function testNeighborhood(e){

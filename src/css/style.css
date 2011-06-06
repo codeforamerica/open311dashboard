@@ -1,11 +1,20 @@
-body { height:100%; overflow:hidden; margin:0; padding:0; background:#fff;}
+body { height:100%; overflow:hidden; margin:0; padding:0; background:#fff; font-family: helvetica, arial, clean, sans-serif;}
   #container header { height:50px; width:100%; }
   #container footer { height:50px; width:100%; position:absolute; bottom:0; }
   
     #main { position:absolute; top:50px; bottom:50px; left:0; right:0; }
-      #aside { position:absolute; top:0; bottom:0; width:300px; overflow-y:auto;}
+      #aside { position:absolute; top:0; bottom:0; width:260px; overflow-y:auto; padding:10px 20px;}
       #map { position:absolute; top:0; bottom:0; left:300px; right:0; }
-      
+
+  #result_data table { width:260px; }
+    #result_data tr td:first-child { width:230px; text-align:left;}
+    #result_data th { font-size:10px; text-align:left; color:#aaa; font-weight:bold; text-transform:uppercase; padding-top:10px; }
+    #result_data td { font-size:13px; text-align:right; }
+    
+    #result_data .total-stats-row td { font-size:16px; }
+    .stats-rank { font-weight:bold; text-align:center !important; }
+    .neighborhood-title { font-weight:bold; font-size:18px; margin-top:10px; }
+    
   .compass .back {
     fill: #fff;
   }
