@@ -20,20 +20,20 @@
   <link rel="stylesheet" href="js/selectmenu/themes/base/jquery.ui.all.css">
   <link rel="stylesheet" href="js/selectmenu/themes/base/jquery.ui.selectmenu.css">
 
-  	<style type="text/css"> 
-		/*demo styles*/
-		fieldset { border:0; margin: 20px 0 0 0;}	
-		label,select,.ui-select-menu { float: left; margin-right: 10px; }
-		select { width: 150px; }
-		
-		/*select with custom icons*/
-		body a.customicons { height: 2.8em;}
-		body .customicons li a, body a.customicons span.ui-selectmenu-status { line-height: 2em; padding-left: 30px !important; }
-		body .video .ui-selectmenu-item-icon, body .podcast .ui-selectmenu-item-icon, body .rss .ui-selectmenu-item-icon { height: 24px; width: 24px; }
-		body .video .ui-selectmenu-item-icon { background: url(images/24-video-square.png) 0 0 no-repeat; }
-		body .podcast .ui-selectmenu-item-icon { background: url(images/24-podcast-square.png) 0 0 no-repeat; }
-		body .rss .ui-selectmenu-item-icon { background: url(images/24-rss-square.png) 0 0 no-repeat; }
-	</style> 
+    <style type="text/css"> 
+    /*demo styles*/
+    fieldset { border:0; margin: 20px 0 0 0;}  
+    label,select,.ui-select-menu { float: left; margin-right: 10px; }
+    select { width: 150px; }
+    
+    /*select with custom icons*/
+    body a.customicons { height: 2.8em;}
+    body .customicons li a, body a.customicons span.ui-selectmenu-status { line-height: 2em; padding-left: 30px !important; }
+    body .video .ui-selectmenu-item-icon, body .podcast .ui-selectmenu-item-icon, body .rss .ui-selectmenu-item-icon { height: 24px; width: 24px; }
+    body .video .ui-selectmenu-item-icon { background: url(images/24-video-square.png) 0 0 no-repeat; }
+    body .podcast .ui-selectmenu-item-icon { background: url(images/24-podcast-square.png) 0 0 no-repeat; }
+    body .rss .ui-selectmenu-item-icon { background: url(images/24-rss-square.png) 0 0 no-repeat; }
+  </style> 
   
 </head>
 
@@ -46,23 +46,21 @@
     <div id="main" role="main">
       <div id="aside">
         <div id="neighborhood-stats">
-          	<form action="#"> 
-		<fieldset> 
-			<label for="speedA"></label> 
-			<select name="speedA" id="speedA"> 
-				<option value="0">Density</option> 
-				<option value="1">Response</option> 
-			</select> 
-		</fieldset> 
-	</form> 
-	
-	<div id="result_data"></div> 
-          Neighborhood stats are here
+          <fieldset> 
+            <label for="speedA"></label> 
+            <select name="speedA" id="speedA"> 
+              <option value="0">Density</option> 
+              <option value="1">Response</option> 
+            </select> 
+          </fieldset> 
+  
+          <div id="result_data"></div> 
         </div>
         <div id="legend">
           <img src="images/density_key.png" alt="Legend for Density Map" width="300" height="95"/>
         </div>
       </div>
+      
       <div id="map">
         <div id="tooltip" style="display:none;"></div> 
         <span id="copy">
@@ -92,48 +90,48 @@
   <script src="js/lib/jquery.ui.position.js"></script>
   <script src="js/lib/jquery.ui.selectmenu.js"></script>
 
-  	<script type="text/javascript">
-		$(function(){		
-						
-			var speedA = $('select#speedA').selectmenu({
-				select: function(event, options) {
-				    //alert("hi");
-				    //alert(options.value); //0,1
+    <script type="text/javascript">
+    $(function(){    
+            
+      var speedA = $('select#speedA').selectmenu({
+        select: function(event, options) {
+            //alert("hi");
+            //alert(options.value); //0,1
                     if(options.value == 1){
-				        //map.remove(density_map);
-				        //map.add(response_time_map);
-				        response_time_map.visible(true);
-				        response_lines.visible(true);
-				        density_map.visible(false);
-				        density_lines.visible(false);
-				        $('#legend').html('<img src="images/response_key.png" alt="Legend for Response Time Map" width="300" height="95"/>');
+                //map.remove(density_map);
+                //map.add(response_time_map);
+                response_time_map.visible(true);
+                response_lines.visible(true);
+                density_map.visible(false);
+                density_lines.visible(false);
+                $('#legend').html('<img src="images/response_key.png" alt="Legend for Response Time Map" width="300" height="95"/>');
                     } else {
                         //map.remove(response_time_map);
-				        //map.add(density_map);
-				        response_time_map.visible(false);
-				        response_lines.visible(false);
-				        density_map.visible(true);
-				        density_lines.visible(true);
-				        $('#legend').html('<img src="images/density_key.png" alt="Legend for Density Map" width="300" height="95"/>');
+                //map.add(density_map);
+                response_time_map.visible(false);
+                response_lines.visible(false);
+                density_map.visible(true);
+                density_lines.visible(true);
+                $('#legend').html('<img src="images/density_key.png" alt="Legend for Density Map" width="300" height="95"/>');
                     }
-				    /*
-					$.ajax({
-						data: "get_data=" + options.value,
-						type: "GET",
-						// you need a serversite script which checks the username
-						url: "ajax/get_data.php",
-						success: function(value) {
-							// add the returned HTML (the new select)
-							$("#result_data").html(value).find("select").selectmenu();
-							
-						}
-					});
-					*/
-				}
-			});
-			
-		});		
-		
-	</script> 
+            /*
+          $.ajax({
+            data: "get_data=" + options.value,
+            type: "GET",
+            // you need a serversite script which checks the username
+            url: "ajax/get_data.php",
+            success: function(value) {
+              // add the returned HTML (the new select)
+              $("#result_data").html(value).find("select").selectmenu();
+              
+            }
+          });
+          */
+        }
+      });
+      
+    });    
+    
+  </script> 
 </body>
 </html>
