@@ -3,7 +3,7 @@ body { height:100%; overflow:hidden; margin:0; padding:0; background:#fff; font-
   #container footer { height:50px; width:100%; position:absolute; bottom:0; }
   
     #main { position:absolute; top:50px; bottom:50px; left:0; right:0; }
-      #aside { position:absolute; top:0; bottom:0; width:260px; overflow-y:auto; padding:10px 20px;}
+      #aside { position:absolute; top:0; bottom:0; width:260px; overflow-y:auto; overflow-x:hidden; padding:10px 20px;}
       #map { position:absolute; top:0; bottom:0; left:300px; right:0; }
 
   #result_data table { width:260px; }
