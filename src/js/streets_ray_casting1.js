@@ -220,9 +220,14 @@ function setStreetContent(e,score,start_street,end_street,street,months,top_requ
 
 
     if (map.zoom() >= 14){
-    //$('#streets path:hover').css({'stroke':'#fff'});
+
+        if (score < 600){
+            score = 'Top 10%';
+        } else {
+            score = 'Top 5%';
+        }
     
-    $('#tooltip').html('<span>'+parseInt(start_street,10) +' - ' + parseInt(end_street,10) + ' ' + street+'</span><br><strong>'+score+'</strong></br>Total Requests <span class="dynamicsparkline1">Loading..</span> '+months[4] + ' in May<br><span>Top Request Type: '+top_request[1]+'</span>');
+    $('#tooltip').html('<span id="dyn_title">'+parseInt(start_street,10) +' - ' + parseInt(end_street,10) + ' ' + street+'</span><span id="dens_score"> / '+score+'</span><br><span id="sparkline_descrip">Total Requests <span class="dynamicsparkline1">Loading..</span><span id="month_color"> '+months[4] + ' </span>during May 2011<br></span><span id ="top_request">Top Request: <b>'+top_request[1]+'</b></span>');
 
     //$('#tooltip').show();
 
