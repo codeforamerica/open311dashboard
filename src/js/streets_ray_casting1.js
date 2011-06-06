@@ -4,6 +4,8 @@ var neighborhood_features = [];
 var highlighted = -1;
 var $neighborhoodStats = $('#result_data');
 
+var tool_tip_up = false;
+
 function insideRectBounds(feature_rect_bounds,mp_ll){
     var lon = mp_ll[0];
     var lat = mp_ll[1];
@@ -102,12 +104,16 @@ function handleHighlight(i){
 function highlightNeighborhood(i){
     //console.log('i',i);
     neighborhood_features[i].element.setAttribute('stroke-opacity','.75');
-    neighborhood_features[i].element.setAttribute('stroke-width','2px');
-    neighborhood_features[i].element.setAttribute('stroke','#fff');
+    neighborhood_features[i].element.setAttribute('stroke-width','1px');
+    //neighborhood_features[i].element.setAttribute('stroke','#3d3d3d');
+    neighborhood_features[i].element.setAttribute('stroke','#050505');
+    neighborhood_features[i].element.setAttribute('fill','#fff');
+    neighborhood_features[i].element.setAttribute('fill-opacity','.4');
 }
 
 function unhighlightNeighborhood(i){
     neighborhood_features[i].element.setAttribute('stroke-opacity','0');
+    neighborhood_features[i].element.setAttribute('fill-opacity','0');
     //neighborhood_features[i].setAttribute('stroke','#fff');
 };
 
@@ -115,7 +121,7 @@ function follow(e){
 
 //    var myvalues = [10,8,5,7,4,4,1];
   //  $('.dynamicsparkline1').sparkline(myvalues) //why does this work here?
-    console.log(e.target.offset);
+    //console.log(e.target.offset);
     
     $('#tooltip').css({
         top: (e.offsetY || e.layerY) + "px",
@@ -190,14 +196,35 @@ function setStreetContent(e,score,start_street,end_street,street,months,top_requ
 
     testNeighborhood(e);
 
+
+    if (map.zoom() >= 14){
+    //$('#streets path:hover').css({'stroke':'#fff'});
+    
     $('#tooltip').html('<span>'+parseInt(start_street,10) +' - ' + parseInt(end_street,10) + ' ' + street+'</span><br><strong>'+score+'</strong></br>Total Requests <span class="dynamicsparkline1">Loading..</span> '+months[4] + ' in May<br><span>Top Request Type: '+top_request[1]+'</span>');
-    $('#tooltip').show();
+
+    //$('#tooltip').show();
+
+    //setTimeout(function() { $('#tooltip').fadeIn(); }, 1000);
+    //console.log(tool_tip_up)
+    //if(tool_tip_up){
+        $('#tooltip').show();
+    } else {
+        //$('#streets path:hover').css({'stroke-width':'2px'});
+    }
+    //} else {
+        //$('#tooltip').show();
+      //  tool_tip_up = true;
+    //}
+    
     setsparkline(score,months);
 }
 
 function hideStreetContent(e){
     testNeighborhood(e);
-
+ 
+    //$('#tooltip').fadeOut(200);
+    //tool_tip_up = false;
+    //$('#streets path:hover').css({'stroke-width':'1.5px'});
     $('#tooltip').hide();
 }
 
@@ -254,7 +281,7 @@ var color = pv.Scale.linear()
 var map = po.map()
     .container(document.getElementById("map").appendChild(po.svg("svg")))
     .center({lat: 37.76, lon: -122.44})
-    .zoom(13)
+    .zoom(12)
     .zoomRange([12, 16])
     .add(po.interact());
 
@@ -264,20 +291,22 @@ map.add(po.image()
     + "/38747/256/{Z}/{X}/{Y}.png")
     .hosts(["a.", "b.", "c.", ""])));
 
-var response_time_map = po.image().url(po.url("http://ec2-184-73-13-139.compute-1.amazonaws.com:8888/1.0.0/open311_test2_548404/{Z}/{X}/{T}.png"));
+var response_time_map = po.image().url(po.url("http://ec2-184-73-13-139.compute-1.amazonaws.com:8888/1.0.0/open311_response_times_final/{Z}/{X}/{T}.png"));
 map.add(response_time_map);
 response_time_map.visible(false);
 
 var density_map = po.image().url(po.url("http://ec2-184-73-13-139.compute-1.amazonaws.com:8888/1.0.0/Open311_Density_Final/{Z}/{X}/{T}.png"));
 map.add(density_map);
 
-/*
-map.add(po.image()
+
+var context_map = po.image()
     .url(po.url("http://{S}tile.cloudmade.com"
     + "/1a193057ca6040fca68c4ae162bec2da"
-    + "/38933/256/{Z}/{X}/{Y}.png")
-    .hosts(["a.", "b.", "c.", ""])));
-*/
+    + "/38965/256/{Z}/{X}/{Y}.png")
+    .hosts(["a.", "b.", "c.", ""]));
+map.add(context_map);
+context_map.visible(false);
+
 var sf_neighborhoods = map.add(po.geoJson()
     .url("data/sf_polygons_geojson_final.json")
     .id("neighborhoods")
@@ -340,3 +369,10 @@ response_lines.visible(false);
 
 map.add(po.compass()
     .pan("none"));
+
+//var dispatch = po.dispatch(map);
+map.on("move", function(){if (map.zoom() >= 14) { 
+                                context_map.visible(true);
+                            } else { 
+                                context_map.visible(false);
+                            }});

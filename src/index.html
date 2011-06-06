@@ -45,9 +45,6 @@
 
     <div id="main" role="main">
       <div id="aside">
-        <div id="legend">
-          Legend is here
-        </div>
         <div id="neighborhood-stats">
           	<form action="#"> 
 		<fieldset> 
@@ -61,6 +58,9 @@
 	
 	<div id="result_data"></div> 
           Neighborhood stats are here
+        </div>
+        <div id="legend">
+          <img src="images/density_key.png" alt="Legend for Density Map" width="300" height="95"/>
         </div>
       </div>
       <div id="map">
@@ -106,6 +106,7 @@
 				        response_lines.visible(true);
 				        density_map.visible(false);
 				        density_lines.visible(false);
+				        $('#legend').html('<img src="images/response_key.png" alt="Legend for Response Time Map" width="300" height="95"/>');
                     } else {
                         //map.remove(response_time_map);
 				        //map.add(density_map);
@@ -113,6 +114,7 @@
 				        response_lines.visible(false);
 				        density_map.visible(true);
 				        density_lines.visible(true);
+				        $('#legend').html('<img src="images/density_key.png" alt="Legend for Density Map" width="300" height="95"/>');
                     }
 				    /*
 					$.ajax({

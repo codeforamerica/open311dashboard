@@ -11,7 +11,7 @@ body { height:100%; overflow:hidden; margin:0; padding:0; background:#fff;}
   }
 
   .compass .fore, .compass .chevron {
-    stroke: #ccc;
+    stroke: #7a7a7a;
   }
 
   #streets {
@@ -45,13 +45,14 @@ body { height:100%; overflow:hidden; margin:0; padding:0; background:#fff;}
     stroke-linecap: round;
   }
   */
+  
   #streets path:hover {
       stroke-width: 2px;
       stroke: #fff
   }
-
+    
   #neighborhoods {
-      fill: rgba(255,255,255,0)
+      fill: rgba(204,204,204,0)
   }
   /*
   #neighborhoods path{
@@ -72,12 +73,13 @@ body { height:100%; overflow:hidden; margin:0; padding:0; background:#fff;}
   }
 
   #tooltip {
-      -moz-box-shadow: 10px 10px 5px #888;
-      -webkit-box-shadow: 10px 10px 5px #888;
-      box-shadow: 10px 10px 5px #888;
+      -moz-box-shadow: 6px 6px 5px #6e6e6e;
+      -webkit-box-shadow: 6px 6px 5px #6e6e6e;
+      box-shadow: 6px 6px 5px #6e6e6e;
 
-      -moz-border-radius: 2px;
-      border-radius: 2px;
+      -moz-border-radius: 4px;
+      border-radius: 4px;
+      z-index: 10;
       background: rgba(255,255,255,.9);
       padding: 5px;
       border: 0px solid #ddd;
