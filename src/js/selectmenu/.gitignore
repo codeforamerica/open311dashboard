@@ -1,0 +1,9 @@
+build/dist
+docs
+.project
+*~
+*.diff
+*.patch
+.DS_Store
+*.db
+*.session

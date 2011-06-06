@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<title>Demo Page for jQuery UI selectmenu</title>
+	
+	<link type="text/css" href="../../themes/base/jquery.ui.all.css" rel="stylesheet" />
+	<link type="text/css" href="../../themes/base/jquery.ui.selectmenu.css" rel="stylesheet" />
+	<script type="text/javascript" src="../../jquery-1.5.1.js"></script>
+	<script type="text/javascript" src="../../ui/jquery.ui.core.js"></script>
+	<script type="text/javascript" src="../../ui/jquery.ui.widget.js"></script>
+	<script type="text/javascript" src="../../ui/jquery.ui.position.js"></script>
+	
+	<script type="text/javascript" src="../../ui/jquery.ui.selectmenu.js"></script>
+
+	<style type="text/css">
+		/*demo styles*/
+		body {font-size: 62.5%; font-family:"Verdana",sans-serif; }
+		fieldset { border:0; margin: 30px 0 0 0;}	
+		label,select,.ui-select-menu { float: left; margin-right: 10px; }
+		select { width: 200px; }
+		
+		/*select with custom icons*/
+		body a.customicons { height: 2.8em;}
+		body .customicons li a, body a.customicons span.ui-selectmenu-status { line-height: 2em; padding-left: 30px !important; }
+		body .video .ui-selectmenu-item-icon, body .podcast .ui-selectmenu-item-icon, body .rss .ui-selectmenu-item-icon { height: 24px; width: 24px; }
+		body .video .ui-selectmenu-item-icon { background: url(images/24-video-square.png) 0 0 no-repeat; }
+		body .podcast .ui-selectmenu-item-icon { background: url(images/24-podcast-square.png) 0 0 no-repeat; }
+		body .rss .ui-selectmenu-item-icon { background: url(images/24-rss-square.png) 0 0 no-repeat; }
+		
+		
+	</style>
+	<script type="text/javascript">	
+		$(function(){		
+		
+			// please note that option.event is always passed as a string, so do not test for true or 1 with if (options.value)
+			// see this issue for more information http://github.com/fnagel/jquery-ui/issues#issue/12
+			var speedA_depends = $('select#speedA_depends').selectmenu();		
+			var speedA = $('select#speedA').selectmenu({
+				select: function(event, options) {
+					if (options.value == "on") { 
+						speedA_depends.selectmenu('enable');
+					} else {
+						speedA_depends.selectmenu('disable');
+					}
+				}
+			});
+			
+			var speedB = $('select#speedB').selectmenu();			
+			$("#on").click(function(){
+				speedB.selectmenu("enable");
+			});			
+			$("#off").click(function(){
+				speedB.selectmenu("disable");
+			});			
+			
+			var speedB2 = $('select#speedB2').selectmenu();			
+			$("#optionSwitch").toggle(
+				function(){
+					speedB2.selectmenu("disable", 2);
+				}, 
+				function(){
+					speedB2.selectmenu("enable", 2);
+				}
+			);			
+			
+			var speedC = $('select#speedC').selectmenu();
+			
+			var speedD = $('select#speedD').selectmenu();		
+
+			var speedD2 = $('select#speedD2').selectmenu();				
+			$("#optgroupSwitch").toggle(
+				function(){
+					speedD2.selectmenu("disable", 1, "optgroup");
+				}, 
+				function(){
+					speedD2.selectmenu("enable", 1, "optgroup");
+				}
+			);			
+
+			var speedD3 = $('select#speedD3').selectmenu();		
+			
+			$('select').show();
+		});		
+		
+	</script>
+</head>
+<body>
+	<h2>Disable / Enable Testing</h2>
+	<form action="#">
+		<h3>API</h3>
+		<h4>selectmenu</h4>
+		<label for="speedA">Disabled by select callback (does not change original select)</label>
+		<fieldset>
+			<select name="speedA" id="speedA">
+				<option value="on">On</option>
+				<option value="off">Off</option>
+			</select>
+			<br />
+			<select name="speedA_depends" id="speedA_depends">
+				<option value="Slow">Slow</option>
+				<option value="Medium">Medium</option>
+				<option value="Fast">Fast</option>
+			</select>
+		</fieldset>		
+		<fieldset>
+			<label for="speedB">Disble whole select</label>
+			<select name="speedB" id="speedB">
+				<option value="Slower" selected="selected">Slower</option>
+				<option value="Slow">Slow</option>
+				<option value="Medium">Medium</option>
+				<option value="Fast">Fast</option>
+				<option value="Faster">Faster</option>
+			</select>
+			<a href="#nogo" id="on">on</a> | <a href="#nogo" id="off">off</a><br />
+		</fieldset>
+		
+		<h4>option</h4>
+		<fieldset>
+			<label for="speedD2">Disabled option by HTML</label>
+			<select name="speedB2" id="speedB2">
+				<option value="Slower" selected="selected">Slower</option>
+				<option value="Slow">Slow</option>
+				<option value="Medium">Medium</option>
+				<option value="Fast">Fast</option>
+				<option value="Faster">Faster</option>
+			</select>
+			Disable option 'Medium' <a href="#nogo" id="optionSwitch">on / off</a><br />
+		</fieldset>
+		
+		<h4>optgroup</h4>				
+		<fieldset>
+			<label for="speedD2">Disabled optgroup by HTML</label>
+			<select name="speedD2" id="speedD2">
+				<optgroup label="scripts">
+					<option value="jquery">jQuery.js</option>
+					<option value="jqueryui">ui.jQuery.js</option>
+				</optgroup>
+				<optgroup label="Label with space">
+					<option value="somefile">Some unknown file</option>
+					<option value="someotherfile">Some other file</option>
+				</optgroup>
+			</select>
+			Disable option 'Label with space' <a href="#nogo" id="optgroupSwitch">on / off</a><br />
+		</fieldset>
+		
+		
+		<h3>HTML</h3>
+		<fieldset>
+			<label for="speedC">Disabled by HTML (initial)</label>
+			<select disabled="disabled" name="speedC" id="speedC">
+				<option value="Slower" selected="selected">Slower</option>
+				<option value="Slow">Slow</option>
+				<option value="Medium">Medium</option>
+				<option value="Fast">Fast</option>
+				<option value="Faster">Faster</option>
+			</select>
+		</fieldset>
+				
+		<fieldset>
+			<label for="speedD">Disabled option by HTML</label>
+			<select name="speedD" id="speedD">
+				<option value="Slower" selected="selected">Slower</option>
+				<option value="Slow">Slow</option>
+				<option disabled="disabled"  value="Medium">Medium (disabled)</option>
+				<option value="Fast">Fast</option>
+				<option value="Faster">Faster</option>
+			</select>
+		</fieldset>
+				
+		<fieldset>
+			<label for="speedD3">Disabled optgroup by HTML</label>
+			<select name="speedD3" id="speedD3">
+				<optgroup label="scripts">
+					<option value="jquery">jQuery.js</option>
+					<option value="jqueryui">ui.jQuery.js</option>
+				</optgroup>
+				<optgroup disabled="disabled" label="Label with space">
+					<option value="somefile">Some unknown file</option>
+					<option value="someotherfile">Some other file</option>
+				</optgroup>
+			</select>
+		</fieldset>
+	</form>
+</body>
+</html>
