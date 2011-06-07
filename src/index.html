@@ -22,7 +22,7 @@
 
     <style type="text/css"> 
     /*demo styles*/
-    fieldset { border:0; margin: 20px 0 0 0;}  
+    fieldset { border:0; margin: 0px 0 0 0;}  
     label,select,.ui-select-menu { float: left; margin-right: 10px; }
     select { width: 150px; }
     
@@ -40,7 +40,7 @@
 <body>
   <div id="container">
     <header>
-      Open311 Dashboard<br>San Francisco: 311 Requests in 2011 YTD
+      <span id="header_title">Open311 Dashboard</span><br><span id="header_sub">San Francisco: 311 Requests in 2011 YTD</span>
     </header>
 
     <div id="main" role="main">
@@ -57,7 +57,7 @@
           <div id="result_data"></div> 
         </div>
         <div id="legend">
-          <!-- <img src="images/density_key.png" alt="Legend for Density Map" width="300" height="95"/> -->
+          <img src="images/density_key.png" alt="Legend for Density Map" width="300" height="62"/><div id="low">Low to High Density</div>
         </div>
       </div>
       
@@ -73,8 +73,8 @@
     </div>
 
     <footer>
-      <span id="footer_text">Code for America Made with</span><span id="footer_image"><a href="http://www.polymaps.org"><img src="images/p.png" alt="Polymaps" width="78" height="20"/></a></span>
-    </footer>
+      <a href="http://www.codeforamerica.org"><img class="clogo" src="images/cfa_logo_50px.png" alt="Code for America" width="105" height="50"/></a>
+      <a href="http://www.polymaps.org"><img class="plogo" src="images/p.png" alt="Polymaps" width="78" height="20"/></a>
   </div>
 
   <!-- Grab Google CDN's jQuery, with a protocol relative URL; fall back to local if necessary -->
@@ -104,7 +104,7 @@
                 response_lines.visible(true);
                 density_map.visible(false);
                 density_lines.visible(false);
-                $('#legend').html('<img src="images/response_key.png" alt="Legend for Response Time Map" width="300" height="95"/>');
+                $('#legend').html('<img src="images/response_key-1.png" alt="Legend for Response Time Map" width="300" height="62"/><div id="low">Fast to Slow Response</div>');
                     } else {
                         //map.remove(response_time_map);
                 //map.add(density_map);
@@ -112,7 +112,7 @@
                 response_lines.visible(false);
                 density_map.visible(true);
                 density_lines.visible(true);
-                $('#legend').html('<img src="images/density_key.png" alt="Legend for Density Map" width="300" height="95"/>');
+                $('#legend').html('<img src="images/density_key.png" alt="Legend for Density Map" width="300" height="62"/><div id="low">Low to High Density</div>');
                     }
             /*
           $.ajax({

@@ -227,7 +227,14 @@ function setStreetContent(e,score,start_street,end_street,street,months,top_requ
             score = 'Top 5%';
         }
     
-    $('#tooltip').html('<span id="dyn_title">'+parseInt(start_street,10) +' - ' + parseInt(end_street,10) + ' ' + street+'</span><span id="dens_score"> / '+score+'</span><br><span id="sparkline_descrip">Total Requests <span class="dynamicsparkline1">Loading..</span><span id="month_color"> '+months[4] + ' </span>during May 2011<br></span><span id ="top_request">Top Request: <b>'+top_request[1]+'</b></span>');
+    $('#tooltip').html('<span id="dyn_title">'+parseInt(start_street,10) +' - ' + parseInt(end_street,10) + ' ' + street+'</span>' +
+        '<div id="dens_score"> '+score+'</div>' +
+        '<div id="sparkline_descrip">Total Requests ' +
+            '<span class="dynamicsparkline1">Loading..</span>' +
+            '<span id="month_color"> '+months[4] + ' </span>' +
+            'during May 2011</span>' +
+        '</div>' +
+        '<div id="top_request">Top Request: <strong>'+top_request[1]+'</strong></div>');
 
     //$('#tooltip').show();
 
@@ -257,7 +264,7 @@ function hideStreetContent(e){
 
 function onresponseload(e){
     //alert('onresponseload');
-    var colorArray = ['#000000','#FF0000'];
+    var colorArray = ['#23677f','#15343f'];
     
     for(var i = 0; i < e.features.length; i++) {
         var streetMouseOver = function(score,start_street,end_street,street,index){
@@ -318,7 +325,7 @@ map.add(po.image()
     + "/38747/256/{Z}/{X}/{Y}.png")
     .hosts(["a.", "b.", "c.", ""])));
 
-var response_time_map = po.image().url(po.url("http://ec2-184-73-13-139.compute-1.amazonaws.com:8888/1.0.0/open311_response_times_final/{Z}/{X}/{T}.png"));
+var response_time_map = po.image().url(po.url("http://ec2-184-73-13-139.compute-1.amazonaws.com:8888/1.0.0/open311_response_times_final_54ea7f/{Z}/{X}/{T}.png"));
 map.add(response_time_map);
 response_time_map.visible(false);
 

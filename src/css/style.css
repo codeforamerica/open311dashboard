@@ -1,12 +1,10 @@
 body { height:100%; overflow:hidden; margin:0; padding:0; background:#fff; font-family: helvetica, arial, clean, sans-serif;}
   #container header { height:80px; width:100%; }
-  #container footer { height:50px; width:100%; position:absolute; bottom:0; }
+  #container footer { height:60px; width:100%; position:absolute; bottom:0; }
   
-    #main { position:absolute; top:80px; bottom:50px; left:0; right:0; }
-      #aside { position:absolute; top:0; bottom:0; width:260px; overflow-y:auto; overflow-x:hidden; padding:10px 20px;}
-      #map { position:absolute; top:0; bottom:0; left:300px; right:0;      -moz-box-shadow: 6px 6px 5px #6e6e6e;
-      -webkit-box-shadow: 6px 6px 5px #6e6e6e;
-      box-shadow: 6px 6px 5px #6e6e6e;}
+    #main { position:absolute; top:80px; bottom:60px; left:0; right:0; }
+      #aside { position:absolute; top:0; bottom:0; width:260px; overflow-y:auto; overflow-x:hidden; padding:20px 20px;}
+      #map { position:absolute; top:0; bottom:0; left:300px; right:0;      }
 
   #result_data table { width:260px; }
     #result_data tr td:first-child { width:230px; text-align:left;}
@@ -106,7 +104,8 @@ body { height:100%; overflow:hidden; margin:0; padding:0; background:#fff; font-
 
  footer {
     padding: 0px 20px 10px;
-    margin: -20px;
+    margin-bottom: -11px;
+    border-top: 1px solid #000000;
  }
 
  #footer_text {
@@ -133,8 +132,50 @@ footer img {
 
 #top_request{
     font-size: 12px;
+    margin-top: 4px;
 }
 
+fieldset{
+    padding: 0;
+    padding-bottom: 10px;
+}
 #dens_score{
     font-size:12px;
+    display: block;
+    width: 60px;
+    float: right;
+    background: rgba(207,207,207,.6);
+    text-align: center;
+    padding: 3px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+
+#low{
+    padding: 0px 4px;
+    font-size: 12px;
+    margin-top: -9px;
+}
+
+.plogo{
+    margin: 15px;
+}
+
+.clogo{
+    margin: 5px;
+}
+
+header{
+    border-bottom: 0px solid #cccccc;
+    padding: 15px 22px;
+}
+
+#header_title{
+    font-size: 30px;
+    color: #050505;
+}
+
+#header_sub{
+    font-size: 20px;
+    color: #3d3d3d;
 }
