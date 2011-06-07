@@ -294,10 +294,11 @@ function onresponseload(e){
 function setResponseContent(e,score,start_street,end_street,street){
     testNeighborhood(e);
 
-    $('#tooltip').html('<span>'+parseInt(start_street,10) +' - ' + parseInt(end_street,10) + ' ' + street+'</span><br><strong>Average Response Time: '+Math.floor(score/24)+' days</strong></br>Total Requests <span class="dynamicbarchart">Loading..</span>');
+    if (map.zoom() >= 14){
+        $('#tooltip').html('<span id="dyn_title">'+parseInt(start_street,10) +' - ' + parseInt(end_street,10) + ' ' + street+'</span><br><span id="top_request"><strong>Average Response Time: '+Math.floor(score/24)+' days</strong></span><br>Average Response Times <span class="dynamicbarchart">Loading..</span>');
 
-    $('#tooltip').show();
-
+        $('#tooltip').show();
+    };
     setbarchart(score);
 }
 

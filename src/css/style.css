@@ -158,11 +158,15 @@ fieldset{
 }
 
 .plogo{
-    margin: 15px;
+    margin: 14px 14px 14px 0;
 }
 
 .clogo{
     margin: 5px;
+}
+
+.ologo{
+    margin: 14px;
 }
 
 header{
