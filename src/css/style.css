@@ -169,6 +169,11 @@ fieldset{
     margin: 14px;
 }
 
+.gbar{
+    margin-left: 20px;
+    margin-top: 5px;
+}
+
 header{
     border-bottom: 0px solid #cccccc;
     padding: 15px 22px;
