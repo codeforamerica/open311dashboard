@@ -341,6 +341,7 @@ var map = po.map()
     .zoom(12)
     .zoomRange([12, 16])
     .add(po.interact());
+map.add(po.hash());
 //20760
 map.add(po.image()
     .url(po.url("http://{S}tile.cloudmade.com"
@@ -348,7 +349,7 @@ map.add(po.image()
     + "/38747/256/{Z}/{X}/{Y}.png")
     .hosts(["a.", "b.", "c.", ""])));
 
-var response_time_map = po.image().url(po.url("http://ec2-184-73-13-139.compute-1.amazonaws.com:8888/1.0.0/open311_response_times_final_54ea7f/{Z}/{X}/{T}.png"));
+var response_time_map = po.image().url(po.url("http://ec2-184-73-13-139.compute-1.amazonaws.com:8888/1.0.0/open311_response_times_final_345d14/{Z}/{X}/{T}.png"));
 map.add(response_time_map);
 response_time_map.visible(false);
 

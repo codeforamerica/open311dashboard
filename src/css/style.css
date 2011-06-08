@@ -142,9 +142,10 @@ fieldset{
 #dens_score{
     font-size:11px;
     display: block;
-    width: 60px;
+    width: 50px;
+    height:10px;
     float: right;
-    background: rgba(207,207,207,.6);
+    background: rgba(184,195,207,.6);
     text-align: center;
     padding: 3px;
     -moz-border-radius: 4px;
