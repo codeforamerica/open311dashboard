@@ -79,7 +79,6 @@ function onloadneighborhoods(e){
 }
 
 function updateNeighborhoodStats(feature) {
-//'<strong>'+score+'</strong></br><span class="dynamicsparkline1">Loading..</span>'
   var i, 
     html = '<div class="neighborhood-title">'+feature.data.properties.neighborhood+'</div>' + 
       '<table><tr><th class="stats-key">Total</th><th class="stats-val">Rank</th></tr>' + 
@@ -139,12 +138,7 @@ function unhighlightNeighborhood(i){
     //neighborhood_features[i].setAttribute('stroke','#fff');
 };
 
-function follow(e){
-
-//    var myvalues = [10,8,5,7,4,4,1];
-  //  $('.dynamicsparkline1').sparkline(myvalues) //why does this work here?
-    //console.log(e.target.offset);
-    
+function follow(e){    
     $('#tooltip').css({
         top: (e.offsetY || e.layerY) + "px",
         left: ((e.offsetX || e.layerX) + 15) + "px"
@@ -157,15 +151,9 @@ function setsparkline(score,months){
 }
 
 function setbarchart(score){
-       //var monthly_values = [months[11],months[0],months[1],months[2],months[3],months[4]];
        //range is an array: range[0],range[1],range[2],range[3],range[4],range[5]
 
-        //range = [100,200,300,200,100,20];
-        //range = [11850,1816,976,500,329,881]
-        //range = [9.3,7.5,6.88,6.2,5.79,6.7]
         range = [93,75,68,62,57,67];
-
-        //24,4,2,1,1,2
         
         if (score < 96){
             cMap = ["red","green","green","green","green","green"];
@@ -185,9 +173,6 @@ function setbarchart(score){
 }
 
 function onload(e){
-    //var scores = [];
-    //alert('onload');
-
     var colorArray = ['#D92B04','#A61103'];
     
     for(var i = 0; i < e.features.length; i++) {
@@ -238,19 +223,8 @@ function setStreetContent(e,score,start_street,end_street,street,months,top_requ
         '</div>' +
         '<div id="top_request">Top Request: <strong>'+top_request[1]+'</strong></div>');
 
-    //$('#tooltip').show();
-
-    //setTimeout(function() { $('#tooltip').fadeIn(); }, 1000);
-    //console.log(tool_tip_up)
-    //if(tool_tip_up){
         $('#tooltip').show();
-    } else {
-        //$('#streets path:hover').css({'stroke-width':'2px'});
     }
-    //} else {
-        //$('#tooltip').show();
-      //  tool_tip_up = true;
-    //}
     
     setsparkline(score,months);
 }
@@ -265,7 +239,6 @@ function hideStreetContent(e){
 }
 
 function onresponseload(e){
-    //alert('onresponseload');
     var colorArray = ['#23677f','#15343f'];
     
     for(var i = 0; i < e.features.length; i++) {
@@ -321,7 +294,6 @@ function setResponseContent(e,score,start_street,end_street,street){
 
         $('#tooltip').show();
     };
-    //setbarchart(score);
 }
 
 function hideResponseContent(e){
@@ -342,7 +314,7 @@ var map = po.map()
     .zoomRange([12, 16])
     .add(po.interact());
 map.add(po.hash());
-//20760
+
 map.add(po.image()
     .url(po.url("http://{S}tile.cloudmade.com"
     + "/1a193057ca6040fca68c4ae162bec2da"
@@ -353,7 +325,6 @@ var response_time_map = po.image().url(po.url("http://ec2-184-73-13-139.compute-
 map.add(response_time_map);
 response_time_map.visible(false);
 
-//var density_map = po.image().url(po.url("http://ec2-184-73-13-139.compute-1.amazonaws.com:8888/1.0.0/Open311_Density_Final/{Z}/{X}/{T}.png"));
 var density_map = po.image().url(po.url("http://ec2-184-73-13-139.compute-1.amazonaws.com:8888/1.0.0/Open311_Density_Final_f3fe0d/{Z}/{X}/{T}.png"));
 map.add(density_map);
 
@@ -372,9 +343,6 @@ var sf_neighborhoods = map.add(po.geoJson()
     .zoom(12)
     .tile(false)
     .on("load", onloadneighborhoods
-    //.on("load", po.stylist()
-    //.attr("stroke", function(d) { return color(d.properties.score).color; })
-    //.title(function(d) { return d.properties.STREET + ": " + d.properties.PCI + " PCI"; })
     ));
 
 var density_lines = po.geoJson()
@@ -383,22 +351,8 @@ var density_lines = po.geoJson()
     .zoom(12)
     .tile(false)
     .on("load", onload
-    //.on("load", po.stylist()
-    //.attr("stroke", function(d) { return color(d.properties.score).color; })
-    //.title(function(d) { return d.properties.STREET + ": " + d.properties.PCI + " PCI"; })
     );
-/*
-map.add(po.geoJson()
-    .url("data/scored_centerlines_sub_final.json")
-    .id("streets")
-    .zoom(12)
-    .tile(false)
-    .on("load", onload
-    //.on("load", po.stylist()
-    //.attr("stroke", function(d) { return color(d.properties.score).color; })
-    //.title(function(d) { return d.properties.STREET + ": " + d.properties.PCI + " PCI"; })
-    ));
-*/
+
 map.add(density_lines);
 var response_lines = po.geoJson()
     .url("data/avg_response_times_sub.json")
@@ -406,30 +360,14 @@ var response_lines = po.geoJson()
     .zoom(12)
     .tile(false)
     .on("load", onresponseload
-    //.on("load", po.stylist()
-    //.attr("stroke", function(d) { return color(d.properties.score).color; })
-    //.title(function(d) { return d.properties.STREET + ": " + d.properties.PCI + " PCI"; })
     );
 
-/*
-map.add(po.geoJson()
-    .url("data/average_response_times_sub.json")
-    .id("streets")
-    .zoom(12)
-    .tile(false)
-    .on("load", onresponseload
-    //.on("load", po.stylist()
-    //.attr("stroke", function(d) { return color(d.properties.score).color; })
-    //.title(function(d) { return d.properties.STREET + ": " + d.properties.PCI + " PCI"; })
-    ));
-*/
 map.add(response_lines);
 response_lines.visible(false);
 
 map.add(po.compass()
     .pan("none"));
 
-//var dispatch = po.dispatch(map);
 map.on("move", function(){if (map.zoom() >= 14) { 
                                 context_map.visible(true);
                             } else { 
