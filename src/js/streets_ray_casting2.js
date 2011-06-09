@@ -303,10 +303,6 @@ function hideResponseContent(e){
 
 var po = org.polymaps;
 
-var color = pv.Scale.linear()
-    .domain(0, 1, 5, 40)
-    .range("#F00", "#930", "#FC0", "#3B0");
-
 var map = po.map()
     .container(document.getElementById("map").appendChild(po.svg("svg")))
     .center({lat: 37.76, lon: -122.44})

@@ -21,7 +21,6 @@
   <link rel="stylesheet" href="js/selectmenu/themes/base/jquery.ui.selectmenu.css">
 
     <style type="text/css"> 
-    /*demo styles*/
     fieldset { border:0; margin: 0px 0 0 0;}  
     label,select,.ui-select-menu { float: left; margin-right: 10px; }
     select { width: 150px; }
@@ -34,9 +33,7 @@
     body .podcast .ui-selectmenu-item-icon { background: url(images/24-podcast-square.png) 0 0 no-repeat; }
     body .rss .ui-selectmenu-item-icon { background: url(images/24-rss-square.png) 0 0 no-repeat; }
   </style> 
-  
 </head>
-
 <body>
   <div id="container">
     <header>
@@ -60,7 +57,6 @@
           <img src="images/density_key.png" alt="Legend for Density Map" width="300" height="62"/><div id="low">Low to High Density</div>
         </div>
       </div>
-      
       <div id="map">
         <div id="tooltip" style="display:none;"></div> 
         <span id="copy">
@@ -71,7 +67,6 @@
         </span>
       </div>
     </div>
-
     <footer>
       <a href="http://www.codeforamerica.org"><img class="clogo" src="images/cfa_logo_50px.png" alt="Code for America" width="105" height="50"/></a>
       <a href="http://open311.org"><img class="ologo" src="images/open311_2.png" alt="Open311" width="83" height="27"/></a>
@@ -82,7 +77,7 @@
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.js"></script>
   <script>window.jQuery || document.write("<script src='js/libs/jquery-1.6.1.min.js'>\x3C/script>")</script>
   <script type="text/javascript" src="js/lib/jquery.qtip.pack.js"></script>
-  <script type="text/javascript" src="js/lib/protodata.js"></script>
+
   <script type="text/javascript" src="js/lib/polymaps.js"></script>
   <script type="text/javascript" src="js/lib/jquery.sparkline.min.js"></script>
   <script src="js/streets_ray_casting2.js"></script>
@@ -96,43 +91,22 @@
             
       var speedA = $('select#speedA').selectmenu({
         select: function(event, options) {
-            //alert("hi");
-            //alert(options.value); //0,1
-                    if(options.value == 1){
-                //map.remove(density_map);
-                //map.add(response_time_map);
-                response_time_map.visible(true);
-                response_lines.visible(true);
-                density_map.visible(false);
-                density_lines.visible(false);
-                $('#legend').html('<img src="images/response_key-1.png" alt="Legend for Response Time Map" width="300" height="62"/><div id="low">Fast to Slow Response</div>');
-                    } else {
-                        //map.remove(response_time_map);
-                //map.add(density_map);
-                response_time_map.visible(false);
-                response_lines.visible(false);
-                density_map.visible(true);
-                density_lines.visible(true);
-                $('#legend').html('<img src="images/density_key.png" alt="Legend for Density Map" width="300" height="62"/><div id="low">Low to High Density</div>');
-                    }
-            /*
-          $.ajax({
-            data: "get_data=" + options.value,
-            type: "GET",
-            // you need a serversite script which checks the username
-            url: "ajax/get_data.php",
-            success: function(value) {
-              // add the returned HTML (the new select)
-              $("#result_data").html(value).find("select").selectmenu();
-              
-            }
-          });
-          */
+                if(options.value == 1){
+                    response_time_map.visible(true);
+                    response_lines.visible(true);
+                    density_map.visible(false);
+                    density_lines.visible(false);
+                    $('#legend').html('<img src="images/response_key-1.png" alt="Legend for Response Time Map" width="300" height="62"/><div id="low">Fast to Slow Response</div>');
+                } else {
+                    response_time_map.visible(false);
+                    response_lines.visible(false);
+                    density_map.visible(true);
+                    density_lines.visible(true);
+                    $('#legend').html('<img src="images/density_key.png" alt="Legend for Density Map" width="300" height="62"/><div id="low">Low to High Density</div>');
+                }
         }
       });
-      
     });    
-    
   </script> 
 </body>
 </html>
