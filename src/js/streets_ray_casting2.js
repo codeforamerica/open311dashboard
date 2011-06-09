@@ -282,10 +282,10 @@ function onresponseload(e){
 
         if (e.features[i].data.properties.response_time < 480){
             e.features[i].element.setAttribute("stroke",colorArray[0]);
-            e.features[i].element.setAttribute("stroke-opacity", 0.75);
+            e.features[i].element.setAttribute("stroke-opacity", 0.65);
         } else {
             e.features[i].element.setAttribute("stroke",colorArray[1]);
-            e.features[i].element.setAttribute("stroke-opacity", 0.8);
+            e.features[i].element.setAttribute("stroke-opacity", 0.7);
         }
 
 
@@ -353,7 +353,8 @@ var response_time_map = po.image().url(po.url("http://ec2-184-73-13-139.compute-
 map.add(response_time_map);
 response_time_map.visible(false);
 
-var density_map = po.image().url(po.url("http://ec2-184-73-13-139.compute-1.amazonaws.com:8888/1.0.0/Open311_Density_Final/{Z}/{X}/{T}.png"));
+//var density_map = po.image().url(po.url("http://ec2-184-73-13-139.compute-1.amazonaws.com:8888/1.0.0/Open311_Density_Final/{Z}/{X}/{T}.png"));
+var density_map = po.image().url(po.url("http://ec2-184-73-13-139.compute-1.amazonaws.com:8888/1.0.0/Open311_Density_Final_f3fe0d/{Z}/{X}/{T}.png"));
 map.add(density_map);
 
 
