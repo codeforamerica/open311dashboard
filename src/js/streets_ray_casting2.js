@@ -143,6 +143,15 @@ function unhighlightNeighborhood(i){
 };
 
 function follow(e){    
+    /*
+    $('#tooltip').css({
+        top: (e.offsetY || e.layerY) + "px",
+        left: ((e.offsetX || e.layerX) + 15) + "px"
+    });
+    */
+
+    //if x + width of tooltip >= 980 --> max out left
+    //else e.offsetX
 
     if ($('select#speedA option:selected').text() === "Density"){
         $('#tooltip').css({
@@ -154,6 +163,7 @@ function follow(e){
 
     if ($('select#speedA option:selected').text() === "Response"){
         $('#tooltip').css({
+            width: "185px",
             top: ((e.offsetY || e.layerY) + 30) + "px",
             left: (-15+((e.offsetX || e.layerX)) - ((((e.offsetX || e.layerX))/(980))*300)) + "px"
         });
