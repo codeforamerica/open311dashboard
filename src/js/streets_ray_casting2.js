@@ -54,6 +54,10 @@ function onloadneighborhoods(e){
       i;
       
     for(i = 0; i < e.features.length; i++) {
+        //new
+        e.features[i].element.setAttribute('fill','#fff');
+        e.features[i].element.setAttribute('fill-opacity','0');
+        
         neighborhood_features[i] = e.features[i];
         
         features_coordinates[i] = e.features[i].data.geometry.coordinates;
@@ -140,9 +144,20 @@ function unhighlightNeighborhood(i){
 
 function follow(e){    
     $('#tooltip').css({
-        top: (e.offsetY || e.layerY) + "px",
-        left: ((e.offsetX || e.layerX) + 15) + "px"
+        width: "300px",
+        top: ((e.offsetY || e.layerY) + 30) + "px",
+        left: (-15+((e.offsetX || e.layerX)) - ((((e.offsetX || e.layerX))/(980))*300)) + "px"
     });
+
+    
+
+    //x - (fraction)*(width of tooltip)
+    //x - (x/width of map)*(width of tooltip)
+    //x - (x/980)*280
+    
+    console.log(e.offsetX || e.layerX);
+    console.log($('#map').width());
+    console.log($('#tooltip').width());
 }
 
 function setsparkline(score,months){
@@ -173,9 +188,15 @@ function setbarchart(score){
 }
 
 function onload(e){
+
+    console.log('href location: ' + window.location.href);
+
     var colorArray = ['#D92B04','#A61103'];
     
     for(var i = 0; i < e.features.length; i++) {
+        //new
+        e.features[i].element.setAttribute('fill-opacity',0);
+    
         var streetMouseOver = function(score,start_street,end_street,street,months,top_request,index){
             return function(evt){
               setStreetContent(evt,score,start_street,end_street,street,months,top_request,index);  
@@ -242,6 +263,9 @@ function onresponseload(e){
     var colorArray = ['#23677f','#15343f'];
     
     for(var i = 0; i < e.features.length; i++) {
+
+        e.features[i].element.setAttribute('fill-opacity',0);
+    
         var streetMouseOver = function(score,start_street,end_street,street,index){
             return function(evt){
               setResponseContent(evt,score,start_street,end_street,street,index);  
