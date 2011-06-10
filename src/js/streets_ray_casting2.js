@@ -143,11 +143,31 @@ function unhighlightNeighborhood(i){
 };
 
 function follow(e){    
+
+    if ($('select#speedA option:selected').text() === "Density"){
+        $('#tooltip').css({
+            width: "300px",
+            top: ((e.offsetY || e.layerY) + 30) + "px",
+            left: (-15+((e.offsetX || e.layerX)) - ((((e.offsetX || e.layerX))/(980))*300)) + "px"
+        });
+    }
+
+    if ($('select#speedA option:selected').text() === "Response"){
+    alert('hi');
+        $('#tooltip').css({
+            top: ((e.offsetY || e.layerY) + 30) + "px",
+            left: (-15+((e.offsetX || e.layerX)) - ((((e.offsetX || e.layerX))/(980))*300)) + "px"
+        });
+    }
+
+
+    /*
     $('#tooltip').css({
         width: "300px",
         top: ((e.offsetY || e.layerY) + 30) + "px",
         left: (-15+((e.offsetX || e.layerX)) - ((((e.offsetX || e.layerX))/(980))*300)) + "px"
     });
+    */
 
     
 

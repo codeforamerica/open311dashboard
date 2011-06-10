@@ -94,7 +94,6 @@ body { height:100%; overflow:hidden; margin:0; padding:0; background:#fff; font-
       border: 0px solid #ddd;
       position: absolute;
       font-family:"Helvetica Neue", Arial, Helvetica, sans-serif
-      width: 300px;
   }
 
  #dyn_title {
