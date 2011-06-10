@@ -153,7 +153,6 @@ function follow(e){
     }
 
     if ($('select#speedA option:selected').text() === "Response"){
-    alert('hi');
         $('#tooltip').css({
             top: ((e.offsetY || e.layerY) + 30) + "px",
             left: (-15+((e.offsetX || e.layerX)) - ((((e.offsetX || e.layerX))/(980))*300)) + "px"
