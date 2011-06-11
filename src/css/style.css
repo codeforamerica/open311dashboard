@@ -1,0 +1,190 @@
+body { height:100%; overflow:hidden; margin:0; padding:0; background:#fff; font-family: helvetica, arial, clean, sans-serif;}
+  #container header { height:80px; width:100%; }
+  #container footer { height:60px; width:100%; position:absolute; bottom:0; }
+  
+    #main { position:absolute; top:80px; bottom:60px; left:0; right:0; }
+      #aside { position:absolute; top:0; bottom:0; width:260px; overflow-y:auto; overflow-x:hidden; padding:20px 20px;}
+      #map { position:absolute; top:0; bottom:0; left:300px; right:0;      }
+
+  #result_data table { width:260px; }
+    #result_data tr td:first-child { width:230px; text-align:left;}
+    #result_data th { font-size:10px; text-align:left; color:#aaa; font-weight:bold; text-transform:uppercase; padding-top:10px; }
+    #result_data td { font-size:13px; text-align:right; }
+    
+    #result_data .total-stats-row td { font-size:16px; }
+    .stats-rank { font-weight:bold; text-align:center !important; }
+    .neighborhood-title { font-weight:bold; font-size:18px; margin-top:10px; }
+    
+  .compass .back {
+    fill: #fff;
+  }
+
+  .compass .fore, .compass .chevron {
+    stroke: #7a7a7a;
+  }
+
+  #streets {
+      fill: rgba(255,255,255,0)
+  }
+
+  #streets path {
+    fill: #fff
+    stroke-width: 1.5px;
+  }
+
+  #responses {
+     fill: rgba(255,255,255,0)
+  }
+
+  #responses path {
+    fill: #fff
+    stroke-width: 1.5px;
+  }
+
+  #responses path:hover {
+      stroke-width: 2px;
+      stroke: #fff
+  }
+
+  /*
+  #streets path {
+    stroke: #f00;
+    fill: #fff
+    stroke-width: 1.5px;
+    stroke-linecap: round;
+  }
+  */
+  
+  #streets path:hover {
+      stroke-width: 2px;
+      stroke: #fff
+  }
+    
+  #neighborhoods {
+      fill: rgba(204,204,204,0)
+  }
+  /*
+  #neighborhoods path{
+    stroke: rgba(0,0,0,.75);
+    stroke-width: 2px;
+    stroke-linecap: round;
+  }
+  */
+  /*
+  #neighborhoods path:hover {
+      stroke: rgba(255,255,255,.75);
+      stroke-width: 2px;
+  }
+  */
+  #copy, #copy a {
+    color: #050505;
+    text-decoration: none;
+  }
+
+  #tooltip {
+      -moz-box-shadow: 6px 6px 5px #6e6e6e;
+      -webkit-box-shadow: 6px 6px 5px #6e6e6e;
+      box-shadow: 6px 6px 5px #6e6e6e;
+
+      -moz-border-radius: 4px;
+      border-radius: 4px;
+      z-index: 10;
+      background: rgba(255,255,255,.9);
+      padding: 15px;
+      border: 0px solid #ddd;
+      position: absolute;
+      font-family:"Helvetica Neue", Arial, Helvetica, sans-serif
+  }
+
+ #dyn_title {
+      font-weight: bold;
+      font-size: 14px;
+ }
+
+ footer {
+    padding: 0px 20px 10px;
+    margin-bottom: -11px;
+    border-top: 1px solid #000000;
+ }
+
+ #footer_text {
+    /*
+    display: block;
+    float: right;
+    */
+    font-size:13px;
+    padding: 10px 0px 10px 10px;
+ }
+
+footer img {
+    vertical-align: -39%;
+}
+
+#sparkline_descrip {
+    font-size: 12px;
+    padding-top: 10px;
+}
+
+#month_color {
+    color: #990000;
+}
+
+#top_request{
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+fieldset{
+    padding: 0;
+    padding-bottom: 10px;
+}
+#dens_score{
+    font-size:11px;
+    display: block;
+    width: 50px;
+    height:12px;
+    float: right;
+    background: rgba(184,195,207,.6);
+    text-align: center;
+    padding: 3px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+
+#low{
+    padding: 0px 4px;
+    font-size: 12px;
+    margin-top: -9px;
+}
+
+.plogo{
+    margin: 14px 14px 14px 0;
+}
+
+.clogo{
+    margin: 5px;
+}
+
+.ologo{
+    margin: 14px;
+}
+
+.gbar{
+    margin-left: 20px;
+    margin-top: 5px;
+}
+
+header{
+    border-bottom: 0px solid #cccccc;
+    padding: 15px 22px;
+}
+
+#header_title{
+    font-size: 30px;
+    color: #050505;
+}
+
+#header_sub{
+    font-size: 20px;
+    color: #3d3d3d;
+}

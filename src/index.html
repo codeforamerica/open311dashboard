@@ -1,0 +1,114 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+
+  <!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame
+       Remove this if you use the .htaccess -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+  <title>Open311 Dashboard</title>
+  <meta name="description" content="Visualization of San Francisco 311 data.">
+  <meta name="author" content="Michael Lawrence Evans">
+
+  <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- CSS: implied media="all" -->
+  <link rel="stylesheet" href="css/polymaps.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="js/selectmenu/themes/base/jquery.ui.all.css">
+  <link rel="stylesheet" href="js/selectmenu/themes/base/jquery.ui.selectmenu.css">
+
+    <style type="text/css"> 
+    fieldset { border:0; margin: 0px 0 0 0;}  
+    label,select,.ui-select-menu { float: left; margin-right: 10px; }
+    select { width: 150px; }
+    
+    /*select with custom icons*/
+    body a.customicons { height: 2.8em;}
+    body .customicons li a, body a.customicons span.ui-selectmenu-status { line-height: 2em; padding-left: 30px !important; }
+    body .video .ui-selectmenu-item-icon, body .podcast .ui-selectmenu-item-icon, body .rss .ui-selectmenu-item-icon { height: 24px; width: 24px; }
+    body .video .ui-selectmenu-item-icon { background: url(images/24-video-square.png) 0 0 no-repeat; }
+    body .podcast .ui-selectmenu-item-icon { background: url(images/24-podcast-square.png) 0 0 no-repeat; }
+    body .rss .ui-selectmenu-item-icon { background: url(images/24-rss-square.png) 0 0 no-repeat; }
+  </style> 
+</head>
+<body>
+  <div id="container">
+    <header>
+      <span id="header_title">Open311 Dashboard</span><br><span id="header_sub">San Francisco: 311 Requests in 2011 YTD</span>
+    </header>
+
+    <div id="main" role="main">
+      <div id="aside">
+        <div id="neighborhood-stats">
+          <fieldset> 
+            <label for="speedA"></label> 
+            <select name="speedA" id="speedA"> 
+              <option value="0">Density</option> 
+              <option value="1">Response</option> 
+            </select> 
+          </fieldset> 
+  
+          <div id="result_data"></div> 
+        </div>
+        <div id="legend">
+          <img src="images/density_key.png" alt="Legend for Density Map" width="300" height="62"/><div id="low">Low to High Density</div>
+        </div>
+      </div>
+      <div id="map">
+        <div id="tooltip" style="display:none;"></div> 
+        <span id="copy">
+          Map Imagery &copy;
+          <a href="http://www.cloudmade.com/">CloudMade</a>. Map Data
+          <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>
+          <a href="http://www.openstreetmap.org/">OpenStreetMap</a>.
+        </span>
+      </div>
+    </div>
+    <footer>
+      <a href="http://www.codeforamerica.org"><img class="clogo" src="images/cfa_logo_50px.png" alt="Code for America" width="105" height="50"/></a>
+      <a href="http://open311.org"><img class="ologo" src="images/open311_2.png" alt="Open311" width="83" height="27"/></a>
+      <a href="http://www.polymaps.org"><img class="plogo" src="images/p.png" alt="Polymaps" width="78" height="20"/></a>
+   </footer>
+  </div>
+
+  <!-- Grab Google CDN's jQuery, with a protocol relative URL; fall back to local if necessary -->
+  <!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.js"></script> -->
+  <script src="js/lib/jquery-1.6.1.min.js"></script>
+  <!-- <script>window.jQuery || document.write("<script src='js/libs/jquery-1.6.1.min.js'>\x3C/script>")</script> -->
+  <script type="text/javascript" src="js/lib/jquery.qtip.pack.js"></script>
+
+  <script type="text/javascript" src="js/lib/polymaps.js"></script>
+  <script type="text/javascript" src="js/lib/jquery.sparkline.min.js"></script>
+  <script src="js/streets_ray_casting2.js"></script>
+  <script src="js/lib/jquery.ui.core.js"></script>
+  <script src="js/lib/jquery.ui.widget.js"></script>
+  <script src="js/lib/jquery.ui.position.js"></script>
+  <script src="js/lib/jquery.ui.selectmenu.js"></script>
+
+    <script type="text/javascript">
+    $(function(){    
+            
+      var speedA = $('select#speedA').selectmenu({
+        select: function(event, options) {
+                if(options.value == 1){
+                    response_time_map.visible(true);
+                    response_lines.visible(true);
+                    density_map.visible(false);
+                    density_lines.visible(false);
+                    $('#legend').html('<img src="images/response_key-1.png" alt="Legend for Response Time Map" width="300" height="62"/><div id="low">Fast to Slow Response</div>');
+                } else {
+                    response_time_map.visible(false);
+                    response_lines.visible(false);
+                    density_map.visible(true);
+                    density_lines.visible(true);
+                    $('#legend').html('<img src="images/density_key.png" alt="Legend for Density Map" width="300" height="62"/><div id="low">Low to High Density</div>');
+                }
+        }
+      });
+    });    
+  </script> 
+</body>
+</html>

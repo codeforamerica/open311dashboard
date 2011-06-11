@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Open311</title>
+    	<link rel="stylesheet" type="text/css" href="jquery.qtip.css" />
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript" src="js/lib/jquery.qtip.pack.js"></script>
+    <script type="text/javascript" src="js/lib/protodata.js"></script>
+    <script type="text/javascript" src="js/lib/polymaps.js"></script>
+    <script type="text/javascript" src="js/lib/jquery.sparkline.min.js"></script>
+    <style type="text/css">
+
+@import url("css/polymaps.css");
+
+body {
+  background: #fff;
+}
+
+.compass .back {
+  fill: #fff;
+}
+
+.compass .fore, .compass .chevron {
+  stroke: #ccc;
+}
+
+#streets {
+    fill: rgba(255,255,255,0)
+}
+
+#streets path {
+  fill: #fff
+  stroke-width: 1.5px;
+}
+
+/*
+#streets path {
+  stroke: #f00;
+  fill: #fff
+  stroke-width: 1.5px;
+  stroke-linecap: round;
+}
+*/
+#streets path:hover {
+    stroke-width: 2px;
+    stroke: #fff
+}
+
+#neighborhoods {
+    fill: rgba(255,255,255,0)
+}
+/*
+#neighborhoods path{
+  stroke: rgba(0,0,0,.75);
+  stroke-width: 2px;
+  stroke-linecap: round;
+}
+*/
+/*
+#neighborhoods path:hover {
+    stroke: rgba(255,255,255,.75);
+    stroke-width: 2px;
+}
+*/
+#copy, #copy a {
+  color: #1AA398;
+}
+
+#tooltip {
+    -moz-box-shadow: 10px 10px 5px #888;
+    -webkit-box-shadow: 10px 10px 5px #888;
+    box-shadow: 10px 10px 5px #888;
+    
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    background: rgba(255,255,255,.9);
+    padding: 5px;
+    border: 0px solid #ddd;
+    position: absolute;
+    font-family:"Helvetica Neue", Arial, Helvetica, sans-serif
+}
+    </style>
+    <script type="text/javascript">
+        $(function() {
+        var myvalues = [10,8,5,7,4,4,1];
+        $('.dynamicsparkline').sparkline(myvalues);
+        $('.dynamicsparkline1').sparkline(myvalues);
+    });
+    </script>
+  </head>
+  <body id="map">
+    <div id="tooltip" style="display:none;"></div> 
+    <script type="text/javascript" src="js/streets_ray_casting1.js"></script>
+    <span class="dynamicsparkline">Loading..</span>
+    <span id="copy">
+      &copy; 2010
+      <a href="http://www.cloudmade.com/">CloudMade</a>,
+      <a href="http://www.openstreetmap.org/">OpenStreetMap</a> contributors,
+      <a href="http://creativecommons.org/licenses/by-sa/2.0/">CCBYSA</a>.
+    </span>
+  </body>
+</html>
