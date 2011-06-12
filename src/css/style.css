@@ -1,6 +1,6 @@
 body { height:100%; overflow:hidden; margin:0; padding:0; background:#fff; font-family: helvetica, arial, clean, sans-serif;}
-  #container header { height:80px; width:100%; }
-  #container footer { height:60px; width:100%; position:absolute; bottom:0; }
+  #container #header { height:80px; width:100%; }
+  #container #footer { height:60px; width:100%; position:absolute; bottom:0; }
   
     #main { position:absolute; top:80px; bottom:60px; left:0; right:0; }
       #aside { position:absolute; top:0; bottom:0; width:260px; overflow-y:auto; overflow-x:hidden; padding:20px 20px;}
@@ -101,7 +101,7 @@ body { height:100%; overflow:hidden; margin:0; padding:0; background:#fff; font-
       font-size: 14px;
  }
 
- footer {
+ #footer {
     padding: 0px 20px 10px;
     margin-bottom: -11px;
     border-top: 1px solid #000000;
@@ -116,7 +116,7 @@ body { height:100%; overflow:hidden; margin:0; padding:0; background:#fff; font-
     padding: 10px 0px 10px 10px;
  }
 
-footer img {
+#footer img {
     vertical-align: -39%;
 }
 
@@ -174,7 +174,7 @@ fieldset{
     margin-top: 5px;
 }
 
-header{
+#header{
     border-bottom: 0px solid #cccccc;
     padding: 15px 22px;
 }
