@@ -59,10 +59,11 @@ body { height:100%; overflow:hidden; margin:0; padding:0; background:#fff; font-
       stroke-width: 2px;
       stroke: #fff
   }
-    
+  /*  
   #neighborhoods {
       fill: rgba(204,204,204,0)
   }
+  */
   /*
   #neighborhoods path{
     stroke: rgba(0,0,0,.75);

@@ -55,10 +55,11 @@ function onloadneighborhoods(e){
       
     for(i = 0; i < e.features.length; i++) {
         //new
-        e.features[i].element.setAttribute('fill','#fff');
-        e.features[i].element.setAttribute('fill-opacity','0');
+
         
         neighborhood_features[i] = e.features[i];
+        neighborhood_features[i].element.setAttribute('fill','#fff');
+        neighborhood_features[i].element.setAttribute('fill-opacity','0');
         
         features_coordinates[i] = e.features[i].data.geometry.coordinates;
         
@@ -123,10 +124,12 @@ function handleHighlight(i){
         updateNeighborhoodStats(neighborhood_features[i]);
     }
     highlighted = i;
+    console.log('highlighted',highlighted);
 
 };
-
+var count = 0;
 function highlightNeighborhood(i){
+    
     //console.log('i',i);
     neighborhood_features[i].element.setAttribute('stroke-opacity','.75');
     neighborhood_features[i].element.setAttribute('stroke-width','1px');
@@ -134,12 +137,24 @@ function highlightNeighborhood(i){
     neighborhood_features[i].element.setAttribute('stroke','#050505');
     neighborhood_features[i].element.setAttribute('fill','#fff');
     neighborhood_features[i].element.setAttribute('fill-opacity','.4');
+
+    //console.log(count,neighborhood_features[i].element.getAttribute('stroke-opacity'));
+    //count=count+1;
+
+    //sf_neighborhoods.visible(false);
+    //sf_neighborhoods.visible(true);
 }
 
 function unhighlightNeighborhood(i){
+    //console.log('i2',i);
     neighborhood_features[i].element.setAttribute('stroke-opacity','0');
     neighborhood_features[i].element.setAttribute('fill-opacity','0');
+
+   // neighborhood_features[i].element.setAttribute("display","none");
+    
     //neighborhood_features[i].setAttribute('stroke','#fff');
+    //console.log(count,neighborhood_features[i].element.getAttribute('stroke-opacity'));
+    //count=count+1;
 };
 
 function follow(e){    
@@ -184,9 +199,9 @@ function follow(e){
     //x - (x/width of map)*(width of tooltip)
     //x - (x/980)*280
     
-    console.log(e.offsetX || e.layerX);
-    console.log($('#map').width());
-    console.log($('#tooltip').width());
+    //console.log(e.offsetX || e.layerX);
+    //console.log($('#map').width());
+    //console.log($('#tooltip').width());
 }
 
 function setsparkline(score,months){
@@ -218,7 +233,7 @@ function setbarchart(score){
 
 function onload(e){
 
-    console.log('href location: ' + window.location.href);
+    //console.log('href location: ' + window.location.href);
 
     var colorArray = ['#D92B04','#A61103'];
     
@@ -386,13 +401,14 @@ var context_map = po.image()
 map.add(context_map);
 context_map.visible(false);
 
-var sf_neighborhoods = map.add(po.geoJson()
+var sf_neighborhoods = po.geoJson()
     .url("data/sf_polygons_geojson_final.json")
     .id("neighborhoods")
     .zoom(12)
     .tile(false)
     .on("load", onloadneighborhoods
-    ));
+    );
+map.add(sf_neighborhoods);
 
 var density_lines = po.geoJson()
     .url("data/scored_centerlines_sub_final.json")
