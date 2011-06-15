@@ -129,27 +129,36 @@ function handleHighlight(i){
 };
 var count = 0;
 function highlightNeighborhood(i){
-    
-    //console.log('i',i);
+    /*
+    console.log('i',i);
     neighborhood_features[i].element.setAttribute('stroke-opacity','.75');
     neighborhood_features[i].element.setAttribute('stroke-width','1px');
     //neighborhood_features[i].element.setAttribute('stroke','#3d3d3d');
     neighborhood_features[i].element.setAttribute('stroke','#050505');
     neighborhood_features[i].element.setAttribute('fill','#fff');
     neighborhood_features[i].element.setAttribute('fill-opacity','.4');
-
+    */
     //console.log(count,neighborhood_features[i].element.getAttribute('stroke-opacity'));
     //count=count+1;
 
     //sf_neighborhoods.visible(false);
     //sf_neighborhoods.visible(true);
+    if (i != 19 && i != 20 && i != 31 && i != 13){
+    neighborhood_features[i].element.setAttribute('style','stroke-width:1;stroke:#050505;stroke-opacity:.75;fill:#fff;fill-opacity:.4;');
+    }
+    //zoom or move the the map, unhighlight and set highlighted to -1
+    //moving outside some area, what's happening? print out lat and long of mouse to lat/long conversion
 }
 
 function unhighlightNeighborhood(i){
+    if(i!=19 && i !=20 && i != 31 && i != 13){
+    neighborhood_features[i].element.setAttribute('style','stroke-opacity:0;fill-opacity:0;');
+    }
     //console.log('i2',i);
+    /*
     neighborhood_features[i].element.setAttribute('stroke-opacity','0');
     neighborhood_features[i].element.setAttribute('fill-opacity','0');
-
+    */
    // neighborhood_features[i].element.setAttribute("display","none");
     
     //neighborhood_features[i].setAttribute('stroke','#fff');
@@ -169,11 +178,24 @@ function follow(e){
     //else e.offsetX
 
     if ($('select#speedA option:selected').text() === "Density"){
+        if (($('#map').width() - (e.offsetX || e.layerX)) < .61*$('#tooltip').width()){
         $('#tooltip').css({
             width: "300px",
             top: ((e.offsetY || e.layerY) + 30) + "px",
-            left: (-15+((e.offsetX || e.layerX)) - ((((e.offsetX || e.layerX))/(980))*300)) + "px"
+            //left: (-15+((e.offsetX || e.layerX)) - ((((e.offsetX || e.layerX))/(980))*300)) + "px"
+            //left: ((e.offsetX || e.layerX) + 15) + "px"
+            right: ($('#map').width() + .25*$('#tooltip').width()) + "px"
         });
+        } else {
+        $('#tooltip').css({
+            width: "300px",
+            top: ((e.offsetY || e.layerY) + 30) + "px",
+            //left: (-15+((e.offsetX || e.layerX)) - ((((e.offsetX || e.layerX))/(980))*300)) + "px"
+            //left: ((e.offsetX || e.layerX) + 15) + "px"
+            left: ((e.offsetX || e.layerX) - .5*$('#tooltip').width()) + "px"
+            //left: ((e.offsetX || e.layerX) + 15) + "px"
+        });
+        }
     }
 
     if ($('select#speedA option:selected').text() === "Response"){
