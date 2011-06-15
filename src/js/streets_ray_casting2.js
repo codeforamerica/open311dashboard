@@ -143,17 +143,17 @@ function highlightNeighborhood(i){
 
     //sf_neighborhoods.visible(false);
     //sf_neighborhoods.visible(true);
-    if (i != 19 && i != 20 && i != 31 && i != 13){
+
     neighborhood_features[i].element.setAttribute('style','stroke-width:1;stroke:#050505;stroke-opacity:.75;fill:#fff;fill-opacity:.4;');
-    }
+
     //zoom or move the the map, unhighlight and set highlighted to -1
     //moving outside some area, what's happening? print out lat and long of mouse to lat/long conversion
 }
 
 function unhighlightNeighborhood(i){
-    if(i!=19 && i !=20 && i != 31 && i != 13){
+
     neighborhood_features[i].element.setAttribute('style','stroke-opacity:0;fill-opacity:0;');
-    }
+
     //console.log('i2',i);
     /*
     neighborhood_features[i].element.setAttribute('stroke-opacity','0');
@@ -401,10 +401,12 @@ var map = po.map()
     .add(po.interact());
 map.add(po.hash());
 
+//38747
+//22677
 map.add(po.image()
     .url(po.url("http://{S}tile.cloudmade.com"
     + "/1a193057ca6040fca68c4ae162bec2da"
-    + "/38747/256/{Z}/{X}/{Y}.png")
+    + "/39534/256/{Z}/{X}/{Y}.png")
     .hosts(["a.", "b.", "c.", ""])));
 
 var response_time_map = po.image().url(po.url("http://ec2-184-73-13-139.compute-1.amazonaws.com:8888/1.0.0/open311_response_times_final_345d14/{Z}/{X}/{T}.png"));
