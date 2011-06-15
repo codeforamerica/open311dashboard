@@ -143,3 +143,8 @@ LOGGING = {
         },
     }
 }
+
+###
+# Local Settings
+###
+from settings_local import *
