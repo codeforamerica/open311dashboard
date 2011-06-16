@@ -95,6 +95,11 @@ def parse_requests_doc(stream):
     return (columns,values)
 
 def insert_data(requests):
+    '''
+    Takes the requests tuple, turns it into a dictionary, and saves it to the
+    Requests model in django.
+    '''
+
     columns,values = requests
 
     for i in range(len(values)):
