@@ -199,11 +199,24 @@ function follow(e){
     }
 
     if ($('select#speedA option:selected').text() === "Response"){
+        if (($('#map').width() - (e.offsetX || e.layerX)) < .75*$('#tooltip').width()){
         $('#tooltip').css({
             width: "185px",
             top: ((e.offsetY || e.layerY) + 30) + "px",
-            left: (-15+((e.offsetX || e.layerX)) - ((((e.offsetX || e.layerX))/(980))*300)) + "px"
+            //left: (-15+((e.offsetX || e.layerX)) - ((((e.offsetX || e.layerX))/(980))*300)) + "px"
+            //left: ((e.offsetX || e.layerX) + 15) + "px"
+            left: ($('#map').width() - $('#tooltip').width() - 50) + "px"
         });
+        } else {
+        $('#tooltip').css({
+            width: "185px",
+            top: ((e.offsetY || e.layerY) + 30) + "px",
+            //left: (-15+((e.offsetX || e.layerX)) - ((((e.offsetX || e.layerX))/(980))*300)) + "px"
+            //left: ((e.offsetX || e.layerX) + 15) + "px"
+            left: ((e.offsetX || e.layerX) - .5*$('#tooltip').width()) + "px"
+            //left: ((e.offsetX || e.layerX) + 15) + "px"
+        });
+        }
     }
 
 
