@@ -178,13 +178,13 @@ function follow(e){
     //else e.offsetX
 
     if ($('select#speedA option:selected').text() === "Density"){
-        if (($('#map').width() - (e.offsetX || e.layerX)) < .61*$('#tooltip').width()){
+        if (($('#map').width() - (e.offsetX || e.layerX)) < .65*$('#tooltip').width()){
         $('#tooltip').css({
             width: "300px",
             top: ((e.offsetY || e.layerY) + 30) + "px",
             //left: (-15+((e.offsetX || e.layerX)) - ((((e.offsetX || e.layerX))/(980))*300)) + "px"
             //left: ((e.offsetX || e.layerX) + 15) + "px"
-            right: ($('#map').width() + .25*$('#tooltip').width()) + "px"
+            left: ($('#map').width() - $('#tooltip').width() - 50) + "px"
         });
         } else {
         $('#tooltip').css({
