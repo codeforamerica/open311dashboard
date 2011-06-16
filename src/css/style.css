@@ -1,8 +1,8 @@
 body { height:100%; overflow:hidden; margin:0; padding:0; background:#fff; font-family: helvetica, arial, clean, sans-serif;}
   #container #header { height:80px; width:100%; }
-  #container #footer { height:60px; width:100%; position:absolute; bottom:0; }
+  #container #footer { height:0px; width:100%; position:absolute; bottom:0; }
   
-    #main { position:absolute; top:80px; bottom:60px; left:0; right:0; }
+    #main { position:absolute; top:80px; bottom:0px; left:0; right:0; }
       #aside { position:absolute; top:0; bottom:0; width:260px; overflow-y:auto; overflow-x:hidden; padding:20px 20px;}
       #map { position:absolute; top:0; bottom:0; left:300px; right:0;      }
 
@@ -163,11 +163,17 @@ fieldset{
 }
 
 .clogo{
-    margin: 5px;
+    margin: 260px 0px 20px 10px;
+/*	position: absolute;
+	left: 0;
+	bottom: 0;*/
+
 }
 
 .ologo{
-    margin: 14px;
+    margin: 10px 0px px 0px;
+	float: left;
+
 }
 
 .gbar{
@@ -180,12 +186,20 @@ fieldset{
     padding: 15px 22px;
 }
 
+#headlogo {
+	
+}
+
 #header_title{
-    font-size: 30px;
-    color: #050505;
+    font-size: 25px;
+    color: #666666;
+	float: right;
+	margin: 12px 60px;
 }
 
 #header_sub{
     font-size: 20px;
     color: #3d3d3d;
 }
+
+#aside {position: relative;}
