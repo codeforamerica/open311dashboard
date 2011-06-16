@@ -177,7 +177,7 @@ function follow(e){
     //if x + width of tooltip >= 980 --> max out left
     //else e.offsetX
 
-    if ($('select#speedA option:selected').text() === "Density"){
+    if (density_lines.visible()){
         if (($('#map').width() - (e.offsetX || e.layerX)) < .65*$('#tooltip').width()){
         $('#tooltip').css({
             width: "300px",
@@ -198,7 +198,7 @@ function follow(e){
         }
     }
 
-    if ($('select#speedA option:selected').text() === "Response"){
+    if (response_lines.visible()){
         if (($('#map').width() - (e.offsetX || e.layerX)) < .75*$('#tooltip').width()){
         $('#tooltip').css({
             width: "185px",
