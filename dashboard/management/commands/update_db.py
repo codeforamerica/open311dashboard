@@ -1,5 +1,6 @@
 from django.core.management.base import BaseCommand, CommandError
 from open311dashboard.dashboard.models import Request
+from settings import CITY
 
 import httplib
 import urllib2
@@ -44,11 +45,11 @@ def get_requests_from_SF(start,end):
     validate_dt_value(end)
 
     #url = r'https://open311.sfgov.org/dev/Open311/v2/requests.xml' #dev
-    url = r'https://open311.sfgov.org/Open311/v2/requests.xml'
+    url = CITY['URL']
     query_data = {
         'start_date' : start.isoformat() + 'Z',
         'end_date' : end.isoformat() + 'Z',
-        'jurisdiction_id' : 'sfgov.org'
+        'jurisdiction_id' : CITY['JURISDICTION']
     }
     query_str = urllib.urlencode(query_data)
 
