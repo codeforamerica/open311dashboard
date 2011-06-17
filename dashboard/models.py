@@ -1,4 +1,5 @@
 from django.db import models
+from settings import CITY
 
 class Request(models.Model):
     service_request_id = models.IntegerField()
@@ -17,3 +18,6 @@ class Request(models.Model):
     zipcode = models.IntegerField(blank=True, null=True)
     lat = models.FloatField()
     long = models.FloatField()
+
+    class Meta:
+        db_table = "dasboard_data_%s" % CITY['SHORTNAME']
