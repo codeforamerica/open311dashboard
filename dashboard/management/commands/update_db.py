@@ -87,8 +87,9 @@ def parse_requests_doc(stream):
 
         for request_attr in request_node.childNodes:
             if request_attr.childNodes:
-                indiv_columns_list.append(request_attr.tagName)
-                indiv_values_list.append(request_attr.childNodes[0].data)
+                if request_attr.tagName in Request._meta.get_all_field_names():
+                    indiv_columns_list.append(request_attr.tagName)
+                    indiv_values_list.append(request_attr.childNodes[0].data)
 
         columns.append(indiv_columns_list)
         values.append(indiv_values_list)
