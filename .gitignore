@@ -1,2 +1,8 @@
+<<<<<<< HEAD
 src/data
 .DS_Store
+=======
+.DS_Store
+settings_local.py
+*.pyc
+>>>>>>> 1fa14d3aa19c576c799b705b2a446dac215426e9

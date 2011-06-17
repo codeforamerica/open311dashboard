@@ -2,8 +2,8 @@ body { height:100%; overflow:hidden; margin:0; padding:0; background:#fff; font-
   #container #header { height:80px; width:100%; }
   #container #footer { height:0px; width:100%; position:absolute; bottom:0; }
   
-    #main { position:absolute; top:80px; bottom:0px; left:0; right:0; }
-      #aside { position:absolute; top:0; bottom:0; width:260px; overflow-y:auto; overflow-x:hidden; padding:20px 20px;}
+    #main { position:absolute; top:80px; height: 100%; bottom:0px; left:0; right:0; }
+      #aside { position:absolute; top:0; bottom:0; height: 100%; width:260px; overflow-y:auto; overflow-x:hidden; padding:20px 20px;}
       #map { position:absolute; top:0; bottom:0; left:300px; right:0;      }
 
   #result_data table { width:260px; }
@@ -46,15 +46,6 @@ body { height:100%; overflow:hidden; margin:0; padding:0; background:#fff; font-
       stroke: #fff
   }
 
-  /*
-  #streets path {
-    stroke: #f00;
-    fill: #fff
-    stroke-width: 1.5px;
-    stroke-linecap: round;
-  }
-  */
-  
   #streets path:hover {
       stroke-width: 2px;
       stroke: #fff
@@ -86,7 +77,6 @@ body { height:100%; overflow:hidden; margin:0; padding:0; background:#fff; font-
       -moz-box-shadow: 6px 6px 5px #6e6e6e;
       -webkit-box-shadow: 6px 6px 5px #6e6e6e;
       box-shadow: 6px 6px 5px #6e6e6e;
-
       -moz-border-radius: 4px;
       border-radius: 4px;
       z-index: 10;
@@ -109,10 +99,6 @@ body { height:100%; overflow:hidden; margin:0; padding:0; background:#fff; font-
  }
 
  #footer_text {
-    /*
-    display: block;
-    float: right;
-    */
     font-size:13px;
     padding: 10px 0px 10px 10px;
  }
@@ -163,15 +149,13 @@ fieldset{
 }
 
 .clogo{
-    margin: 100px 0px 20px 10px;
-/*	position: absolute;
-	left: 0;
-	bottom: 0;*/
-
+    margin: 0px 0px 20px 10px;
+    position: absolute;
+    bottom: 120px;
 }
 
 .ologo{
-    margin: 10px 0px px 0px;
+    margin: 0px 0px 0px -10px;
 	float: left;
 
 }
@@ -184,10 +168,6 @@ fieldset{
 #header{
     border-bottom: 0px solid #cccccc;
     padding: 15px 22px;
-}
-
-#headlogo {
-	
 }
 
 #header_title{

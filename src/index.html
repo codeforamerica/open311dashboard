@@ -19,7 +19,6 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="js/selectmenu/themes/base/jquery.ui.all.css">
   <link rel="stylesheet" href="js/selectmenu/themes/base/jquery.ui.selectmenu.css">
-
     <style type="text/css"> 
     fieldset { border:0; margin: 0px 0 0 0;}  
     label,select,.ui-select-menu { float: left; margin-right: 10px; }
@@ -32,26 +31,24 @@
     body .video .ui-selectmenu-item-icon { background: url(images/24-video-square.png) 0 0 no-repeat; }
     body .podcast .ui-selectmenu-item-icon { background: url(images/24-podcast-square.png) 0 0 no-repeat; }
     body .rss .ui-selectmenu-item-icon { background: url(images/24-rss-square.png) 0 0 no-repeat; }
-  </style> 
+    </style> 
 </head>
 <body>
   <div id="container">
     <div id="header">
-	      <a href="http://open311.org"><img class="ologo" src="images/open311dashlogo.jpg" alt="Open311" width="226" height="51"/></a>
+	      <a href="http://codeforamerica.org/?cfa_project=open311-dashboard"><img class="ologo" src="images/open311dashlogo.jpg" alt="Open311" width="226" height="51"/></a>
       <span id="header_title">San Francisco 311: Requests in 2011</span>
     </div>
-
     <div id="main" role="main">
       <div id="aside">
         <div id="neighborhood-stats">
           <fieldset> 
-            <label for="speedA"></label> 
-            <select name="speedA" id="speedA"> 
+            <label for="map_choice"></label> 
+            <select name="map_choice" id="map_choice"> 
               <option value="0">Density</option> 
               <option value="1">Response</option> 
             </select> 
           </fieldset> 
-  
           <div id="result_data"></div> 
         </div>
         <div id="legend">
@@ -69,7 +66,6 @@
           <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>
           <a href="http://www.openstreetmap.org/">OpenStreetMap</a>.
         </span>
-
       </div>
     </div>
   </div>
@@ -80,33 +76,11 @@
   <!-- <script>window.jQuery || document.write("<script src='js/libs/jquery-1.6.1.min.js'>\x3C/script>")</script> -->
   <script type="text/javascript" src="js/lib/polymaps.js"></script>
   <script type="text/javascript" src="js/lib/jquery.sparkline.min.js"></script>
-  <script src="js/streets_ray_casting2.js"></script>
+  <script src="js/streets_final.js"></script>
   <script src="js/lib/jquery.ui.core.js"></script>
   <script src="js/lib/jquery.ui.widget.js"></script>
   <script src="js/lib/jquery.ui.position.js"></script>
   <script src="js/lib/jquery.ui.selectmenu.js"></script>
-
-    <script type="text/javascript">
-    $(function(){    
-            
-      var speedA = $('select#speedA').selectmenu({
-        select: function(event, options) {
-                if(options.value == 1){
-                    response_time_map.visible(true);
-                    response_lines.visible(true);
-                    density_map.visible(false);
-                    density_lines.visible(false);
-                    $('#legend').html('<img src="images/response_key-1.png" alt="Legend for Response Time Map" width="300" height="62"/><div id="low">Fast to Slow Response</div>');
-                } else {
-                    response_time_map.visible(false);
-                    response_lines.visible(false);
-                    density_map.visible(true);
-                    density_lines.visible(true);
-                    $('#legend').html('<img src="images/density_key.png" alt="Legend for Density Map" width="300" height="62"/><div id="low">Low to High Density</div>');
-                }
-        }
-      });
-    });    
-  </script> 
+  <script src="js/map_choice.js"></script>
 </body>
 </html>

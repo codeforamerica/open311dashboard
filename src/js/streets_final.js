@@ -1,10 +1,8 @@
-var features_coordinates = []; //dom ready
+var features_coordinates = [];
 var features_rect_bounds = [];
 var neighborhood_features = [];
 var highlighted = -1;
 var $neighborhoodStats = $('#result_data');
-
-var tool_tip_up = false;
 
 function insideRectBounds(feature_rect_bounds,mp_ll){
     var lon = mp_ll[0];
@@ -50,13 +48,10 @@ function insidePolygon(mp_ll,index){
 
 function onloadneighborhoods(e){
     var lon = [],
-      lat = [],
-      i;
+        lat = [],
+        i;
       
     for(i = 0; i < e.features.length; i++) {
-        //new
-
-        
         neighborhood_features[i] = e.features[i];
         neighborhood_features[i].element.setAttribute('fill','#fff');
         neighborhood_features[i].element.setAttribute('fill-opacity','0');
@@ -84,11 +79,10 @@ function onloadneighborhoods(e){
 }
 
 function updateNeighborhoodStats(feature) {
-  var i, 
-    html = '<div class="neighborhood-title">'+feature.data.properties.neighborhood+'</div>' + 
+    var i, 
+        html = '<div class="neighborhood-title">'+feature.data.properties.neighborhood+'</div>' + 
       '<table><tr><th class="stats-key">Total</th><th class="stats-val">Rank</th></tr>' + 
-      '<tr class="total-stats-row"><td class="stats-key">'+feature.data.properties.total+'</td><td class="stats-val stats-rank">'+feature.data.properties.rank+'</td></tr>' + 
-      '<tr><th class="stats-key">Request</th><th class="stats-val">Total</th></tr>';
+      '<tr class="total-stats-row"><td class="stats-key">'+feature.data.properties.total+'</td><td class="stats-val stats-rank">'+feature.data.properties.rank+'</td></tr>' + '<tr><th class="stats-key">Request</th><th class="stats-val">Total</th></tr>';
     
     for (i=feature.data.properties.top_five.length-1; i>=0; i--) {
       html += '<tr><td class="stats-key">'+feature.data.properties.top_five[i][0]+'</td><td class="stats-val">'+feature.data.properties.top_five[i][1]+'</td></tr>';
@@ -96,7 +90,7 @@ function updateNeighborhoodStats(feature) {
     
     html += '</table>';
 
-  $neighborhoodStats.html(html);
+    $neighborhoodStats.html(html);
 }
 
 function testNeighborhood(e){
@@ -124,76 +118,29 @@ function handleHighlight(i){
         updateNeighborhoodStats(neighborhood_features[i]);
     }
     highlighted = i;
-    console.log('highlighted',highlighted);
-
 };
-var count = 0;
+
 function highlightNeighborhood(i){
-    /*
-    console.log('i',i);
-    neighborhood_features[i].element.setAttribute('stroke-opacity','.75');
-    neighborhood_features[i].element.setAttribute('stroke-width','1px');
-    //neighborhood_features[i].element.setAttribute('stroke','#3d3d3d');
-    neighborhood_features[i].element.setAttribute('stroke','#050505');
-    neighborhood_features[i].element.setAttribute('fill','#fff');
-    neighborhood_features[i].element.setAttribute('fill-opacity','.4');
-    */
-    //console.log(count,neighborhood_features[i].element.getAttribute('stroke-opacity'));
-    //count=count+1;
-
-    //sf_neighborhoods.visible(false);
-    //sf_neighborhoods.visible(true);
-
     neighborhood_features[i].element.setAttribute('style','stroke-width:1;stroke:#050505;stroke-opacity:.75;fill:#fff;fill-opacity:.4;');
-
-    //zoom or move the the map, unhighlight and set highlighted to -1
-    //moving outside some area, what's happening? print out lat and long of mouse to lat/long conversion
 }
 
 function unhighlightNeighborhood(i){
-
     neighborhood_features[i].element.setAttribute('style','stroke-opacity:0;fill-opacity:0;');
-
-    //console.log('i2',i);
-    /*
-    neighborhood_features[i].element.setAttribute('stroke-opacity','0');
-    neighborhood_features[i].element.setAttribute('fill-opacity','0');
-    */
-   // neighborhood_features[i].element.setAttribute("display","none");
-    
-    //neighborhood_features[i].setAttribute('stroke','#fff');
-    //console.log(count,neighborhood_features[i].element.getAttribute('stroke-opacity'));
-    //count=count+1;
 };
 
 function follow(e){    
-    /*
-    $('#tooltip').css({
-        top: (e.offsetY || e.layerY) + "px",
-        left: ((e.offsetX || e.layerX) + 15) + "px"
-    });
-    */
-
-    //if x + width of tooltip >= 980 --> max out left
-    //else e.offsetX
-
     if (density_lines.visible()){
         if (($('#map').width() - (e.offsetX || e.layerX)) < .65*$('#tooltip').width()){
         $('#tooltip').css({
             width: "300px",
             top: ((e.offsetY || e.layerY) + 30) + "px",
-            //left: (-15+((e.offsetX || e.layerX)) - ((((e.offsetX || e.layerX))/(980))*300)) + "px"
-            //left: ((e.offsetX || e.layerX) + 15) + "px"
             left: ($('#map').width() - $('#tooltip').width() - 50) + "px"
         });
         } else {
         $('#tooltip').css({
             width: "300px",
             top: ((e.offsetY || e.layerY) + 30) + "px",
-            //left: (-15+((e.offsetX || e.layerX)) - ((((e.offsetX || e.layerX))/(980))*300)) + "px"
-            //left: ((e.offsetX || e.layerX) + 15) + "px"
             left: ((e.offsetX || e.layerX) - .5*$('#tooltip').width()) + "px"
-            //left: ((e.offsetX || e.layerX) + 15) + "px"
         });
         }
     }
@@ -203,50 +150,24 @@ function follow(e){
         $('#tooltip').css({
             width: "185px",
             top: ((e.offsetY || e.layerY) + 30) + "px",
-            //left: (-15+((e.offsetX || e.layerX)) - ((((e.offsetX || e.layerX))/(980))*300)) + "px"
-            //left: ((e.offsetX || e.layerX) + 15) + "px"
             left: ($('#map').width() - $('#tooltip').width() - 50) + "px"
         });
         } else {
         $('#tooltip').css({
             width: "185px",
             top: ((e.offsetY || e.layerY) + 30) + "px",
-            //left: (-15+((e.offsetX || e.layerX)) - ((((e.offsetX || e.layerX))/(980))*300)) + "px"
-            //left: ((e.offsetX || e.layerX) + 15) + "px"
             left: ((e.offsetX || e.layerX) - .5*$('#tooltip').width()) + "px"
-            //left: ((e.offsetX || e.layerX) + 15) + "px"
         });
         }
     }
-
-
-    /*
-    $('#tooltip').css({
-        width: "300px",
-        top: ((e.offsetY || e.layerY) + 30) + "px",
-        left: (-15+((e.offsetX || e.layerX)) - ((((e.offsetX || e.layerX))/(980))*300)) + "px"
-    });
-    */
-
-    
-
-    //x - (fraction)*(width of tooltip)
-    //x - (x/width of map)*(width of tooltip)
-    //x - (x/980)*280
-    
-    //console.log(e.offsetX || e.layerX);
-    //console.log($('#map').width());
-    //console.log($('#tooltip').width());
 }
 
 function setsparkline(score,months){
       var monthly_values = [months[11],months[0],months[1],months[2],months[3],months[4]];
-      $('.dynamicsparkline1').sparkline(monthly_values,{width:100,fillColor:false,lineColor:"#336699",minSpotColor:"#990000",maxSpotColor:"#990000",spotColor:"#990000",lineWidth:1}); //why does this work here?
+      $('.dynamicsparkline1').sparkline(monthly_values,     {width:100,fillColor:false,lineColor:"#336699",minSpotColor:"#990000",maxSpotColor:"#990000",spotColor:"#990000",lineWidth:1});
 }
 
 function setbarchart(score){
-       //range is an array: range[0],range[1],range[2],range[3],range[4],range[5]
-
         range = [93,75,68,62,57,67];
         
         if (score < 96){
@@ -263,17 +184,13 @@ function setbarchart(score){
             cMap = ["green","green","green","green","green","red"];
         };
        
-      $('.dynamicbarchart').sparkline(range,{type:'bar',width:100,barSpacing:1,barWidth:5,colorMap:cMap}); //why does this work here?
+      $('.dynamicbarchart').sparkline(range,{type:'bar',width:100,barSpacing:1,barWidth:5,colorMap:cMap});
 }
 
 function onload(e){
-
-    //console.log('href location: ' + window.location.href);
-
     var colorArray = ['#D92B04','#A61103'];
     
     for(var i = 0; i < e.features.length; i++) {
-        //new
         e.features[i].element.setAttribute('fill-opacity',0);
     
         var streetMouseOver = function(score,start_street,end_street,street,months,top_request,index){
@@ -294,20 +211,14 @@ function onload(e){
             e.features[i].element.setAttribute("stroke",colorArray[1]);
             e.features[i].element.setAttribute("stroke-opacity", 0.8);
         }
-
-
         e.features[i].element.setAttribute("stroke-linecap","round");
     }
 }
 
 function setStreetContent(e,score,start_street,end_street,street,months,top_request,index){
-    //console.log('e',e);
-
     testNeighborhood(e);
 
-
     if (map.zoom() >= 14){
-
         if (score < 600){
             score = 'Top 10%';
         } else {
@@ -325,16 +236,12 @@ function setStreetContent(e,score,start_street,end_street,street,months,top_requ
 
         $('#tooltip').show();
     }
-    
     setsparkline(score,months);
 }
 
 function hideStreetContent(e){
     testNeighborhood(e);
  
-    //$('#tooltip').fadeOut(200);
-    //tool_tip_up = false;
-    //$('#streets path:hover').css({'stroke-width':'1.5px'});
     $('#tooltip').hide();
 }
 
@@ -376,7 +283,6 @@ function setResponseContent(e,score,start_street,end_street,street){
 
         var barColors = '';
 
-
         if (score < 96){
             barColors = '6EAFCF|DBDBDB|DBDBDB|DBDBDB|DBDBDB|DBDBDB';
         } else if (score < 192) {
@@ -390,8 +296,6 @@ function setResponseContent(e,score,start_street,end_street,street){
         } else {
             barColors = 'DBDBDB|DBDBDB|DBDBDB|DBDBDB|DBDBDB|6EAFCF';
         }
-
-        24,4,2,1,1,2
         
         $('#tooltip').html('<span id="dyn_title">'+parseInt(start_street,10) +' - ' + parseInt(end_street,10) + ' ' + street + '</span><br><span id="top_request">Average Response Time: <strong>'+Math.floor(score/24)+' days</strong></span><br><span class="gbar"><img class="gbar" src=\'http://chart.apis.google.com/chart?chxl=0:||Fast|||Slow&chxs=0,676767,9,0,l,676767|1,FFFFFF,0,0,_,FFFFFF&chxt=x,y&chbh=a&chs=100x60&cht=bvg&chco=' + barColors + '&chds=0,50&chd=t:192,32,16,8,8,16&chma=|0,5&chtt=Response+Times&chts=676767,9\' width="100" height="60"></span>');
 
@@ -404,6 +308,7 @@ function hideResponseContent(e){
     $('#tooltip').hide();
 }
 
+//Initialize the map layers
 var po = org.polymaps;
 
 var map = po.map()
@@ -414,8 +319,6 @@ var map = po.map()
     .add(po.interact());
 map.add(po.hash());
 
-//38747
-//22677
 map.add(po.image()
     .url(po.url("http://{S}tile.cloudmade.com"
     + "/1a193057ca6040fca68c4ae162bec2da"

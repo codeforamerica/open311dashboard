@@ -8,4 +8,8 @@ Visit our [project page](http://codeforamerica.org/?cfa_project=open311-dashboar
 
 Join the [official Open311 Dashboard mailing list](http://groups.google.com/group/open311-dashboard).
 
+<<<<<<< HEAD
 [![Code for America Tracker](http://stats.codeforamerica.org/codeforamerica/open311dashboard.png)](http://stats.codeforamerica.org/projects/open311dashboard)
+=======
+[![Code for America Tracker](http://stats.codeforamerica.org/codeforamerica/open311dashboard.png)](http://stats.codeforamerica.org/projects/open311dashboard)
+>>>>>>> 1fa14d3aa19c576c799b705b2a446dac215426e9
