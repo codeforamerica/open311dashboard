@@ -2,11 +2,11 @@ from django.db import models
 from settings import CITY
 
 class Request(models.Model):
-    service_request_id = models.IntegerField()
+    service_request_id = models.BigIntegerField()
     status = models.CharField(max_length=10)
     status_notes = models.TextField(blank=True, null=True)
     service_name = models.CharField(max_length=100)
-    service_code = models.IntegerField(blank=True, null=True)
+    service_code = models.CharField(max_length=100, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     agency_responsible = models.CharField(max_length=255, blank=True, null=True)
     service_notice = models.CharField(max_length=255, blank=True, null=True)
@@ -18,6 +18,7 @@ class Request(models.Model):
     zipcode = models.IntegerField(blank=True, null=True)
     lat = models.FloatField()
     long = models.FloatField()
+    media_url = models.URLField(blank=True, null=True)
 
     class Meta:
-        db_table = "dasboard_data_%s" % CITY['SHORTNAME']
+        db_table = "dashboard_data_%s" % CITY['SHORTNAME']
