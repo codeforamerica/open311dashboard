@@ -2,6 +2,13 @@ Open311 Dashboard
 =================
 We are creating a set of interactive widgets to help people visualize and analyze 311 data on one unified dashboard.
 
+Getting Started
+---------------
+1. Rename settings_local.example.py to settings_local.py and set your db/city/secretkey variables.
+2. `pip install -r requirements.txt`
+3. `python manage.py update_db` imports initial data.
+4. `python manage.py runserver`
+
 More Information
 ----------------
 Visit our [project page](http://codeforamerica.org/?cfa_project=open311-dashboard) and our [homepage](http://www.311dashboard.com).
