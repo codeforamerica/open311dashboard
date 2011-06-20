@@ -1,0 +1,3 @@
+Django
+python-dateutil==1.5
+psycopg2

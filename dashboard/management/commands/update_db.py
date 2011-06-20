@@ -1,6 +1,9 @@
 from django.core.management.base import BaseCommand, CommandError
+from django.core.exceptions import ValidationError
 from open311dashboard.dashboard.models import Request
+from dateutil import parser
 from settings import CITY
+
 
 import httplib
 import urllib2
@@ -20,6 +23,10 @@ def get_time_range(on_day=None):
     start = end - ONE_DAY
 
     return (start, end)
+
+def parse_date(date_string):
+    new_date = parser.parse(date_string)
+    return new_date.strftime("%Y-%m-%d %I:%M")
 
 def validate_dt_value(datetime):
     """
@@ -52,6 +59,7 @@ def get_requests_from_SF(start,end):
         'jurisdiction_id' : CITY['JURISDICTION']
     }
     query_str = urllib.urlencode(query_data)
+    print url + '?' + query_str
 
     requests_stream = urllib2.urlopen(url + '?' + query_str)
     return requests_stream
@@ -87,6 +95,9 @@ def parse_requests_doc(stream):
 
         for request_attr in request_node.childNodes:
             if request_attr.childNodes:
+                if request_attr.tagName.find('datetime') > -1:
+                    request_attr.childNodes[0].data = parse_date(request_attr.childNodes[0].data)
+
                 if request_attr.tagName in Request._meta.get_all_field_names():
                     indiv_columns_list.append(request_attr.tagName)
                     indiv_values_list.append(request_attr.childNodes[0].data)
@@ -114,21 +125,21 @@ def insert_data(requests):
         try:
             r.save()
             print "Successfully saved %s" % r.service_request_id
-        except Request.ValidationError:
-            raise CommandError('Request "%s" does not validate correctly' %
-                    r.service_request_id)
+        except ValidationError, e:
+            raise CommandError('Request "%s" does not validate correctly\n %s' %
+                    (r.service_request_id, e))
 
 # At runtime...
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
         if len(args) >= 2:
-            start, end = get_time_range(dt.datetime.strptime(sys.argv[1], '%Y-%m-%d'))
+            start, end = get_time_range(dt.datetime.strptime(args[0], '%Y-%m-%d'))
         else:
             start, end = get_time_range()
 
         if len(args) >= 3:
-            num_days = int(sys.argv[2])
+            num_days = int(args[1])
         else:
             num_days = 1
 
