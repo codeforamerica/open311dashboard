@@ -17,4 +17,16 @@
     {% endfor %}
 </table>
 {% endif %}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.ajax({
+            url: "/jsontest/",
+            success: function(data) {
+                alert(data);
+            }
+        });
+    });
+</script>
+
 {% endblock %}

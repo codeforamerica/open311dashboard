@@ -5,7 +5,8 @@ from django.conf.urls.defaults import patterns, include, url
 # admin.autodiscover()
 
 urlpatterns = patterns('',
-    url(r'^$', 'dashboard.views.index')
+    url(r'^$', 'dashboard.views.index'),
+    url(r'^jsontest/$', 'dashboard.views.json_test'),
     # Examples:
     # url(r'^$', 'open311dashboard.views.home', name='home'),
     # url(r'^open311dashboard/', include('open311dashboard.foo.urls')),

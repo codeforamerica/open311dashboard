@@ -2,7 +2,7 @@ from django.db import models
 from settings import CITY
 
 class Request(models.Model):
-    service_request_id = models.BigIntegerField()
+    service_request_id = models.CharField(max_length=200)
     status = models.CharField(max_length=10)
     status_notes = models.TextField(blank=True, null=True)
     service_name = models.CharField(max_length=100)
