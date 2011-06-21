@@ -40,7 +40,7 @@ def validate_dt_value(datetime):
     if datetime.tzinfo is not None:
         raise ValueError('Tzinfo on datetime must be None: %s' % datetime)
 
-def get_requests_from_SF(start,end):
+def get_requests_from_SF(start,end,page):
     """
     Retrieve the requests from the San Francisco 311 API within the time range
     specified by the dates start and end.
@@ -56,8 +56,12 @@ def get_requests_from_SF(start,end):
     query_data = {
         'start_date' : start.isoformat() + 'Z',
         'end_date' : end.isoformat() + 'Z',
-        'jurisdiction_id' : CITY['JURISDICTION']
+        'jurisdiction_id' : CITY['JURISDICTION'],
     }
+
+    if page > 0:
+        query_data['page'] = page
+
     query_str = urllib.urlencode(query_data)
     print url + '?' + query_str
 
@@ -82,6 +86,9 @@ def parse_requests_doc(stream):
     except ExpatError:
         print(xml_string)
         raise
+
+    if len(requests_root.childNodes) < 1:
+        return False
 
     for request_node in requests_root.childNodes:
         indiv_columns_list = []
@@ -129,29 +136,49 @@ def insert_data(requests):
             raise CommandError('Request "%s" does not validate correctly\n %s' %
                     (r.service_request_id, e))
 
+def process_requests(start, end, page):
+    requests_stream = get_requests_from_SF(start, end, page)
+    requests = parse_requests_doc(requests_stream)
+
+    #
+    if requests != False:
+        insert_data(requests)
+
+        if page == 0:
+            returnval = requests[1]
+        else:
+            page = page+1
+            process_requests(start, end, page)
+    return requests
+    
 # At runtime...
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
-        if len(args) >= 2:
+        if len(args) >= 1:
             start, end = get_time_range(dt.datetime.strptime(args[0], '%Y-%m-%d'))
         else:
             start, end = get_time_range()
 
-        if len(args) >= 3:
+        if len(args) >= 2:
             num_days = int(args[1])
+            print(args[1])
         else:
             num_days = 1
 
+        if len(args) >= 3:
+            page = 1
+        else:
+            page = False
+
         for _ in xrange(num_days):
-            requests_stream = get_requests_from_SF(start, end)
-            requests = parse_requests_doc(requests_stream) #returns tuple of columns and values
-            insert_data(requests)
+            requests = process_requests(start, end, page)
 
             start -= ONE_DAY
             end -= ONE_DAY
 
             print start
-            print requests[1]
+            print "Done."
+            #print requests
 
 
