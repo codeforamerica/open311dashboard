@@ -1,4 +1,4 @@
-from dashboard.models import Request
+from open311dashboard.dashboard.models import Request
 
 from django.http import HttpResponse, HttpRequest
 from django.template import Context
