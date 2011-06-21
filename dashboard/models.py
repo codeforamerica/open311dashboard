@@ -1,5 +1,5 @@
 from django.db import models
-from settings import CITY
+from open311dashboard.settings import CITY
 
 class Request(models.Model):
     service_request_id = models.CharField(max_length=200)

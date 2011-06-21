@@ -2,7 +2,7 @@ from django.core.management.base import BaseCommand, CommandError
 from django.core.exceptions import ValidationError
 from open311dashboard.dashboard.models import Request
 from dateutil import parser
-from settings import CITY
+from open311dashboard.settings import CITY
 
 
 import httplib
