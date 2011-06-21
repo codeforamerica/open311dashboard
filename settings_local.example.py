@@ -15,9 +15,9 @@ SECRET_KEY = ''
 
 # CITY Variable
 CITY = {
-        'NAME': '',
-        'SHORTNAME': '',
-        'JURISDICTION': '',
-        'URL': r'',
-        'PAGINATE': False,
+        'NAME': '',         # Ex: 'San Francisco'
+        'SHORTNAME': '',    # Ex: 'sf'
+        'JURISDICTION': '', # From the city's API
+        'URL': r'',         # GET requests URL
+        'PAGINATE': False,  # Some implementations paginate, BOS does, SF doesn't.
         }
