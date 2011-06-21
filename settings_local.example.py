@@ -19,4 +19,5 @@ CITY = {
         'SHORTNAME': '',
         'JURISDICTION': '',
         'URL': r'',
+        'PAGINATE': False,
         }

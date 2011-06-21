@@ -150,7 +150,7 @@ def process_requests(start, end, page):
             page = page+1
             process_requests(start, end, page)
     return requests
-    
+
 # At runtime...
 class Command(BaseCommand):
 
@@ -166,7 +166,7 @@ class Command(BaseCommand):
         else:
             num_days = 1
 
-        if len(args) >= 3:
+        if CITY['PAGINATE']:
             page = 1
         else:
             page = False
@@ -178,7 +178,5 @@ class Command(BaseCommand):
             end -= ONE_DAY
 
             print start
-            print "Done."
-            #print requests
 
 
