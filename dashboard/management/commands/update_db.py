@@ -125,9 +125,17 @@ def insert_data(requests):
 
         # Put the key-value pairs into a dictionary and then an arguments list.
         request_dict = dict(zip(columns[i], values[i]))
-        together = request_dict
 
-        r = Request(**together)
+        # Check if the record already exists.
+        try:
+            exists = Request.objects.get(service_request_id = request_dict['service_request_id'],
+                                        service_code = request_dict['service_code'])
+            request_dict['id'] = exists.id
+        except:
+            print "Not updating..."
+            pass
+
+        r = Request(**request_dict)
 
         try:
             r.save()
@@ -140,13 +148,11 @@ def process_requests(start, end, page):
     requests_stream = get_requests_from_SF(start, end, page)
     requests = parse_requests_doc(requests_stream)
 
-    #
+    # 
     if requests != False:
         insert_data(requests)
 
-        if page == 0:
-            returnval = requests[1]
-        else:
+        if page != 0:
             page = page+1
             process_requests(start, end, page)
     return requests
