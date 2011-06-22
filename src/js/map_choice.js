@@ -1,5 +1,5 @@
 //Switching between types of maps
-//Need refactor this so that it can scale out to switch between arbitrary map types
+//Need to refactor this so that it can scale out to switch between arbitrary map types
 $(function(){
   var map_choice = $('select#map_choice').selectmenu({
     select: function(event, options) {
