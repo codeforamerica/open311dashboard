@@ -32,4 +32,4 @@ def ticket_days(request, ticket_status="open", start=None, end=None):
 
     data = json.dumps(tickets)
 
-    return HttpResponse(data)
+    return HttpResponse(data, content_type='application/json')
