@@ -8,7 +8,7 @@ urlpatterns = patterns('',
     url(r'^$', 'open311dashboard.dashboard.views.index'),
     url(r'^tickets/$', 'open311dashboard.dashboard.views.ticket_days'),
     url(r'^tickets/(?P<ticket_status>\w+)/$', 'open311dashboard.dashboard.views.ticket_days'),
-    url(r'^tickets/(?P<ticket_status>\w+)/(?P<start>.+)/(?P<end>.+)$', 'open311dashboard.dashboard.views.ticket_days'),
+    url(r'^tickets/(?P<ticket_status>\w+)/(?P<start>.+)/(?P<end>.+)/$', 'open311dashboard.dashboard.views.ticket_days'),
     # Examples:
     # url(r'^$', 'open311dashboard.views.home', name='home'),
     # url(r'^open311dashboard/', include('open311dashboard.foo.urls')),
