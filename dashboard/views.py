@@ -1,3 +1,4 @@
+from open311dashboard.settings import CITY
 from open311dashboard.dashboard.models import Request
 
 from django.http import HttpResponse, HttpRequest
@@ -11,7 +12,8 @@ import qsstats
 def index(request):
     request_list = Request.objects.all()[:10]
     c = Context({
-        'request_list': request_list
+        'request_list': request_list,
+        'city': CITY['NAME'],
         })
     return render(request, 'index.html', c)
 
