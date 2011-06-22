@@ -6,6 +6,7 @@ from django.shortcuts import render
 
 import json
 import datetime
+import qsstats
 
 def index(request):
     request_list = Request.objects.all()[:10]
@@ -14,22 +15,29 @@ def index(request):
         })
     return render(request, 'index.html', c)
 
-def ticket_days(request, ticket_status="open", start=None, end=None):
+def ticket_days(request, ticket_status="opened", start=None, end=None):
+    if ticket_status == "opened":
+        request = Request.objects.all()
+        stats = qsstats.QuerySetStats(request, 'requested_datetime')
+    elif ticket_status == "closed":
+        request = Request.objects.filter(status="Closed")
+        stats = qsstats.QuerySetStats(request, 'updated_datetime')
+
     if start == None:
-        tickets_opened = Request.objects.status_count(status=ticket_status)
+        end = datetime.date.today()
+        start = end - datetime.timedelta(days=30)
     else:
-        tickets_opened = Request.objects.status_count(status=ticket_status,
-                startdate=start,
-                enddate=end)
+        start = datetime.datetime.strptime(start, '%Y-%m-%d')
+        end = datetime.datetime.strptime(end, '%Y-%m-%d')
 
-    tickets = []
-    for ticket in tickets_opened:
-        formatted_date = datetime.datetime.strftime(ticket.date,
-                "%Y-%m-%d")
-        row = {'date': formatted_date,
-                'count': ticket.count }
-        tickets.append(row)
+    raw_data = stats.time_series(start, end, engine='postgres')
+    data = []
 
-    data = json.dumps(tickets)
+    for row in raw_data:
+        temp_data = {'date': datetime.datetime.strftime(row[0], '%Y-%m-%d'),
+                'count': row[1]}
+        data.append(temp_data)
 
-    return HttpResponse(data, content_type='application/json')
+    json_data = json.dumps(data)
+
+    return HttpResponse(json_data)# , content_type='application/json')
