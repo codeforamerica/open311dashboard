@@ -6,6 +6,7 @@ from django.conf.urls.defaults import patterns, include, url
 
 urlpatterns = patterns('',
     url(r'^$', 'open311dashboard.dashboard.views.index'),
+    url(r'^city/$', 'open311dashboard.dashboard.views.city'),
     url(r'^tickets/$', 'open311dashboard.dashboard.views.ticket_days'),
     url(r'^tickets/(?P<ticket_status>\w+)/$', 'open311dashboard.dashboard.views.ticket_days'),
     url(r'^tickets/(?P<ticket_status>\w+)/(?P<start>.+)/(?P<end>.+)/$', 'open311dashboard.dashboard.views.ticket_days'),

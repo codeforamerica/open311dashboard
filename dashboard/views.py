@@ -10,12 +10,15 @@ import datetime
 import qsstats
 
 def index(request):
+    return render(request,'index.html')
+
+def city(request):
     request_list = Request.objects.all()[:10]
     c = Context({
         'request_list': request_list,
         'city': CITY['NAME'],
         })
-    return render(request, 'index.html', c)
+    return render(request, 'city.html', c)
 
 def ticket_days(request, ticket_status="opened", start=None, end=None):
     if ticket_status == "opened":
