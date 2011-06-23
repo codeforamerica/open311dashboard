@@ -4,6 +4,7 @@ from open311dashboard.dashboard.models import Request
 from django.http import HttpResponse, HttpRequest
 from django.template import Context
 from django.shortcuts import render
+from django.db.models import Count
 
 from open311dashboard.dashboard.utils import str_to_day, day_to_str
 
@@ -60,4 +61,12 @@ def ticket_days(request, ticket_status="opened", start=None, end=None,
 
 def ticket_day(request, day=day_to_str(datetime.date.today())):
     date = str_to_day(day)
-    return
+    date_min = datetime.datetime.combine(date, datetime.time.min)
+    date_max = datetime.datetime.combine(date, datetime.time.max)
+
+    requests = Request.objects.filter(requested_datetime__range=(date_min,
+        date_max)).values('service_name').annotate(count=Count('service_name'))
+    data = {day: [item for item in requests]}
+    json_data = json.dumps(data)
+
+    return HttpResponse(json_data, content_type='application/json')

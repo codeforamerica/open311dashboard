@@ -1,9 +1,5 @@
 from django.conf.urls.defaults import patterns, include, url
 
-# Uncomment the next two lines to enable the admin:
-# from django.contrib import admin
-# admin.autodiscover()
-
 urlpatterns = patterns('',
     url(r'^$', 'open311dashboard.dashboard.views.index'),
 
@@ -17,4 +13,7 @@ urlpatterns = patterns('',
         'open311dashboard.dashboard.views.ticket_days'),
     url(r'^api/tickets/(?P<ticket_status>opened|closed)/(?P<start>\d{4}-\d{2}-\d{2})/(?P<end>\d{4}-\d{2}-\d{2})/$',
         'open311dashboard.dashboard.views.ticket_days'),
+
+    url(r'^api/day/(?P<day>\d{4}-\d{2}-\d{2})/$',
+        'open311dashboard.dashboard.views.ticket_day'),
 )
