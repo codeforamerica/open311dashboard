@@ -5,8 +5,10 @@ from django.http import HttpResponse, HttpRequest
 from django.template import Context
 from django.shortcuts import render
 from django.db.models import Count
+from django.core import serializers
 
-from open311dashboard.dashboard.utils import str_to_day, day_to_str
+from open311dashboard.dashboard.utils import str_to_day, day_to_str, \
+    date_range
 
 import json
 import datetime
@@ -59,14 +61,30 @@ def ticket_days(request, ticket_status="opened", start=None, end=None,
 
     return HttpResponse(json_data, content_type='application/json')
 
-def ticket_day(request, day=day_to_str(datetime.date.today())):
-    date = str_to_day(day)
-    date_min = datetime.datetime.combine(date, datetime.time.min)
-    date_max = datetime.datetime.combine(date, datetime.time.max)
+# Get service_name stats for a range of dates
+def ticket_day(request, begin=day_to_str(datetime.date.today()), end=None):
+    if end == None:
+        key = begin
+    else:
+        key = "% - %" % [begin, end]
 
-    requests = Request.objects.filter(requested_datetime__range=(date_min,
-        date_max)).values('service_name').annotate(count=Count('service_name'))
-    data = {day: [item for item in requests]}
+    # Request and group by service_name.
+    requests = Request.objects \
+            .filter(requested_datetime__range=date_range(begin, end)) \
+            .values('service_name').annotate(count=Count('service_name'))
+
+    data = {key: [item for item in requests]}
     json_data = json.dumps(data)
 
+    return HttpResponse(json_data, content_type='application/json')
+
+# List requests in a given date range
+def list_requests(request, begin=day_to_str(datetime.date.today()), end=None):
+    requests = Request.objects \
+        .filter(requested_datetime__range=date_range(begin,end))
+
+    # TODO: FIX dthandler so it is more robust.
+    dthandler = lambda obj: obj.isoformat() if isinstance(obj, datetime.datetime) else None
+    data = [item for item in requests.values()]
+    json_data = json.dumps(data, default=dthandler)
     return HttpResponse(json_data, content_type='application/json')
