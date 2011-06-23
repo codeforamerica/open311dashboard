@@ -1,2 +1,4 @@
 src/data
 .DS_Store
+src/django-qsstats-magic/
+src/pip-delete-this-directory.txt
