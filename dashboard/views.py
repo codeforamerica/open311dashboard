@@ -5,6 +5,8 @@ from django.http import HttpResponse, HttpRequest
 from django.template import Context
 from django.shortcuts import render
 
+from dashboard.utils import str_to_day, day_to_str
+
 import json
 import datetime
 import qsstats
@@ -30,28 +32,32 @@ def ticket_days(request, ticket_status="opened", start=None, end=None,
         stats = qsstats.QuerySetStats(request, 'updated_datetime')
 
     # If no start or end variables are passed, do the past 30 days. If one is
-    # passed, do the 30 days prior to that date. If both, do the range.
+    # passed, check if num_days and do the past num_days. If num_days isn't
+    # passed, just do one day. Else, do the range.
     if start == None and end == None:
         end = datetime.date.today()
         start = end - datetime.timedelta(days=30)
     elif end != None and num_days != None:
-        end = datetime.datetime.strptime(end, '%Y-%m-%d')
+        end = str_to_day(end)
         start = end - datetime.timedelta(days=int(num_days))
     elif end != None:
-        end = datetime.datetime.strptime(end, '%Y-%m-%d')
+        end = str_to_day(end)
         start = end
     else:
-        start = datetime.datetime.strptime(start, '%Y-%m-%d')
-        end = datetime.datetime.strptime(end, '%Y-%m-%d')
+        start = str_to_day(start)
+        end = str_to_day(end)
 
     raw_data = stats.time_series(start, end, engine='postgres')
     data = []
 
     for row in raw_data:
-        temp_data = {'date': datetime.datetime.strftime(row[0], '%Y-%m-%d'),
-                'count': row[1]}
+        temp_data = {'date': day_to_str(row[0]), 'count': row[1]}
         data.append(temp_data)
 
     json_data = json.dumps(data)
 
     return HttpResponse(json_data, content_type='application/json')
+
+def ticket_day(request, day=day_to_str(datetime.date.today())):
+    date = str_to_day(day)
+    return
