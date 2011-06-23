@@ -5,7 +5,7 @@ from django.http import HttpResponse, HttpRequest
 from django.template import Context
 from django.shortcuts import render
 
-from dashboard.utils import str_to_day, day_to_str
+from open311dashboard.dashboard.utils import str_to_day, day_to_str
 
 import json
 import datetime
