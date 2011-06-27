@@ -14,11 +14,15 @@ urlpatterns = patterns('',
     url(r'^api/tickets/(?P<ticket_status>opened|closed)/(?P<start>\d{4}-\d{2}-\d{2})/(?P<end>\d{4}-\d{2}-\d{2})/$',
         'open311dashboard.dashboard.views.ticket_days'),
 
+    # More in depth aggregate data.
     url(r'^api/more_info/(?P<begin>\d{4}-\d{2}-\d{2})/$',
         'open311dashboard.dashboard.views.ticket_day'),
     url(r'^api/more_info/(?P<begin>\d{4}-\d{2}-\d{2})/(?P<end>\d{4}-\d{2}-\d{2})/$',
         'open311dashboard.dashboard.views.ticket_day'),
 
+    # All tickets within a range of dates.
     url(r'^api/list/(?P<begin>\d{4}-\d{2}-\d{2})/$',
+        'open311dashboard.dashboard.views.list_requests'),
+    url(r'^api/list/(?P<begin>\d{4}-\d{2}-\d{2})/(?P<end>\d{4}-\d{2}-\d{2})/$',
         'open311dashboard.dashboard.views.list_requests'),
 )
