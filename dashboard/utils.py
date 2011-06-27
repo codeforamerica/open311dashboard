@@ -19,3 +19,9 @@ def date_range(begin, end=None):
         end = str_to_day(end)
 
     return (begin, end)
+
+def dt_handler(obj):
+    if isinstance(obj, datetime.datetime):
+        return obj.isoformat()
+    else:
+        return None

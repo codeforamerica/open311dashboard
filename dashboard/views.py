@@ -8,7 +8,7 @@ from django.db.models import Count
 from django.core import serializers
 
 from open311dashboard.dashboard.utils import str_to_day, day_to_str, \
-    date_range
+    date_range, dt_handler
 
 import json
 import datetime
@@ -83,8 +83,6 @@ def list_requests(request, begin=day_to_str(datetime.date.today()), end=None):
     requests = Request.objects \
         .filter(requested_datetime__range=date_range(begin,end))
 
-    # TODO: FIX dthandler so it is more robust.
-    dthandler = lambda obj: obj.isoformat() if isinstance(obj, datetime.datetime) else None
     data = [item for item in requests.values()]
-    json_data = json.dumps(data, default=dthandler)
+    json_data = json.dumps(data, default=dt_handler)
     return HttpResponse(json_data, content_type='application/json')
