@@ -41,8 +41,10 @@ def ticket_days(request, ticket_status="opened", start=None, end=None,
     # passed, check if num_days and do the past num_days. If num_days isn't
     # passed, just do one day. Else, do the range.
     if start == None and end == None:
+        num_days = int(num_days) if num_days is not None else 30
+
         end = datetime.date.today()
-        start = end - datetime.timedelta(days=30)
+        start = end - datetime.timedelta(days=num_days)
     elif end != None and num_days != None:
         end = str_to_day(end)
         start = end - datetime.timedelta(days=int(num_days))
