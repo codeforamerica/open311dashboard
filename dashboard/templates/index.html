@@ -1,34 +1,10 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>{{ city }}</h1>
+<ul>
+    <li><a href="http://d5dab8db.dotcloud.com/">Boston</a></li>
+    <li><a href="http://80b4bf21.dotcloud.com/">San Francisco</a></li>
+</ul>
 
-{% if request_list %}
-<table class="test-table">
-    <tr>
-        <th>Case Reference</td>
-        <th>Latitude</td>
-        <th>Longitude</td>
-    </tr>
-    {% for request in request_list %}
-    <tr>
-        <td>{{ request.service_request_id }}</td>
-        <td>{{ request.lat }}</td>
-        <td>{{ request.long }}</td>
-    </tr>
-    {% endfor %}
-</table>
-{% endif %}
-
-<script type="text/javascript">
-    $(document).ready(function () {
-        $.ajax({
-            url: "/jsontest/",
-            success: function(data) {
-                alert(data);
-            }
-        });
-    });
-</script>
-
+<a href="/test">Test to see if the DB works</a>
 {% endblock %}

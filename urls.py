@@ -2,6 +2,7 @@ from django.conf.urls.defaults import patterns, include, url
 
 urlpatterns = patterns('',
     url(r'^$', 'open311dashboard.dashboard.views.index'),
+    url(r'^test/$', 'open311dashboard.dashboard.views.test'),
 
     # API Calls
     url(r'^api/tickets/$', 'open311dashboard.dashboard.views.ticket_days'),

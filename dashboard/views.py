@@ -15,12 +15,15 @@ import datetime
 import qsstats
 
 def index(request):
+    return render(request, 'index.html')
+
+def test(request):
     request_list = Request.objects.all()[:10]
     c = Context({
         'request_list': request_list,
         'city': CITY['NAME'],
         })
-    return render(request, 'index.html', c)
+    return render(request, 'test.html', c)
 
 # API Views
 def ticket_days(request, ticket_status="opened", start=None, end=None,
