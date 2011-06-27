@@ -14,14 +14,14 @@ API Access
 There are a number API calls to return JSON in various forms.
 
 * `/api`
- * `/tickets/(opened|closed)`
-  * `/[0-9]+` (n days previous to today)
-  * `/YYYY-MM-DD(/[0-9]+)` (n days previous to the date)
-  * `/YYYY-MM-DD/YYYY-MM-DD` (simple date range)
- * `/more_info/YYYY-MM-DD` (single day)
-  * `/YYYY-MM-DD` (range)
- * `/list/YYYY-MM-DD` (singe day)
-  * `/YYYY-MM-DD` (range)
+    * `/tickets/(opened|closed)`
+        * `/[0-9]+` (n days previous to today)
+        * `/YYYY-MM-DD(/[0-9]+)` (n days previous to the date)
+        * `/YYYY-MM-DD/YYYY-MM-DD` (simple date range)
+    * `/more_info/YYYY-MM-DD` (single day)
+        * `/YYYY-MM-DD` (range)
+    * `/list/YYYY-MM-DD` (singe day)
+        * `/YYYY-MM-DD` (range)
 
 More Information
 ----------------
