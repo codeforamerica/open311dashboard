@@ -9,6 +9,19 @@ Getting Started
 3. `python manage.py update_db` imports initial data.
 4. `python manage.py runserver`
 
+API Access
+----------
+There are a number API calls to return JSON in various forms.
+* `/api`
+* * `/tickets/(opened|closed)`
+* * * `/[0-9]+` (n days previous to today)
+* * * `/YYYY-MM-DD(/[0-9]+)` (n days previous to the date)
+* * * `/YYYY-MM-DD/YYYY-MM-DD` (simple date range)
+* * `/more_info/YYYY-MM-DD` (single day)
+* * * `/YYYY-MM-DD` (range)
+* * `/list/YYYY-MM-DD` (singe day)
+* * * `/YYYY-MM-DD` (range)
+
 More Information
 ----------------
 Visit our [project page](http://codeforamerica.org/?cfa_project=open311-dashboard) and our [homepage](http://www.311dashboard.com).
