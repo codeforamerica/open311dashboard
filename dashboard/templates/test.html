@@ -20,15 +20,21 @@
 </table>
 {% endif %}
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        $.ajax({
-            url: "/jsontest/",
-            success: function(data) {
-                alert(data);
-            }
-        });
-    });
-</script>
+<div id="webservice-test">
+</div>
 
+
+{% endblock %}
+
+{% block custom_js %}
+$(document).ready(function() {
+    $.ajax({
+        url: '/api/tickets/opened/',
+        success: function(data) {
+            $.each(data, function() {
+                $("#webservice-test").append(this.date);
+            });
+        }
+    });
+});
 {% endblock %}
