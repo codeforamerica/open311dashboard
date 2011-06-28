@@ -13,6 +13,7 @@ from open311dashboard.dashboard.utils import str_to_day, day_to_str, \
 import json
 import datetime
 import qsstats
+import time
 
 def index(request):
     return render(request, 'index.html')
@@ -60,7 +61,7 @@ def ticket_days(request, ticket_status="opened", start=None, end=None,
     data = []
 
     for row in raw_data:
-        temp_data = {'date': day_to_str(row[0]), 'count': row[1]}
+        temp_data = {'date': int(time.mktime(row[0].timetuple())), 'count': row[1]}
         data.append(temp_data)
 
     json_data = json.dumps(data)
