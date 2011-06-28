@@ -26,7 +26,8 @@
 
 {% endblock %}
 
-{% block custom_js %}
+{% block custom_scripts %}
+<script>
 $(document).ready(function() {
     $.ajax({
         url: '/api/tickets/opened/',
@@ -37,4 +38,5 @@ $(document).ready(function() {
         }
     });
 });
+</script>
 {% endblock %}
