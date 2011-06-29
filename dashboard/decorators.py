@@ -13,9 +13,16 @@ class ApiHandler(object):
         request = args[0]
         format = request.GET.get('format')
 
-        if format == 'json':
-            response = self.func(*args, **kwargs)
+        response = self.func(*args, **kwargs)
+        if format == 'jsonp':
             data = json.dumps(response)
-            return_val = HttpResponse(data, content_type='application/json')
+            callback = request.GET.get('callback')
 
-        return return_val
+            if callback:
+                data = "%s(%s)" % (callback, data)
+                mime_type = 'application/javascript'
+        else:
+            mime_type = 'application/json'
+            data = json.dumps(response)
+
+        return HttpResponse(data, content_type=mime_type)
