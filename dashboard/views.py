@@ -9,6 +9,7 @@ from django.core import serializers
 
 from open311dashboard.dashboard.utils import str_to_day, day_to_str, \
     date_range, dt_handler
+from open311dashboard.dashboard.decorators import ApiHandler
 
 import json
 import datetime
@@ -27,6 +28,7 @@ def test(request):
     return render(request, 'test.html', c)
 
 # API Views
+@ApiHandler
 def ticket_days(request, ticket_status="opened", start=None, end=None,
         num_days=None):
     '''Returns JSON with the number of opened/closed tickets in a specified
@@ -46,6 +48,7 @@ def ticket_days(request, ticket_status="opened", start=None, end=None,
         request_closed = Request.objects.filter(status="Closed")
         stats_closed = qsstats.QuerySetStats(request_closed,
                                              'updated_datetime')
+
     # If no start or end variables are passed, do the past 30 days. If one is
     # passed, check if num_days and do the past num_days. If num_days isn't
     # passed, just do one day. Else, do the range.
@@ -84,11 +87,10 @@ def ticket_days(request, ticket_status="opened", start=None, end=None,
                          }
             data.append(temp_data)
 
-    json_data = json.dumps(data)
-
-    return HttpResponse(json_data, content_type='application/json')
+    return data
 
 # Get service_name stats for a range of dates
+@ApiHandler
 def ticket_day(request, begin=day_to_str(datetime.date.today()), end=None):
     if end == None:
         key = begin
@@ -101,15 +103,13 @@ def ticket_day(request, begin=day_to_str(datetime.date.today()), end=None):
             .values('service_name').annotate(count=Count('service_name'))
 
     data = {key: [item for item in requests]}
-    json_data = json.dumps(data)
-
-    return HttpResponse(json_data, content_type='application/json')
+    return data
 
 # List requests in a given date range
+@ApiHandler
 def list_requests(request, begin=day_to_str(datetime.date.today()), end=None):
     requests = Request.objects \
         .filter(requested_datetime__range=date_range(begin,end))
 
     data = [item for item in requests.values()]
-    json_data = json.dumps(data, default=dt_handler)
-    return HttpResponse(json_data, content_type='application/json')
+    return data
