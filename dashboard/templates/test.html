@@ -33,7 +33,7 @@ $(document).ready(function() {
     	var fromDate = 1298966400000;
 	var toDate = 1307775600000;
 
-	$.ajax({url: http://80b4bf21.dotcloud.com/api/tickets/both,
+	$.ajax({url: 'http://80b4bf21.dotcloud.com/api/tickets/both',
 			dataType: 'json',
 			success: function(data) {
 			    barchart.render(fromDate,toDate,data);
