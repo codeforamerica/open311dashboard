@@ -26,14 +26,21 @@ class ApiTest(unittest.TestCase):
                 self.assertEqual(len(json_objects, expected_length))
 
     def test_tickets(self):
+        '''Tests: /api/tickets/'''
+
         self.json_test_helper(['/api/tickets/'], 30)
 
-
     def test_tickets_opened_closed(self):
-        urls = ['/api/tickets/opened/', '/api/tickets/closed/']
+        '''Tests: /api/tickets/opened/, /api/tickets/closed/, and
+        /api/tickets/both'''
+
+        urls = ['/api/tickets/opened/', '/api/tickets/closed/',
+                '/api/tickets/both/']
         self.json_test_helper(urls, 30)
 
     def test_tickets_date_range(self):
+        '''Tests: /api/tickets/YYYY-MM-DD/YYYY-MM-DD/'''
+
         random_number = random.randint(1, 90)
         end_date = str(datetime.date.today())
         start_date = str(datetime.date.today()-datetime. \
@@ -43,6 +50,9 @@ class ApiTest(unittest.TestCase):
         self.json_test_helper(urls, random_number+1)
 
     def test_tickets_date_count(self):
+        '''Tests: /api/tickets/opened/[0-9]+ and
+        /api/tickets/opened/YYYY-MM-DD/[0-9]+'''
+
         random_number = random.randint(1, 90)
         end_date = str(datetime.date.today())
 
