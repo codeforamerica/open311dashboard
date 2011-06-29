@@ -35,7 +35,7 @@ $(document).ready(function() {
 	var toDate = 1307775600000;
 
 	$.ajax({
-	        url: 'http://127.0.0.1:8000/api/tickets/both/2011-03-01/2011-06-11/',
+	        url: '/api/tickets/both/2011-03-01/2011-06-11/',
 			dataType: 'json',
 			success: function(data) {
 			    barchart.render(fromDate,toDate,data);
