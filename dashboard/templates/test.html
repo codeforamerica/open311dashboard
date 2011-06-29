@@ -41,16 +41,6 @@ $(document).ready(function() {
 			    barchart.render(fromDate,toDate,data);
 			}
 		      });
-
-
-    $.ajax({
-        url: '/api/tickets/opened/',
-        success: function(data) {
-            $.each(data, function() {
-                $("#webservice-test").append(this.date);
-            });
-        }
-    });
 });
 </script>
 {% endblock %}
