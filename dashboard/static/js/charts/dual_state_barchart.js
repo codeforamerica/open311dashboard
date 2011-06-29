@@ -9,11 +9,11 @@ var barchart = {
      };
     
      var totalData = [];
-     for (i=0; i<data.rows.length; i++){
+     for (i=0; i<data.length; i++){
 	    totalData[i] = ({"date":data[i].date, "openCount": data[i].opened_count});
      }
      
-     for (i=0; i<data.rows.length; i++){
+     for (i=0; i<data.length; i++){
 	    totalData[i].closedCount = data[i].closed_count;
      }
 
@@ -69,7 +69,7 @@ var barchart = {
 	var graphWidth = (origin + dayLen*barWidth + (dayLen-1)*spacing);
 	var index;
 	var firstDateInData = data[0].date;
-	var lastDateInData = data[dataOpen.rows.length-1].date;
+	var lastDateInData = data[data.length-1].date;
 
 	var date;
 	var label_text_string;
