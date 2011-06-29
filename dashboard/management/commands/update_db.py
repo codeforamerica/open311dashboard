@@ -132,7 +132,6 @@ def insert_data(requests):
                                         service_code = request_dict['service_code'])
             request_dict['id'] = exists.id
         except:
-            print "Not updating..."
             pass
 
         r = Request(**request_dict)
