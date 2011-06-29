@@ -31,7 +31,7 @@ var barchart = {
     }
     
     //add option for no data
-	paper = Raphael(100, 100,CANVAS_WIDTH, CANVAS_HEIGHT);
+	paper = Raphael(document.getElementById("chart"),CANVAS_WIDTH, CANVAS_HEIGHT);
   	var barsTop = paper.set();
 	var barsBottom = paper.set();
   	var bottomLine = paper.path("M0 70L" + bottomLineLength + " 70");
