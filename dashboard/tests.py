@@ -23,8 +23,9 @@ class ApiTest(unittest.TestCase):
 
             # If expected_length is set, check it.
             if expected_length is not None:
-                self.assertEqual(len(json_objects, expected_length))
+                self.assertEqual(len(json_objects), expected_length)
 
+    # Test /api/tickets/*
     def test_tickets(self):
         '''Tests: /api/tickets/'''
 
