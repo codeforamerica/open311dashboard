@@ -31,11 +31,11 @@ class ApiTest(unittest.TestCase):
 
         self.json_test_helper(['/api/tickets/'], 30)
 
-    def test_tickets_opened_closed(self):
-        '''Tests: /api/tickets/opened/, /api/tickets/closed/, and
+    def test_tickets_open_closed(self):
+        '''Tests: /api/tickets/open/, /api/tickets/closed/, and
         /api/tickets/both'''
 
-        urls = ['/api/tickets/opened/', '/api/tickets/closed/',
+        urls = ['/api/tickets/open/', '/api/tickets/closed/',
                 '/api/tickets/both/']
         self.json_test_helper(urls, 30)
 
@@ -47,18 +47,18 @@ class ApiTest(unittest.TestCase):
         start_date = str(datetime.date.today()-datetime. \
                 timedelta(days=random_number))
 
-        urls = ['/api/tickets/opened/%s/%s/' % (start_date, end_date)]
+        urls = ['/api/tickets/open/%s/%s/' % (start_date, end_date)]
         self.json_test_helper(urls, random_number+1)
 
     def test_tickets_date_count(self):
-        '''Tests: /api/tickets/opened/[0-9]+ and
-        /api/tickets/opened/YYYY-MM-DD/[0-9]+'''
+        '''Tests: /api/tickets/open/[0-9]+ and
+        /api/tickets/oped/YYYY-MM-DD/[0-9]+'''
 
         random_number = random.randint(1, 90)
         end_date = str(datetime.date.today())
 
-        url_sans_date = ['/api/tickets/opened/%s/' % random_number]
-        url_date = ['/api/tickets/opened/%s/%s/' % (end_date, random_number)]
+        url_sans_date = ['/api/tickets/open/%s/' % random_number]
+        url_date = ['/api/tickets/open/%s/%s/' % (end_date, random_number)]
 
         self.json_test_helper(url_sans_date, random_number+1)
         self.json_test_helper(url_date, random_number)

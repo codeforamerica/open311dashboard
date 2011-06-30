@@ -6,15 +6,15 @@ urlpatterns = patterns('',
 
     # API Calls
     url(r'^api/tickets/$', 'open311dashboard.dashboard.views.ticket_days'),
-    url(r'^api/tickets/(?P<ticket_status>opened|closed|both)/$',
+    url(r'^api/tickets/(?P<ticket_status>open|closed|both)/$',
         'open311dashboard.dashboard.views.ticket_days'),
-    url(r'^api/tickets/(?P<ticket_status>opened|closed|both)/(?P<num_days>\d+)/$',
+    url(r'^api/tickets/(?P<ticket_status>open|closed|both)/(?P<num_days>\d+)/$',
         'open311dashboard.dashboard.views.ticket_days'),
-    url(r'^api/tickets/(?P<ticket_status>opened|closed|both)/(?P<end>\d{4}-\d{2}-\d{2})/$',
+    url(r'^api/tickets/(?P<ticket_status>open|closed|both)/(?P<end>\d{4}-\d{2}-\d{2})/$',
         'open311dashboard.dashboard.views.ticket_days'),
-    url(r'^api/tickets/(?P<ticket_status>opened|closed|both)/(?P<end>\d{4}-\d{2}-\d{2})/(?P<num_days>\d+)/',
+    url(r'^api/tickets/(?P<ticket_status>open|closed|both)/(?P<end>\d{4}-\d{2}-\d{2})/(?P<num_days>\d+)/',
         'open311dashboard.dashboard.views.ticket_days'),
-    url(r'^api/tickets/(?P<ticket_status>opened|closed|both)/(?P<start>\d{4}-\d{2}-\d{2})/(?P<end>\d{4}-\d{2}-\d{2})/$',
+    url(r'^api/tickets/(?P<ticket_status>open|closed|both)/(?P<start>\d{4}-\d{2}-\d{2})/(?P<end>\d{4}-\d{2}-\d{2})/$',
         'open311dashboard.dashboard.views.ticket_days'),
 
     # More in depth aggregate data.
