@@ -6,8 +6,19 @@ Getting Started
 ---------------
 1. Rename settings_local.example.py to settings_local.py and set your db/city/secretkey variables.
 2. `pip install -r requirements.txt`
-3. `python manage.py update_db` imports initial data.
-4. `python manage.py runserver`
+3. `python manage.py syncdb` creates the database schema.
+4. `python manage.py update_db` imports initial data.
+5. `python manage.py runserver`
+
+Database Update Script
+----------------------
+To update data from the Open311 API, run `python manage.py update_db`.
+This command has a few options that may be useful. The first argument is
+the end date, defaults to yesterday. The second argument is the number
+of days to download previous to that date.
+
+* Ex: `python manage.py updatedb 2011-07-01 30` will download the entire
+  month of June.
 
 API Access
 ----------
