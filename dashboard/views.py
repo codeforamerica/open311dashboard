@@ -29,12 +29,11 @@ def test(request):
 
 # API Views
 @ApiHandler
-def ticket_days(request, ticket_status="opened", start=None, end=None,
+def ticket_days(request, ticket_status="open", start=None, end=None,
         num_days=None):
     '''Returns JSON with the number of opened/closed tickets in a specified
     date range'''
-    print ticket_status
-    if ticket_status == "opened":
+    if ticket_status == "open":
         request = Request.objects.filter(status="Open")
         stats = qsstats.QuerySetStats(request, 'requested_datetime')
     elif ticket_status == "closed":
@@ -82,7 +81,7 @@ def ticket_days(request, ticket_status="opened", start=None, end=None,
 
         for i in range(len(opened_data)):
             temp_data = {'date': int(time.mktime(opened_data[i][0].timetuple())),
-                         'opened_count': opened_data[i][1],
+                         'open_count': opened_data[i][1],
                          'closed_count': closed_data[i][1],
                          }
             data.append(temp_data)

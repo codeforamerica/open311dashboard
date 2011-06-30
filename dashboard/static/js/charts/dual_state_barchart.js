@@ -10,7 +10,7 @@ var barchart = {
     
      var totalData = [];
      for (i=0; i<data.length; i++){
-	    totalData[i] = ({"date":data[i].date, "openCount": data[i].opened_count});
+	    totalData[i] = ({"date":data[i].date, "openCount": data[i].open_count});
      }
      
      for (i=0; i<data.length; i++){
