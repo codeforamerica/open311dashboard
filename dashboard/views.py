@@ -35,13 +35,13 @@ def ticket_days(request, ticket_status="opened", start=None, end=None,
     date range'''
     print ticket_status
     if ticket_status == "opened":
-        request = Request.objects.all()
+        request = Request.objects.filter(status="Open")
         stats = qsstats.QuerySetStats(request, 'requested_datetime')
     elif ticket_status == "closed":
         request = Request.objects.filter(status="Closed")
         stats = qsstats.QuerySetStats(request, 'updated_datetime')
     elif ticket_status == "both":
-        request_opened = Request.objects.all()
+        request_opened = Request.objects.filter(status="Closed")
         stats_opened = qsstats.QuerySetStats(request_opened,
                                              'requested_datetime')
 
