@@ -17,8 +17,8 @@ var barchart = {
 	    totalData[i].closedCount = data[i].closed_count;
      }
 
-    var CANVAS_HEIGHT = 160;
-    var y_orig = 85;
+    var CANVAS_HEIGHT = 400;
+    var y_orig = 200;
     var origin = 70;
     var barWidth = 14;
     var spacing = 1;
