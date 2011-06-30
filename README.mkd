@@ -14,7 +14,7 @@ API Access
 There are a number API calls to return JSON in various forms.
 
 * `/api`
-    * `/tickets/(opened|closed)`
+    * `/tickets/(open|closed|both)`
         * `/[0-9]+` (n days previous to today)
         * `/YYYY-MM-DD(/[0-9]+)` (n days previous to the date)
         * `/YYYY-MM-DD/YYYY-MM-DD` (simple date range)
