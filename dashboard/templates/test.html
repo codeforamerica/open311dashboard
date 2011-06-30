@@ -31,11 +31,11 @@
 <script type="text/javascript" src="{{ STATIC_URL }}js/charts/dual_state_barchart.js"></script>
 <script>
 $(document).ready(function() {
-    	var fromDate = 1298966400000;
-	var toDate = 1307775600000;
+    	var fromDate = new Date(2011,5,1).getTime(); //1298966400000;
+	var toDate = new Date(2011,6,1).getTime(); //1307775600000;
 
 	$.ajax({
-	        url: '/api/tickets/both/2011-03-01/2011-06-11/',
+	        url: '/api/tickets/both/2011-06-01/2011-06-30/',
 			dataType: 'json',
 			success: function(data) {
 			    barchart.render(fromDate,toDate,data);
