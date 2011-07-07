@@ -32,6 +32,9 @@ class Page(models.Model):
     title = model.CharField(max_length=140)
     widgets = model.ManyToManyField('Widget')
 
+    class Meta:
+        db_table = "pages_%s" % CITY['SHORTNAME']
+
 class Widget(models.Model):
     '''Widgets are attached to pages and have a column number and an order. All
     metadata should be serialized in JSON.'''
@@ -39,4 +42,7 @@ class Widget(models.Model):
     partial = model.CharField(max_length=255)
     column = model.IntegerField()
     order = model.IntegerField()
+
+    class Meta:
+        db_table = "widgets_%s" % CITY['SHORTNAME']
 
