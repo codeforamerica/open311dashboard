@@ -157,7 +157,7 @@ def process_requests(start, end, page):
 
 def handle_open_requests():
     url = CITY['URL']
-    open_requests = Request.objects.all().filter(status="Open")
+    open_requests = Request.objects.all().filter(status__iexact="open")
     length = len(open_requests)
     print "Checking %d tickets for changed status" % length
 
