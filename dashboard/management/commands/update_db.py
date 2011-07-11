@@ -4,7 +4,7 @@ from open311dashboard.dashboard.models import Request
 from dateutil import parser
 from open311dashboard.settings import CITY
 
-
+from optparse import make_option
 import httplib
 import urllib2
 import urllib
@@ -185,6 +185,10 @@ def handle_open_requests():
 
 # At runtime...
 class Command(BaseCommand):
+    option_list = BaseCommand.option_list + (
+            make_option('--checkopen', dest='open',
+                default=True),
+            )
 
     def handle(self, *args, **options):
         if len(args) >= 1:
@@ -211,6 +215,7 @@ class Command(BaseCommand):
 
             print start
 
-        handle_open_requests()
+        if options['open'] is True:
+            handle_open_requests()
 
 
