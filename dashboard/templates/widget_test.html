@@ -4,8 +4,10 @@
 I have to make {{ columns }} columns.<br />
 
 {% for widget in widgets %}
+  <div class="grid_{% widthratio widget.column columns 12 %}">
     {% with "partials/"|add:widget.partial as partial_url %}
-        {% include partial_url %}<br />
+      {% include partial_url %}<br />
     {% endwith %}
+  </div>
 {% endfor %}
 {% endblock %}
