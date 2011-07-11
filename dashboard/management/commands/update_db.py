@@ -147,7 +147,6 @@ def process_requests(start, end, page):
     requests_stream = get_requests_from_SF(start, end, page)
     requests = parse_requests_doc(requests_stream)
 
-    # 
     if requests != False:
         insert_data(requests)
 
@@ -155,6 +154,34 @@ def process_requests(start, end, page):
             page = page+1
             process_requests(start, end, page)
     return requests
+
+def handle_open_requests():
+    url = CITY['URL']
+    open_requests = Request.objects.all().filter(status="Open")
+    length = len(open_requests)
+    print "Checking %d tickets for changed status" % length
+
+    for index in xrange(0, length, 10):
+        data = []
+        for i in xrange(0, 10):
+            data.append(open_requests[index + i].service_request_id)
+
+        query_data = {
+                'jurisdiction_id': CITY['JURISDICTION'],
+                'service_request_id': ','.join(data)
+                }
+
+        query_str = urllib.urlencode(query_data)
+        print url + '?' + query_str
+
+        requests_stream = urllib2.urlopen(url + '?' + query_str)
+        try:
+            print "Parsing open docs"
+            requests = parse_requests_doc(requests_stream)
+            print "Saving..."
+            insert_data(requests)
+        except:
+            print "Could not process updates."
 
 # At runtime...
 class Command(BaseCommand):
@@ -183,5 +210,7 @@ class Command(BaseCommand):
             end -= ONE_DAY
 
             print start
+
+        handle_open_requests()
 
 
