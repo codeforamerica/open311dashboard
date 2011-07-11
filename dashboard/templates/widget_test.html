@@ -4,15 +4,8 @@
 I have to make {{ columns }} columns.<br />
 
 {% for widget in widgets %}
-    Success!<br />
     {% with "partials/"|add:widget.partial as partial_url %}
         {% include partial_url %}<br />
     {% endwith %}
-
-    Includes the following scripts:
-    {% for script in widget.metadata.scripts %}
-        Iterate.
-        {{ script }}
-    {% endfor %}
 {% endfor %}
 {% endblock %}
