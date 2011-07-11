@@ -1,10 +1,10 @@
 from open311dashboard.settings import CITY
-from open311dashboard.dashboard.models import Request
+from open311dashboard.dashboard.models import Request, Widget
 
 from django.http import HttpResponse, HttpRequest
 from django.template import Context
 from django.shortcuts import render
-from django.db.models import Count
+from django.db.models import Count, Max
 from django.core import serializers
 
 from open311dashboard.dashboard.utils import str_to_day, day_to_str, \
@@ -26,6 +26,26 @@ def test(request):
         'city': CITY['NAME'],
         })
     return render(request, 'test.html', c)
+
+def widget_test(request):
+    widgets = Widget.objects.all()
+    columns = widgets.aggregate(max_cols=Max('column'))
+    metadata = []
+
+    # Deserialize the JSON in the metadata field.
+    for widget in widgets:
+        try:
+            temp_data = json.loads(widget.metadata)
+            widget.metadata = temp_data
+        except:
+            print "Error: Could not parse json for metadata"
+
+
+    c = Context({
+        'widgets': widgets,
+        'columns': columns['max_cols']
+        })
+    return render(request, 'widget_test.html', c)
 
 # API Views
 @ApiHandler

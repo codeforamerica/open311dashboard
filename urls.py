@@ -4,6 +4,9 @@ urlpatterns = patterns('',
     url(r'^$', 'open311dashboard.dashboard.views.index'),
     url(r'^test/$', 'open311dashboard.dashboard.views.test'),
 
+    # Testing out the widget architecture.
+    url(r'^widgets/$', 'open311dashboard.dashboard.views.widget_test'),
+
     # API Calls
     url(r'^api/tickets/$', 'open311dashboard.dashboard.views.ticket_days'),
     url(r'^api/tickets/(?P<ticket_status>open|closed|both)/$',

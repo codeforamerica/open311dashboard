@@ -29,8 +29,8 @@ class Request(models.Model):
 class Page(models.Model):
     '''Pages are merely exist to hold widgets, they have a title and widgets
     associated with them.'''
-    title = model.CharField(max_length=140)
-    widgets = model.ManyToManyField('Widget')
+    title = models.CharField(max_length=140)
+    widgets = models.ManyToManyField('Widget')
 
     class Meta:
         db_table = "pages_%s" % CITY['SHORTNAME']
@@ -38,10 +38,10 @@ class Page(models.Model):
 class Widget(models.Model):
     '''Widgets are attached to pages and have a column number and an order. All
     metadata should be serialized in JSON.'''
-    page = model.ManyToManyField('Page')
-    partial = model.CharField(max_length=255)
-    column = model.IntegerField()
-    order = model.IntegerField()
+    partial = models.CharField(max_length=255)
+    column = models.IntegerField()
+    order = models.IntegerField()
+    metadata = models.TextField()
 
     class Meta:
         db_table = "widgets_%s" % CITY['SHORTNAME']
