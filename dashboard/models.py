@@ -41,6 +41,7 @@ class Widget(models.Model):
     partial = models.CharField(max_length=255)
     column = models.IntegerField()
     order = models.IntegerField()
+    span = models.IntegerField()
     metadata = models.TextField()
 
     class Meta:
