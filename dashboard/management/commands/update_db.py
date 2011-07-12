@@ -4,7 +4,7 @@ from open311dashboard.dashboard.models import Request
 from dateutil import parser
 from open311dashboard.settings import CITY
 
-
+from optparse import make_option
 import httplib
 import urllib2
 import urllib
@@ -147,7 +147,6 @@ def process_requests(start, end, page):
     requests_stream = get_requests_from_SF(start, end, page)
     requests = parse_requests_doc(requests_stream)
 
-    # 
     if requests != False:
         insert_data(requests)
 
@@ -156,32 +155,73 @@ def process_requests(start, end, page):
             process_requests(start, end, page)
     return requests
 
+def handle_open_requests():
+    url = CITY['URL']
+    open_requests = Request.objects.all().filter(status__iexact="open")
+    length = len(open_requests)
+    print "Checking %d tickets for changed status" % length
+
+    for index in xrange(0, length, 10):
+        data = []
+        for i in xrange(0, 10):
+            data.append(open_requests[index + i].service_request_id)
+
+        query_data = {
+                'jurisdiction_id': CITY['JURISDICTION'],
+                'service_request_id': ','.join(data)
+                }
+
+        query_str = urllib.urlencode(query_data)
+        print url + '?' + query_str
+
+        requests_stream = urllib2.urlopen(url + '?' + query_str)
+        try:
+            print "Parsing open docs"
+            requests = parse_requests_doc(requests_stream)
+            print "Saving..."
+            insert_data(requests)
+        except:
+            print "Could not process updates."
+
 # At runtime...
 class Command(BaseCommand):
+    option_list = BaseCommand.option_list + (
+            make_option('--checkopen', dest='open',
+                default=False, help="Boolean to check open tickets"),
+            make_option('--default', dest='default',
+                default=True, help="Boolean to execute default functionality"),
+            )
+
+    help = """Update and seed the database from data retrieved from the API.
+    Makes calls one day at a time"""
 
     def handle(self, *args, **options):
-        if len(args) >= 1:
-            start, end = get_time_range(dt.datetime.strptime(args[0], '%Y-%m-%d'))
-        else:
-            start, end = get_time_range()
+        if options['default'] is True:
+            if len(args) >= 1:
+                start, end = get_time_range(dt.datetime.strptime(args[0], '%Y-%m-%d'))
+            else:
+                start, end = get_time_range()
 
-        if len(args) >= 2:
-            num_days = int(args[1])
-            print(args[1])
-        else:
-            num_days = 1
+            if len(args) >= 2:
+                num_days = int(args[1])
+                print(args[1])
+            else:
+                num_days = 1
 
-        if CITY['PAGINATE']:
-            page = 1
-        else:
-            page = False
+            if CITY['PAGINATE']:
+                page = 1
+            else:
+                page = False
 
-        for _ in xrange(num_days):
-            requests = process_requests(start, end, page)
+            for _ in xrange(num_days):
+                requests = process_requests(start, end, page)
 
-            start -= ONE_DAY
-            end -= ONE_DAY
+                start -= ONE_DAY
+                end -= ONE_DAY
 
-            print start
+                print start
+
+        if options['open'] is True:
+            handle_open_requests()
 
 
