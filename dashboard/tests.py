@@ -19,7 +19,10 @@ class ApiTest(unittest.TestCase):
             response = self.client.get(url)
             self.assertEqual(response.status_code, 200)
 
-            json_objects = json.loads(response.content)
+            try:
+                json_objects = json.loads(response.content)
+            except:
+                print "JSON from %s not valid." % url
 
             # If expected_length is set, check it.
             if expected_length is not None:
