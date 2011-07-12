@@ -63,18 +63,20 @@ class ApiTest(unittest.TestCase):
         self.json_test_helper(url_sans_date, random_number+1)
         self.json_test_helper(url_date, random_number)
 
-    def test_agg_single_day(self):
+    def test_single_day(self):
         '''Tests: /api/more_info/YYYY-MM-DD/'''
         date = str(datetime.date.today()-datetime.timedelta(days=1))
 
-        url = ['/api/more_info/%s/' % date]
-        self.json_test_helper(url)
+        url = ['/api/more_info/%s/' % date, '/api/list/%s/' % date]
+        self.json_test_helper(urls)
 
-    def test_agg_date_range(self):
-        '''Tests: /api/more_info/YYYY-MM-DD/YYYY-MM-DD'''
+    def test_date_range(self):
+        '''Tests: /api/more_info/YYYY-MM-DD/YYYY-MM-DD/'''
         end_date = str(datetime.date.today())
         start_date = str(datetime.date.today() - datetime. \
                 timedelta(days=30))
+        start_end = (start_date, end_date)
 
-        url = ['/api/more_info/%s/%s/' % (start_date, end_date)]
+        url = ['/api/more_info/%s/%s/' % start_end,
+                '/api/list/%s/%s/' % start_end]
         self.json_test_helper(url)
