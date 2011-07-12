@@ -40,7 +40,6 @@ def widget_test(request):
         except:
             print "Error: Could not parse json for metadata"
 
-
     c = Context({
         'widgets': widgets,
         'columns': columns['max_cols']

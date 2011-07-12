@@ -1,10 +1,11 @@
 {% extends 'base.html' %}
+{% load math %}
 
 {% block content %}
 I have to make {{ columns }} columns.<br />
 
 {% for widget in widgets %}
-  <div class="grid_{% widthratio widget.column*widget.span columns 12 %}">
+  <div class="grid_{% widthratio widget.column|multiply:widget.span columns 12 %}">
     {% with "partials/"|add:widget.partial as partial_url %}
       {% include partial_url %}
     {% endwith %}
