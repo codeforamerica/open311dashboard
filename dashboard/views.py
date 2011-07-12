@@ -94,7 +94,7 @@ def ticket_day(request, begin=day_to_str(datetime.date.today()), end=None):
     if end == None:
         key = begin
     else:
-        key = "% - %" % [begin, end]
+        key = "%s - %s" % (begin, end)
 
     # Request and group by service_name.
     requests = Request.objects \
