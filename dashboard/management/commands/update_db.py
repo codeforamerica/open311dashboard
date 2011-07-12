@@ -187,33 +187,39 @@ def handle_open_requests():
 class Command(BaseCommand):
     option_list = BaseCommand.option_list + (
             make_option('--checkopen', dest='open',
-                default=False),
+                default=False, help="Boolean to check open tickets"),
+            make_option('--default', dest='default',
+                default=True, help="Boolean to execute default functionality"),
             )
 
+    help = """Update and seed the database from data retrieved from the API.
+    Makes calls one day at a time"""
+
     def handle(self, *args, **options):
-        if len(args) >= 1:
-            start, end = get_time_range(dt.datetime.strptime(args[0], '%Y-%m-%d'))
-        else:
-            start, end = get_time_range()
+        if options['default'] is True:
+            if len(args) >= 1:
+                start, end = get_time_range(dt.datetime.strptime(args[0], '%Y-%m-%d'))
+            else:
+                start, end = get_time_range()
 
-        if len(args) >= 2:
-            num_days = int(args[1])
-            print(args[1])
-        else:
-            num_days = 1
+            if len(args) >= 2:
+                num_days = int(args[1])
+                print(args[1])
+            else:
+                num_days = 1
 
-        if CITY['PAGINATE']:
-            page = 1
-        else:
-            page = False
+            if CITY['PAGINATE']:
+                page = 1
+            else:
+                page = False
 
-        for _ in xrange(num_days):
-            requests = process_requests(start, end, page)
+            for _ in xrange(num_days):
+                requests = process_requests(start, end, page)
 
-            start -= ONE_DAY
-            end -= ONE_DAY
+                start -= ONE_DAY
+                end -= ONE_DAY
 
-            print start
+                print start
 
         if options['open'] is True:
             handle_open_requests()
