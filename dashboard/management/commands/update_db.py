@@ -187,7 +187,7 @@ def handle_open_requests():
 class Command(BaseCommand):
     option_list = BaseCommand.option_list + (
             make_option('--checkopen', dest='open',
-                default=True),
+                default=False),
             )
 
     def handle(self, *args, **options):
