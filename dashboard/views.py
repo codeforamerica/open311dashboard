@@ -99,7 +99,8 @@ def ticket_day(request, begin=day_to_str(datetime.date.today()), end=None):
     # Request and group by service_name.
     requests = Request.objects \
             .filter(requested_datetime__range=date_range(begin, end)) \
-            .values('service_name').annotate(count=Count('service_name'))
+            .values('service_name').annotate(count=Count('service_name')) \
+            .order_by('-count')
 
     data = {key: [item for item in requests]}
     return data
