@@ -22,3 +22,16 @@ class Request(models.Model):
 
     class Meta:
         db_table = "dashboard_data_%s" % CITY['SHORTNAME']
+
+class Service(models.Model):
+    service_code = models.CharField(max_length=100)
+    metadata = models.CharField(max_length=100)
+    type = models.CharField(max_length=50)
+    keywords = models.TextField(blank=True, null=True)
+    group = models.CharField(max_length=100)
+    service_name = models.CharField(max_length=100)
+    description = models.TextField()
+
+    class Meta:
+        db_table = "dashboard_service_%s" % CITY['SHORTNAME']
+
