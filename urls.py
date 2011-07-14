@@ -1,5 +1,8 @@
 from django.conf.urls.defaults import patterns, include, url
 
+from django.contrib import admin
+admin.autodiscover()
+
 urlpatterns = patterns('',
     url(r'^$', 'open311dashboard.dashboard.views.index'),
     url(r'^test/$', 'open311dashboard.dashboard.views.test'),
@@ -28,4 +31,6 @@ urlpatterns = patterns('',
         'open311dashboard.dashboard.views.list_requests'),
     url(r'^api/list/(?P<begin>\d{4}-\d{2}-\d{2})/(?P<end>\d{4}-\d{2}-\d{2})/$',
         'open311dashboard.dashboard.views.list_requests'),
+
+    (r'^admin/', include(admin.site.urls)),
 )
