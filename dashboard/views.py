@@ -16,6 +16,9 @@ import datetime
 import qsstats
 import time
 
+# PROFILING
+from django.db import connection
+
 def index(request):
     return render(request, 'index.html')
 
@@ -70,22 +73,20 @@ def ticket_days(request, ticket_status="open", start=None, end=None,
     data = []
 
     try:
-        raw_data = stats.time_series(start, end, engine='postgres')
+        raw_data = stats.time_series(start, end)
 
         for row in raw_data:
             temp_data = {'date': int(time.mktime(row[0].timetuple())), 'count': row[1]}
             data.append(temp_data)
     except:
-        opened_data = stats_opened.time_series(start, end, engine='postgres')
-        closed_data = stats_closed.time_series(start, end, engine='postgres')
-
+        opened_data = stats_opened.time_series(start, end)
+        closed_data = stats_closed.time_series(start, end)
         for i in range(len(opened_data)):
             temp_data = {'date': int(time.mktime(opened_data[i][0].timetuple())),
                          'open_count': opened_data[i][1],
                          'closed_count': closed_data[i][1],
                          }
             data.append(temp_data)
-
     return data
 
 # Get service_name stats for a range of dates
