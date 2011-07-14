@@ -20,6 +20,12 @@ of days to download previous to that date.
 * Ex: `python manage.py updatedb 2011-07-01 30` will download the entire
   month of June.
 
+To set up automatic updates (midnight every night):
+
+1. `crontab -e`
+2. Insert `0 0 * * * /path/to/dir/manage.py update_db`
+
+
 API Access
 ----------
 There are a number API calls to return JSON in various forms.
