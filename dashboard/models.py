@@ -19,6 +19,9 @@ class Request(models.Model):
     lat = models.FloatField()
     long = models.FloatField()
     media_url = models.URLField(blank=True, null=True)
+    geo_point = models.PointField(srid=4326)
+
+    objects = models.GeoManager()
 
     class Meta:
         db_table = "dashboard_data_%s" % CITY['SHORTNAME']
@@ -35,3 +38,19 @@ class Service(models.Model):
     class Meta:
         db_table = "dashboard_service_%s" % CITY['SHORTNAME']
 
+# This is an auto-generated Django model module created by ogrinspect.
+class Neighborhoods(models.Model):
+    objectid = models.FloatField()
+    neighborho = models.CharField(max_length=25)
+    geom = models.MultiPolygonField(srid=4326)
+    objects = models.GeoManager()
+
+    def __unicode__(self):
+        return self.neighborho
+
+# Auto-generated `LayerMapping` dictionary for Neighborhoods model
+neighborhoods_mapping = {
+    'objectid' : 'OBJECTID',
+    'neighborho' : 'NEIGHBORHO',
+    'geom' : 'MULTIPOLYGON',
+}
