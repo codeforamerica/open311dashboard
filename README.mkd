@@ -40,6 +40,10 @@ There are a number API calls to return JSON in various forms.
     * `/list/YYYY-MM-DD` (singe day)
         * `/YYYY-MM-DD` (range)
 
+Geo Stuff
+---------
+`shp2pgsql -a -s 4326 neighborhoods.shp dashboard_neighborhoods > neighborhoods.sql`
+
 More Information
 ----------------
 Visit our [project page](http://codeforamerica.org/?cfa_project=open311-dashboard) and our [homepage](http://www.311dashboard.com).
