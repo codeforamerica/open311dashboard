@@ -1,5 +1,5 @@
 from open311dashboard.settings import CITY
-from open311dashboard.dashboard.models import Request
+from open311dashboard.dashboard.models import Request, Neighborhoods
 
 from django.http import HttpResponse, HttpRequest
 from django.template import Context
@@ -24,6 +24,11 @@ def index(request):
 
 def map(request):
     return render(request, 'map.html')
+
+def neighborhood(request, neighborhood_id):
+    neighborhood = Neighborhoods.objects.get(pk=neighborhood_id)
+    return HttpResponse(neighborhood.geom.geojson, content_type='application/json')
+
 
 def test(request):
     request_list = Request.objects.all()[:10]
