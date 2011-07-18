@@ -22,6 +22,9 @@ from django.db import connection
 def index(request):
     return render(request, 'index.html')
 
+def map(request):
+    return render(request, 'map.html')
+
 def test(request):
     request_list = Request.objects.all()[:10]
     c = Context({
