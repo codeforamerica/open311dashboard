@@ -12,13 +12,23 @@ var po = org.polymaps;
 var map = po.map()
     .container(document.getElementById("map").appendChild(po.svg("svg")))
     .add(po.interact())
-    .add(po.hash());
+    .add(po.hash())
+    .center({lat: 37.76, lon: -122.44})
+    .zoom(13);
 
 map.add(po.image()
         .url(po.url("http://{S}tile.cloudmade.com"
                 + "/b60fbbd51f17456794d2b0e4ed4f0d0c"
-                + "/3121/256/{Z}/{X}/{Y}.png")
+                + "/1714/256/{Z}/{X}/{Y}.png")
             .hosts(["a.", "b.", "c.", ""])));
+
+map.add(po.geoJson()
+        .url("/neighborhood/10.json")
+        .id("neighborhood")
+        .zoom(13)
+        .tile(false)
+        .on("load", po.stylist()
+            .attr("stroke", "red")));
 
 map.add(po.compass()
         .pan("none"));
