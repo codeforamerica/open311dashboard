@@ -9,6 +9,8 @@ urlpatterns = patterns('',
     url(r'^map/$', 'open311dashboard.dashboard.views.map'),
     url(r'^neighborhood/(?P<neighborhood_id>\d+).json$',
         'open311dashboard.dashboard.views.neighborhood'),
+    url(r'^neighborhoods.json$',
+        'open311dashboard.dashboard.views.neighborhoods'),
 
     # API Calls
     url(r'^api/tickets/$', 'open311dashboard.dashboard.views.ticket_days'),
