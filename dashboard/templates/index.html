@@ -1,9 +1,31 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<ul>
-    <li><a href="http://d5dab8db.dotcloud.com/">Boston</a></li>
-    <li><a href="http://80b4bf21.dotcloud.com/">San Francisco</a></li>
-</ul>
-<a href="/test">Test to see if the DB works</a>
+<style>
+    #datepicker input {
+        width:80px;
+        }
+
+    #ui-datepicker-div {
+        display:none;
+    }
+</style>
+<div class="grid_4 prefix_8">
+    <div id="datepicker">
+        <label for="from">From</label>
+        <input type="text" name="from" id="from">
+        <label for="to">to</label>
+        <input type="text" name="to" id="to">
+    </div>
+</div>
+{% endblock %}
+
+{% block custom_scripts %}
+<script>
+  $(function() {
+        var from_date = $("#datepicker #from, #datepicker #to").datepicker({
+            changeMonth: true
+        });
+    });
+</script>
 {% endblock %}

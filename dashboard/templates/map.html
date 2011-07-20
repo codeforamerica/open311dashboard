@@ -1,6 +1,25 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<style>
+    #neighborhood path {
+        fill:blue;
+        stroke:yellow;
+        opacity:.8;
+    }
+
+    #neighborhood path:hover {
+        opacity:.3;
+    }
+</style>
+<div id="selector">
+  <select id="changer">
+    {% for neighborhood in neighborhoods %}
+      <option value="{{ neighborhood.id }}">{{ neighborhood.neighborho }}</option>
+    {% endfor %}
+</select>
+<div id="position">Lat: <span id="lat"></span>; Long: <span id="long"></span></div>
+</div>
 <div id="map">
 </div>
 {% endblock %}
@@ -22,15 +41,25 @@ map.add(po.image()
                 + "/1714/256/{Z}/{X}/{Y}.png")
             .hosts(["a.", "b.", "c.", ""])));
 
-map.add(po.geoJson()
-        .url("/neighborhood/10.json")
-        .id("neighborhood")
-        .zoom(13)
-        .tile(false)
-        .on("load", po.stylist()
-            .attr("stroke", "red")));
+var neighborhood = po.geoJson()
+    .url("/neighborhoods.json")
+    .id("neighborhood")
+    .zoom(13)
+    .tile(false);
+
+map.add(neighborhood);
 
 map.add(po.compass()
-        .pan("none"));
+    .pan("none"));
+
+document.getElementById("changer").onchange = function (e) {
+  neighborhood.stylist().attr("fill-opacity", .5);
+};
+
+document.getElementById("map").onmousemove = function(e) {
+    var loc = map.pointLocation(map.mouse(e));
+    document.getElementById("lat").innerHTML = loc.lat;
+    document.getElementById("long").innerHTML = loc.lon;
+};
 </script>
 {% endblock %}
