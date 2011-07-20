@@ -26,6 +26,9 @@
   <link rel="stylesheet" href="{{ STATIC_URL }}css/style.css?v=2">
   <link rel="stylesheet" href="{{ STATIC_URL }}css/960.css">
 
+  <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.0/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.0/themes/ui-lightness/jquery-ui.css">
+
   <script src="{{ STATIC_URL }}js/libs/modernizr-1.7.min.js"></script>
 
 </head>
@@ -34,7 +37,8 @@
 
   <div id="container" class="container_12">
     <header>
-
+    <h1>Open311 Dashboard</h1>
+    <p>Yeah, we're pretty awesome&hellip;</p>
     </header>
     <div id="main" role="main">
         {% block content %}{% endblock %}
@@ -47,7 +51,8 @@
 
 
   <!-- Grab Google CDN's jQuery, with a protocol relative URL; fall back to local if necessary -->
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.min.js"></script>
   <script src="{{ STATIC_URL }}js/libs/raphael-min.js"></script>
   <script src="{{ STATIC_URL }}js/libs/polymaps.min.js"></script>
   <!-- <script>window.jQuery || document.write("<script src='{{ STATIC_URL

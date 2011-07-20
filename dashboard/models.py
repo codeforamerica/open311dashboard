@@ -48,6 +48,9 @@ class Neighborhoods(models.Model):
     def __unicode__(self):
         return self.neighborho
 
+    class Meta:
+        db_table = "neighborhoods_%s" % CITY['SHORTNAME']
+
 # Auto-generated `LayerMapping` dictionary for Neighborhoods model
 neighborhoods_mapping = {
     'objectid' : 'OBJECTID',

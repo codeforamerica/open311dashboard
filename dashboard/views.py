@@ -8,7 +8,7 @@ from django.db.models import Count
 from django.core import serializers
 
 from open311dashboard.dashboard.utils import str_to_day, day_to_str, \
-    date_range, dt_handler
+    date_range, dt_handler, render_to_geojson
 from open311dashboard.dashboard.decorators import ApiHandler
 
 import json
@@ -23,11 +23,19 @@ def index(request):
     return render(request, 'index.html')
 
 def map(request):
-    return render(request, 'map.html')
+    neighborhoods = Neighborhoods.objects.all()
+    c = Context({
+        'neighborhoods': neighborhoods,
+        })
+    return render(request, 'map.html', c)
 
 def neighborhood(request, neighborhood_id):
     neighborhood = Neighborhoods.objects.get(pk=neighborhood_id)
     return HttpResponse(neighborhood.geom.geojson, content_type='application/json')
+
+def neighborhoods(request):
+    neighborhoods = Neighborhoods.objects.all()
+    return render_to_geojson(neighborhoods, exclude=['_state'])
 
 
 def test(request):
@@ -91,9 +99,9 @@ def ticket_days(request, ticket_status="open", start=None, end=None,
         closed_data = stats_closed.time_series(start, end)
         for i in range(len(opened_data)):
             temp_data = {'date': int(time.mktime(opened_data[i][0].timetuple())),
-                         'open_count': opened_data[i][1],
-                         'closed_count': closed_data[i][1],
-                         }
+                    'open_count': opened_data[i][1],
+                     'closed_count': closed_data[i][1],
+                     }
             data.append(temp_data)
     return data
 
