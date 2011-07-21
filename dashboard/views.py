@@ -20,8 +20,14 @@ import time
 from django.db import connection
 
 def index(request):
-    total_open = Request.objects.filter(status="Open").filter
-    return render(request, 'index.html')
+    total_open = Request.objects.filter(status="Open").count()
+    most_recent = Request.objects.latest('requested_datetime')
+
+    c = Context({
+        'open_tickets': total_open,
+        'latest': most_recent
+        })
+    return render(request, 'index.html', c)
 
 def map(request):
     neighborhoods = Neighborhoods.objects.all()
