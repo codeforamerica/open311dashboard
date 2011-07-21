@@ -25,7 +25,7 @@ def index(request):
 
     c = Context({
         'open_tickets': total_open,
-        'latest': most_recent
+        'latest': most_recent.requested_datetime
         })
     return render(request, 'index.html', c)
 
