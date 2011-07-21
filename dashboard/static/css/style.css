@@ -165,23 +165,12 @@ a:hover { color: #036; }
 /**
  * Primary styles
  *
- * Author: 
+ * Author: Chris Barna and mevans.
  */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#container header {
+  width:100%;
+  background:#ccc;
+}
 
 /**
  * Non-semantic helper classes: please define your styles before this section.
