@@ -20,6 +20,7 @@ import time
 from django.db import connection
 
 def index(request):
+    total_open = Request.objects.filter(status="Open").filter
     return render(request, 'index.html')
 
 def map(request):
@@ -52,20 +53,6 @@ def ticket_days(request, ticket_status="open", start=None, end=None,
         num_days=None):
     '''Returns JSON with the number of opened/closed tickets in a specified
     date range'''
-    if ticket_status == "open":
-        request = Request.objects.filter(status="Open")
-        stats = qsstats.QuerySetStats(request, 'requested_datetime')
-    elif ticket_status == "closed":
-        request = Request.objects.filter(status="Closed")
-        stats = qsstats.QuerySetStats(request, 'updated_datetime')
-    elif ticket_status == "both":
-        request_opened = Request.objects.filter(status="Open")
-        stats_opened = qsstats.QuerySetStats(request_opened,
-                                             'requested_datetime')
-
-        request_closed = Request.objects.filter(status="Closed")
-        stats_closed = qsstats.QuerySetStats(request_closed,
-                                             'updated_datetime')
 
     # If no start or end variables are passed, do the past 30 days. If one is
     # passed, check if num_days and do the past num_days. If num_days isn't
@@ -85,6 +72,29 @@ def ticket_days(request, ticket_status="open", start=None, end=None,
     else:
         start = str_to_day(start)
         end = str_to_day(end)
+
+    if ticket_status == "open":
+        request = Request.objects.filter(status="Open") \
+            .filter(requested_datetime__range=date_range(day_to_str(start),
+                                                         day_to_str(end)))
+        stats = qsstats.QuerySetStats(request, 'requested_datetime')
+    elif ticket_status == "closed":
+        request = Request.objects.filter(status="Closed")
+        stats = qsstats.QuerySetStats(request, 'updated_datetime') \
+            .filter(requested_datetime__range=date_range(day_to_str(start),
+                                                         day_to_str(end)))
+    elif ticket_status == "both":
+        request_opened = Request.objects.filter(status="Open") \
+            .filter(requested_datetime__range=date_range(day_to_str(start),
+                                                         day_to_str(end)))
+        stats_opened = qsstats.QuerySetStats(request_opened,
+                                             'requested_datetime')
+
+        request_closed = Request.objects.filter(status="Closed") \
+            .filter(requested_datetime__range=date_range(day_to_str(start),
+                                                         day_to_str(end)))
+        stats_closed = qsstats.QuerySetStats(request_closed,
+                                             'updated_datetime')
 
     data = []
 
