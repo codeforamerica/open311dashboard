@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
-
+{% block last_updated %}
+Last updated: {{ latest|date:"F jS, Y" }}
+{% endblock %}
 {% block content %}
 <style>
     #datepicker input {
@@ -11,7 +13,7 @@
     }
 </style>
 {{ open_tickets }}<br />
-{{ latest.requested_datetime }}
+
 <div class="grid_4 prefix_8">
     <div id="datepicker">
         <label for="from">From</label>
