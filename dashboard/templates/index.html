@@ -3,12 +3,10 @@
 Last updated: {{ latest|date:"F jS, Y" }}
 {% endblock %}
 {% block content %}
-{{ open_tickets }}<br />
-
-<div id="top_bar">
+<div id="top-bar">
     <div id="tabs">
         <ul>
-            <li>{{ open_tickets }} open tickets</li>
+            <li><span class="number">{{ open_tickets }}</span><br /> open tickets</li>
         </ul>
     </div>
     <div id="datepicker">
@@ -17,6 +15,7 @@ Last updated: {{ latest|date:"F jS, Y" }}
         <label for="to">to</label>
         <input type="text" name="to" id="to">
     </div>
+    <div class="clear"></div>
 </div>
 
 <div class="clear"></div>
