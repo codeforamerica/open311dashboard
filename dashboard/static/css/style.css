@@ -210,6 +210,37 @@ a:hover { color: #036; }
     display:none;
 }
 
+#top-bar {
+  border-bottom:1px solid #000;
+}
+
+#tabs {
+  width:80%;
+  float:left;
+}
+
+#tabs ul {
+  list-style-type:none;
+}
+
+#tabs ul li {
+  border-left:1px solid #000;
+  border-right:1px solid #000;
+  float:left;
+  text-align:center;
+  padding:1px 3px;
+}
+
+#tabs ul li .number {
+  font-weight:bold;
+  font-size:16pt;
+}
+
+#datepicker {
+  width:20%;
+  float:right;
+}
+
 
 /* http://sonspring.com/journal/clearing-floats */
 
