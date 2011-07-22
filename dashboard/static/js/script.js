@@ -1,23 +1,27 @@
 /* Author: Chris Barna */
-var pad = function (number, length) {
-    var str = number.toString();
-    while (str.length < length) {
-        str = '0' + str;
-    }
-    return str;
-};
-
-var renderBarchart = function (fromDate, toDate) {
-    $.ajax({
-        url: '/api/tickets/both/' + fromDate.getFullYear() + '-' + pad(fromDate.getMonth() + 1, 2) + '-' + pad(fromDate.getDate(), 2) + '/' + toDate.getFullYear() + '-' + pad(toDate.getMonth() + 1, 2) + '-' + pad(toDate.getDate(), 2) + '/',
-        dataType: 'json',
-        success: function (data) {
-            barchart.render(fromDate.getTime(), toDate.getTime(), data);
-        }
-    });
-};
-
+/*global $, barchart */
+/*jslint browser: true, sloppy: false, maxerr: 50, indent: 4 */
 $(function () {
+    'use strict';
+
+    var pad = function (number, length) {
+        var str = number.toString();
+        while (str.length < length) {
+            str = '0' + str;
+        }
+        return str;
+    };
+
+    var renderBarchart = function (fromDate, toDate) {
+        $.ajax({
+            url: '/api/tickets/both/' + fromDate.getFullYear() + '-' + pad(fromDate.getMonth() + 1, 2) + '-' + pad(fromDate.getDate(), 2) + '/' + toDate.getFullYear() + '-' + pad(toDate.getMonth() + 1, 2) + '-' + pad(toDate.getDate(), 2) + '/',
+            dataType: 'json',
+            success: function (data) {
+                barchart.render(fromDate.getTime(), toDate.getTime(), data);
+            }
+        });
+    };
+
 
     $("#from, #to").datepicker({
         changeMonth: true,
