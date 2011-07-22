@@ -212,6 +212,7 @@ a:hover { color: #036; }
 
 #top-bar {
   border-bottom:1px solid #000;
+  height:45px;
 }
 
 #tabs {
@@ -241,6 +242,14 @@ a:hover { color: #036; }
   float:right;
 }
 
+#main-content {
+  position:absolute;
+  bottom:5px;
+  top:55px;
+  width:98%;
+  margin:0 1%;
+  border:1px solid #ccc;
+}
 
 /* http://sonspring.com/journal/clearing-floats */
 
