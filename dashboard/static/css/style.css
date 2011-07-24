@@ -167,15 +167,21 @@ a:hover { color: #036; }
  *
  * Author: Chris Barna and mevans.
  */
+html, body {
+  height:100%;
+}
+
 #container {
     min-width:960px;
     min-height:600px;
+    height:100%;
+    overflow:hidden;
 }
 
 #container header {
     background:#ccc;
-    position:fixed;
-    height:50px;
+    position:relative;
+    /* height:50px;*/
     top:0;
     left:0;
     right:0;
@@ -195,11 +201,9 @@ a:hover { color: #036; }
 }
 
 #main {
-    position:absolute;
-    top:50px;
-    bottom:0px;
+    position:relative;
+    height:100%;
     border:1px solid #000;
-    width:100%;
 }
 
 #datepicker input {
@@ -211,8 +215,6 @@ a:hover { color: #036; }
 }
 
 #top-bar {
-  border-bottom:1px solid #000;
-  height:45px;
 }
 
 #tabs {
@@ -243,11 +245,9 @@ a:hover { color: #036; }
 }
 
 #main-content {
-  position:absolute;
-  bottom:5px;
-  top:55px;
-  width:98%;
-  margin:0 1%;
+  position:relative;
+  margin:0 5px;
+  margin-bottom:5px;
   border:1px solid #ccc;
 }
 
