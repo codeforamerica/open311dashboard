@@ -36,16 +36,14 @@ var map = po.map()
     .zoom(13);
 
 map.add(po.image()
-        .url(po.url("http://localhost:8080"
-                + "/test/{Z}/{X}/{Y}.png")));
-        //.url(po.url("http://{S}tile.cloudmade.com"
-         //       + "/b60fbbd51f17456794d2b0e4ed4f0d0c"
-          //      + "/1714/256/{Z}/{X}/{Y}.png")
-           // .hosts(["a.", "b.", "c.", ""])));
+        .url(po.url("http://{S}tile.cloudmade.com"
+                + "/b60fbbd51f17456794d2b0e4ed4f0d0c"
+                + "/1714/256/{Z}/{X}/{Y}.png")
+            .hosts(["a.", "b.", "c.", ""])));
 
-map.add(po.geoJson()
+map.add(po.image()
         .url(po.url("http://localhost:8080"
-                + "/neighborhoods3/{Z}/{X}/{Y}.geojson")));
+                + "/stclines/{Z}/{X}/{Y}.png")));
 
 /* var neighborhood = po.geoJson()
     .url("/neighborhoods.json")
