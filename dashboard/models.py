@@ -32,7 +32,7 @@ class Request(models.Model):
 
     # Super top secret geographic data.
     if ENABLE_GEO is True:
-        geo_point = models.PointField(srid=4326)
+        geo_point = models.PointField(srid=4326, null=True)
         objects = models.GeoManager()
 
 class Service(models.Model):
@@ -51,6 +51,7 @@ class Service(models.Model):
     description = models.TextField()
 
     city = models.ForeignKey('City')
+    street = models.ForeignKey('Street')
 
 class City(models.Model):
     """
@@ -60,8 +61,9 @@ class City(models.Model):
     """
     name = models.CharField(max_length=100)
     short_name = models.CharField(max_length=50)
-    api_key = models.CharField(max_length=255)
+    api_key = models.CharField(max_length=255, blank=True, null=True)
     url = models.CharField(max_length=255)
+    jurisdiction_id = models.CharField(max_length=100)
     paginated = models.BooleanField()
 
 if ENABLE_GEO is True:
@@ -73,7 +75,7 @@ if ENABLE_GEO is True:
 
         """
         name = models.CharField(max_length=25)
-        geo = models.MultiPolygonField(srid=4326)
+        geo = models.MultiPolygonField(srid=900913)
 
         city = models.ForeignKey('City')
 
@@ -81,3 +83,23 @@ if ENABLE_GEO is True:
 
         def __unicode__(self):
             return self.name
+
+    class Street(models.Model):
+        """
+
+        Street centerline data.
+
+        """
+        street_name = models.CharField(max_length=100)
+        line = models.LineStringField(srid=900913)
+        city = models.ForeignKey("City")
+
+        left_low_address = models.IntegerField(default=0)
+        left_high_address = models.IntegerField(default=0)
+        right_low_address = models.IntegerField(default=0)
+        right_high_address = models.IntegerField(default=0)
+
+        objects = models.GeoManager()
+
+        def __unicode__(self):
+            return self.street_name
