@@ -1,11 +1,12 @@
 from django.conf.urls.defaults import patterns, include, url
 
-from django.contrib.gis import admin
-admin.autodiscover()
-
 urlpatterns = patterns('',
     url(r'^$', 'open311dashboard.dashboard.views.index'),
     url(r'^map/$', 'open311dashboard.dashboard.views.map'),
+
+    # Login
+    url(r'^login/$', 'django.contrib.auth.views.login',
+        {'template_name': 'login.html'}),
 
     # API Calls
     url(r'^api/tickets/$', 'open311dashboard.dashboard.views.ticket_days'),
@@ -32,5 +33,6 @@ urlpatterns = patterns('',
     url(r'^api/list/(?P<begin>\d{4}-\d{2}-\d{2})/(?P<end>\d{4}-\d{2}-\d{2})/$',
         'open311dashboard.dashboard.views.list_requests'),
 
-    (r'^admin/', include(admin.site.urls)),
+    # Handle admin stuff.
+    url(r'^admin/', 'open311dashboard.dashboard.views.admin'),
 )
