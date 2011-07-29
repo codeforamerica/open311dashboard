@@ -40,15 +40,6 @@ def neighborhoods(request):
     neighborhoods = Neighborhoods.objects.all()
     return render_to_geojson(neighborhoods, exclude=['_state'])
 
-
-def test(request):
-    request_list = Request.objects.all()[:10]
-    c = Context({
-        'request_list': request_list,
-        'city': CITY['NAME'],
-        })
-    return render(request, 'test.html', c)
-
 # API Views
 @ApiHandler
 def ticket_days(request, ticket_status="open", start=None, end=None,
