@@ -7,6 +7,8 @@ from django.shortcuts import render
 from django.db.models import Count
 from django.core import serializers
 
+from django.contrib.auth.decorators import login_required
+
 from open311dashboard.dashboard.utils import str_to_day, day_to_str, \
     date_range, dt_handler, render_to_geojson
 from open311dashboard.dashboard.decorators import ApiHandler
@@ -32,13 +34,10 @@ def index(request):
 def map(request):
     return render(request, 'map.html')
 
-def neighborhood(request, neighborhood_id):
-    neighborhood = Neighborhoods.objects.get(pk=neighborhood_id)
-    return HttpResponse(neighborhood.geom.geojson, content_type='application/json')
-
-def neighborhoods(request):
-    neighborhoods = Neighborhoods.objects.all()
-    return render_to_geojson(neighborhoods, exclude=['_state'])
+# Admin Pages
+@login_required
+def admin(request):
+    return render(request, 'admin/index.html')
 
 # API Views
 @ApiHandler

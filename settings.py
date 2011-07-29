@@ -151,6 +151,12 @@ LOGGING = {
 }
 
 ###
+# Login URL
+###
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/admin/'
+
+###
 # Local Settings
 ###
 from settings_local import *
