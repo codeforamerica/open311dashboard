@@ -251,6 +251,10 @@ html, body {
   border:1px solid #ccc;
 }
 
+#map {
+  height:100%;
+}
+
 .chevron {
   stroke:#999;
   stroke-width:3px;
