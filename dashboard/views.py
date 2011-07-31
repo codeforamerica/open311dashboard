@@ -1,11 +1,8 @@
-from open311dashboard.settings import CITY
 from open311dashboard.dashboard.models import Request, City, Geography
 
-from django.http import HttpResponse, HttpRequest
 from django.template import Context
 from django.shortcuts import render
 from django.db.models import Count
-from django.core import serializers
 
 from django.contrib.auth.decorators import login_required
 
@@ -13,13 +10,9 @@ from open311dashboard.dashboard.utils import str_to_day, day_to_str, \
     date_range, dt_handler, render_to_geojson
 from open311dashboard.dashboard.decorators import ApiHandler
 
-import json
 import datetime
 import qsstats
 import time
-
-# PROFILING
-from django.db import connection
 
 def index(request):
     total_open = Request.objects.filter(status="Open").count()
