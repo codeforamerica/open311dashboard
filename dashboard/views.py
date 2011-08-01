@@ -1,8 +1,11 @@
-from open311dashboard.dashboard.models import Request, City, Geography
+from open311dashboard.dashboard.models import Request, City, Geography, Street
 
 from django.template import Context
 from django.shortcuts import render
 from django.db.models import Count
+
+from django.http import HttpResponseRedirect
+from django.core.urlresolvers import reverse
 
 from django.contrib.auth.decorators import login_required
 
@@ -30,7 +33,36 @@ def map(request):
 # Admin Pages
 @login_required
 def admin(request):
-    return render(request, 'admin/index.html')
+    cities = City.objects.all()
+
+    c = Context({
+        'cities': cities
+        })
+    return render(request, 'admin/index.html', c)
+
+@login_required
+def city_admin(request, shortname=None):
+    # try:
+    city = City.objects.get(short_name=shortname)
+    geographies = Geography.objects.filter(city=city.id).count()
+    streets = Street.objects.filter(city=city.id).count()
+    requests = Request.objects.filter(city=city.id).count()
+
+    c = Context({
+        'city': city,
+        'geographies': geographies,
+        'streets': streets,
+        'requests': requests
+        })
+
+    return render(request, 'admin/city_view.html', c)
+
+    # except:
+        # return HttpResponseRedirect(reverse(admin))
+
+@login_required
+def city_add (request):
+    return render(request, 'admin/city_add.html')
 
 # API Views
 @ApiHandler

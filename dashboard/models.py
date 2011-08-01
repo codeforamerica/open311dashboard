@@ -1,5 +1,5 @@
 from django.contrib.gis.db import models
-from open311dashboard.settings import CITY, ENABLE_GEO
+from open311dashboard.settings import ENABLE_GEO
 
 class Request(models.Model):
     """
@@ -33,6 +33,7 @@ class Request(models.Model):
     # Super top secret geographic data.
     if ENABLE_GEO is True:
         geo_point = models.PointField(srid=4326, null=True)
+        street = models.ForeignKey('Street')
         objects = models.GeoManager()
 
 class Service(models.Model):
@@ -78,11 +79,23 @@ if ENABLE_GEO is True:
         geo = models.MultiPolygonField(srid=900913)
 
         city = models.ForeignKey('City')
+        geo_type = models.ForeignKey('GeographyType')
 
         objects = models.GeoManager()
 
         def __unicode__(self):
             return self.name
+
+    class GeographyType(models.Model):
+        """
+
+        Ex: Neighborhood, Congressional Districts...
+
+        """
+        name = models.CharField(max_length=25)
+
+        # Thank @ravoreyer for recommending this.
+        city = models.ForeignKey('City')
 
     class Street(models.Model):
         """
