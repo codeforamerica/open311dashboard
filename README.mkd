@@ -2,13 +2,28 @@ Open311 Dashboard
 =================
 We are creating a set of interactive widgets to help people visualize and analyze 311 data on one unified dashboard.
 
+Non-Python Requirements
+-----------------------
+Basically, you need all of the libraries to run [GeoDjango](https://docs.djangoproject.com/en/dev/ref/contrib/gis/install/). If you are so inclined, you can install most of these with [homebrew](https://github.com/mxcl/homebrew).
+
+* [GEOS](http://trac.osgeo.org/geos/)
+* [GDAL](http://www.gdal.org/)
+* [PROJ.4](http://trac.osgeo.org/proj/)
+* [PostGIS](http://postgis.refractions.net/)
+* [Mapnik2](http://trac.mapnik.org/wiki/Mapnik2) (not explicitely required but this generates map tiles, see below.)
+
 Getting Started
 ---------------
-1. Rename settings_local.example.py to settings_local.py and set your db/city/secretkey variables.
+1. Set up a database using the [PostGIS spatial database template](https://docs.djangoproject.com/en/dev/ref/contrib/gis/install/#spatialdb-template).
+1. Rename settings_local.example.py to settings_local.py and set your db/secretkey variables.
 2. `pip install -r requirements.txt`
 3. `python manage.py syncdb` creates the database schema.
 4. `python manage.py update_db` imports initial data.
 5. `python manage.py runserver`
+
+A Word on Mapnik
+----------------
+Mapnik is a real pain to install. The [TileMill](http://tilemill.com/index.html)homepage has resources and packages for installing Mapnik2 on Mac and Ubuntu.
 
 Database Update Script
 ----------------------
@@ -39,10 +54,6 @@ There are a number API calls to return JSON in various forms.
         * `/YYYY-MM-DD` (range)
     * `/list/YYYY-MM-DD` (singe day)
         * `/YYYY-MM-DD` (range)
-
-Geo Stuff
----------
-`shp2pgsql -a -s 4326 neighborhoods.shp dashboard_neighborhoods > neighborhoods.sql`
 
 More Information
 ----------------

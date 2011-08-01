@@ -1,23 +1,21 @@
-from open311dashboard.settings import CITY
-from open311dashboard.dashboard.models import Request, Neighborhoods
+from open311dashboard.dashboard.models import Request, City, Geography, Street
 
-from django.http import HttpResponse, HttpRequest
 from django.template import Context
 from django.shortcuts import render
 from django.db.models import Count
-from django.core import serializers
+
+from django.http import HttpResponseRedirect
+from django.core.urlresolvers import reverse
+
+from django.contrib.auth.decorators import login_required
 
 from open311dashboard.dashboard.utils import str_to_day, day_to_str, \
     date_range, dt_handler, render_to_geojson
 from open311dashboard.dashboard.decorators import ApiHandler
 
-import json
 import datetime
 import qsstats
 import time
-
-# PROFILING
-from django.db import connection
 
 def index(request):
     total_open = Request.objects.filter(status="Open").count()
@@ -30,28 +28,41 @@ def index(request):
     return render(request, 'index.html', c)
 
 def map(request):
-    neighborhoods = Neighborhoods.objects.all()
+    return render(request, 'map.html')
+
+# Admin Pages
+@login_required
+def admin(request):
+    cities = City.objects.all()
+
     c = Context({
-        'neighborhoods': neighborhoods,
+        'cities': cities
         })
-    return render(request, 'map.html', c)
+    return render(request, 'admin/index.html', c)
 
-def neighborhood(request, neighborhood_id):
-    neighborhood = Neighborhoods.objects.get(pk=neighborhood_id)
-    return HttpResponse(neighborhood.geom.geojson, content_type='application/json')
+@login_required
+def city_admin(request, shortname=None):
+    # try:
+    city = City.objects.get(short_name=shortname)
+    geographies = Geography.objects.filter(city=city.id).count()
+    streets = Street.objects.filter(city=city.id).count()
+    requests = Request.objects.filter(city=city.id).count()
 
-def neighborhoods(request):
-    neighborhoods = Neighborhoods.objects.all()
-    return render_to_geojson(neighborhoods, exclude=['_state'])
-
-
-def test(request):
-    request_list = Request.objects.all()[:10]
     c = Context({
-        'request_list': request_list,
-        'city': CITY['NAME'],
+        'city': city,
+        'geographies': geographies,
+        'streets': streets,
+        'requests': requests
         })
-    return render(request, 'test.html', c)
+
+    return render(request, 'admin/city_view.html', c)
+
+    # except:
+        # return HttpResponseRedirect(reverse(admin))
+
+@login_required
+def city_add (request):
+    return render(request, 'admin/city_add.html')
 
 # API Views
 @ApiHandler

@@ -124,6 +124,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'django.contrib.gis',
+    'django.contrib.humanize',
     'open311dashboard.dashboard',
 )
 
@@ -149,6 +150,12 @@ LOGGING = {
         },
     }
 }
+
+###
+# Login URL
+###
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/admin/'
 
 ###
 # Local Settings

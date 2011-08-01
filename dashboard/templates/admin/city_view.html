@@ -1,0 +1,20 @@
+{% extends 'base/admin.html' %}
+{% load humanize %}
+
+{% block content %}
+<h2>{{city.name}}</h2>
+<div id="basic-info">
+    <ul>
+        <li><strong>URL:</strong> {{ city.url }}</li>
+    </ul>
+</div>
+
+<h3>More data</h3>
+<div id="more-info">
+    <ul>
+        <li><strong>Requests</strong>: {{ requests|intcomma }}</li>
+        <li><strong>Geographies</strong>: {{ geographies|intcomma }}</li>
+        <li><strong>Streets</strong>: {{ streets|intcomma }}</li>
+    </ul>
+</div>
+{% endblock %}
