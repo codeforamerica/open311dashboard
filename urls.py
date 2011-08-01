@@ -1,4 +1,4 @@
-from django.conf.urls.defaults import patterns, include, url
+from django.conf.urls.defaults import patterns, url
 
 urlpatterns = patterns('',
     url(r'^$', 'open311dashboard.dashboard.views.index'),
@@ -34,5 +34,8 @@ urlpatterns = patterns('',
         'open311dashboard.dashboard.views.list_requests'),
 
     # Handle admin stuff.
-    url(r'^admin/', 'open311dashboard.dashboard.views.admin'),
+    url(r'^admin/$', 'open311dashboard.dashboard.views.admin'),
+    url(r'^admin/(?P<shortname>\w+)/$',
+        'open311dashboard.dashboard.views.city_admin'),
+    url(r'^admin/new/$', 'open311dashboard.dashboard.views.city_add'),
 )
