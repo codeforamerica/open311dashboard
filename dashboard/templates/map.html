@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base/main.html' %}
 
 {% block content %}
 <style>
@@ -13,11 +13,6 @@
     }
 </style>
 <div id="selector">
-  <select id="changer">
-    {% for neighborhood in neighborhoods %}
-      <option value="{{ neighborhood.id }}">{{ neighborhood.neighborho }}</option>
-    {% endfor %}
-</select>
 <div id="position">Lat: <span id="lat"></span>; Long: <span id="long"></span></div>
 </div>
 <div id="map">
@@ -32,25 +27,19 @@ var map = po.map()
     .container(document.getElementById("map").appendChild(po.svg("svg")))
     .add(po.interact())
     .add(po.hash())
+    .zoomRange([12,16])
     .center({lat: 37.76, lon: -122.44})
     .zoom(13);
 
 map.add(po.image()
         .url(po.url("http://{S}tile.cloudmade.com"
-                + "/b60fbbd51f17456794d2b0e4ed4f0d0c"
-                + "/1714/256/{Z}/{X}/{Y}.png")
-            .hosts(["a.", "b.", "c.", ""])));
+               + "/b60fbbd51f17456794d2b0e4ed4f0d0c"
+              + "/39534/256/{Z}/{X}/{Y}.png")
+         .hosts(["a.", "b.", "c.", ""])));
 
 map.add(po.image()
-        .url(po.url("http://localhost:8080"
-                + "/stclines/{Z}/{X}/{Y}.png")));
-
-/* var neighborhood = po.geoJson()
-    .url("/neighborhoods.json")
-    .id("neighborhood")
-    .zoom(13)
-    .tile(false); */
-
+    .url(po.url("http://open311-tiles.s3-website-us-east-1.amazonaws.com"
+        +"/density/{Z}/{X}/{Y}.png")));
 
 map.add(po.compass()
     .pan("none"));

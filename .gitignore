@@ -3,3 +3,6 @@ settings_local.py
 *.pyc
 src/
 data/
+dashboard/static/tiles/
+epio.ini
+.epio-app

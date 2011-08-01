@@ -1,39 +1,10 @@
-{% extends 'base.html' %}
+{% extends 'base/main.html' %}
 {% block last_updated %}
 Last updated: {{ latest|date:"F jS, Y" }}
 {% endblock %}
 {% block content %}
-<div id="top-bar">
-    <div id="tabs">
-        <ul>
-            <li><span class="number">{{ open_tickets }}</span><br /> open tickets</li>
-        </ul>
-    </div>
-    <div id="datepicker">
-        <label for="from">From</label>
-        <input type="text" name="from" id="from">
-        <label for="to">to</label>
-        <input type="text" name="to" id="to">
-    </div>
-    <div class="clear"></div>
-</div>
-
-<div class="clear"></div>
-
-<div id="main-content">
-  <div id="chart"></div>
-  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur ultricies lectus placerat arcu tincidunt quis dictum tellus malesuada. Nunc placerat sodales lorem sit amet cursus. Suspendisse vel urna sit amet mi placerat ornare vitae quis turpis. Phasellus vel lacus quis est imperdiet ultrices id eu augue. Vestibulum quis magna dui. Aliquam vulputate mattis venenatis. In eros tellus, lacinia sit amet feugiat eget, rhoncus non mi. Sed facilisis lacus eu eros gravida condimentum. Quisque vel purus ipsum, quis suscipit massa. Curabitur urna enim, consequat in facilisis non, sollicitudin ac neque. Sed accumsan enim eget leo commodo pretium. Nunc mi mauris, interdum et vestibulum vitae, mollis in urna.</p>
-  <p>Aenean vitae mi eu diam dictum tincidunt lobortis in lacus. Nunc at ante vel quam dictum placerat ac at sapien. Morbi semper, leo auctor tincidunt fringilla, quam tellus sagittis ante, quis molestie neque augue rhoncus purus. Suspendisse non justo quis urna accumsan pulvinar. Proin laoreet ullamcorper augue, non ultricies eros feugiat vitae. Phasellus mattis porttitor augue eu mollis. Aliquam non consequat metus. Suspendisse ornare consectetur erat eu vulputate. Quisque ut lacus sed sapien eleifend dictum. Vivamus ante tortor, dignissim sit amet auctor non, lacinia vel orci. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam at mi in orci ultricies egestas porta non diam. Duis erat erat, egestas sed porta nec, sodales bibendum sapien. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Praesent in ante purus, ornare pulvinar elit.</p>
-
-  <p>Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla tincidunt mollis mauris vel varius. Aenean placerat est eu nisi laoreet venenatis. Curabitur ipsum orci, volutpat sit amet bibendum non, commodo vel lorem. Ut interdum consectetur blandit. Nunc elit eros, mollis vel laoreet sed, suscipit sed justo. Quisque sed est in ligula convallis varius in et urna. Pellentesque sit amet dolor lectus, vel lacinia lacus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Etiam rutrum, tortor ut lacinia convallis, dui neque cursus libero, eu adipiscing ligula dui eget purus. Pellentesque ut felis in neque suscipit dapibus in non ante. Nulla vel arcu eros, nec lobortis nisl. Praesent placerat fringilla lacinia. Etiam ullamcorper magna sed libero pharetra a fringilla dui scelerisque. Praesent massa enim, blandit eget tincidunt non, egestas at orci.</p>
-
-  <p>Nam tristique tristique nisi in varius. Morbi lectus elit, lacinia at tincidunt non, venenatis eget urna. Quisque iaculis felis tortor. Proin laoreet placerat ligula, nec viverra tortor posuere eu. Proin auctor accumsan dapibus. Vestibulum dui massa, sagittis blandit lacinia in, elementum dapibus ipsum. In ac mi eu ipsum dictum iaculis at eget purus. Praesent ornare nunc id orci sollicitudin porta. Nullam varius velit ut dolor eleifend sed egestas nisl rutrum. Nullam quis velit et justo malesuada tincidunt. Morbi blandit, libero et vulputate facilisis, nisl sem sagittis est, in rhoncus nibh erat a nulla. In hac habitasse platea dictumst. Pellentesque mauris leo, adipiscing id fringilla pellentesque, lobortis at quam.</p>
-
-  <p>Integer fringilla ornare sollicitudin. Nunc vehicula, leo et sagittis ornare, eros velit porttitor nisl, eu facilisis libero tellus vitae orci. Donec vel urna ligula. Suspendisse tincidunt ornare augue id consequat. Maecenas nibh neque, mattis sed rhoncus eget, cursus in metus. Aliquam porta lacus at risus gravida ac pretium elit fermentum. Morbi faucibus tortor in ante luctus vel mattis ante lacinia. Vestibulum libero purus, varius nec faucibus vitae, suscipit sit amet erat. Integer luctus neque sit amet dolor suscipit vehicula dignissim diam volutpat. Quisque imperdiet arcu ut leo dignissim quis tristique urna tempor. Sed porta porttitor viverra. Donec nec enim quam. Nullam dapibus nunc eu neque aliquam eu interdum nibh egestas. Nunc rutrum, magna ac rutrum ullamcorper, ante velit ullamcorper ligula, ornare vestibulum nisi elit nec purus. Praesent et augue orci, quis eleifend dolor. Donec in elit eget sem tristique placerat eu dictum metus. Nunc blandit ultrices tellus et egestas. Cras quis libero ac ante convallis hendrerit sit amet a nisi. Praesent elit dui, dictum eget feugiat id, lacinia sit amet neque. Nulla porttitor lacus sit amet enim ullamcorper eget tristique justo hendrerit.</p>
-</div>
-
+<p>Main content goes here! Until then, check out our <a href="/map/">map</a>!</p>
 {% endblock %}
 
 {% block custom_scripts %}
-<script type="text/javascript" src="{{ STATIC_URL }}js/charts/dual_state_barchart.js"></script>
 {% endblock %}

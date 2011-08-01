@@ -26,17 +26,17 @@ table, caption, tbody, tfoot, thead, tr, th, td,
 article, aside, canvas, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section, summary,
 time, mark, audio, video {
-    margin: 0;
-    padding: 0;
-    border: 0;
-    font-size: 100%;
-    font: inherit;
-    vertical-align: baseline;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
 }
 
 article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section {
-    display: block;
+  display: block;
 }
 
 blockquote, q { quotes: none; }
@@ -98,9 +98,9 @@ sup { top: -0.5em; }
 sub { bottom: -0.25em; }
 
 pre {
-    /* www.pathf.com/blogs/2008/05/formatting-quoted-code-in-blog-posts-css21-white-space-pre-wrap/ */
-    white-space: pre; white-space: pre-wrap; word-wrap: break-word;
-    padding: 15px;
+  /* www.pathf.com/blogs/2008/05/formatting-quoted-code-in-blog-posts-css21-white-space-pre-wrap/ */
+  white-space: pre; white-space: pre-wrap; word-wrap: break-word;
+  padding: 15px;
 }
 
 textarea { overflow: auto; } /* www.sitepoint.com/blogs/2010/08/20/ie-remove-textarea-scrollbars/ */
@@ -122,7 +122,7 @@ button, input, select, textarea { margin: 0; }
 /* Colors for form validity */
 input:valid, textarea:valid   {  }
 input:invalid, textarea:invalid {
-    border-radius: 1px; -moz-box-shadow: 0px 0px 5px red; -webkit-box-shadow: 0px 0px 5px red; box-shadow: 0px 0px 5px red;
+  border-radius: 1px; -moz-box-shadow: 0px 0px 5px red; -webkit-box-shadow: 0px 0px 5px red; box-shadow: 0px 0px 5px red;
 }
 .no-boxshadow input:invalid, .no-boxshadow textarea:invalid { background-color: #f0dddd; }
 
@@ -149,10 +149,10 @@ code.flickr.com/blog/2008/11/12/on-ui-quality-the-little-things-client-side-imag
  */
 
 body, select, input, textarea {
-    /* #444 looks better than black: twitter.com/H_FJ/statuses/11800719859 */
-    color: #444;
-    /* Set your base font here, to apply evenly */
-    /* font-family: Georgia, serif;  */
+  /* #444 looks better than black: twitter.com/H_FJ/statuses/11800719859 */
+  color: #444;
+  /* Set your base font here, to apply evenly */
+  /* font-family: Georgia, serif;  */
 }
 
 /* Headers (h1, h2, etc) have no default font-size or margin; define those yourself */
@@ -172,46 +172,46 @@ html, body {
 }
 
 #container {
-    min-width:960px;
-    min-height:600px;
-    height:100%;
-    overflow:hidden;
+  min-width:960px;
+  min-height:600px;
+  height:100%;
+  overflow:hidden;
 }
 
 #container header {
-    background:#ccc;
-    position:relative;
-    /* height:50px;*/
-    top:0;
-    left:0;
-    right:0;
+  background:#ccc;
+  position:relative;
+  /* height:50px;*/
+  top:0;
+  left:0;
+  right:0;
 }
 
 #title {
-    width:50%;
-    float:left;
+  width:50%;
+  float:left;
 }
 
 #last-updated {
-    width:49%;
-    float:right;
-    text-align:right;
-    padding-top:8px;
-    padding-right:1%;
+  width:49%;
+  float:right;
+  text-align:right;
+  padding-top:8px;
+  padding-right:1%;
 }
 
 #main {
-    position:relative;
-    height:100%;
-    border:1px solid #000;
+  position:relative;
+  height:100%;
+  border:1px solid #000;
 }
 
 #datepicker input {
-    width:80px;
+  width:80px;
 }
 
 #ui-datepicker-div {
-    display:none;
+  display:none;
 }
 
 #top-bar {
@@ -251,15 +251,37 @@ html, body {
   border:1px solid #ccc;
 }
 
+#map {
+  height:100%;
+}
+
+.chevron {
+  stroke:#999;
+  stroke-width:3px;
+  fill:none;
+}
+
+.fore {
+  stroke:#999;
+  stroke-width:1.5px;
+}
+.back {
+  fill:#eee;
+  fill-opacity:.8;
+}
+.direction {
+  fill:none;
+}
+
 /* http://sonspring.com/journal/clearing-floats */
 
 .clear {
-    clear: both;
-    display: block;
-    overflow: hidden;
-    visibility: hidden;
-    width: 0;
-    height: 0;
+  clear: both;
+  display: block;
+  overflow: hidden;
+  visibility: hidden;
+  width: 0;
+  height: 0;
 }
 
 /**
@@ -299,12 +321,12 @@ j.mp/bestclearfix */
  */
 
 @media all and (orientation:portrait) {
-    /* Style adjustments for portrait mode goes here */
+  /* Style adjustments for portrait mode goes here */
 
 }
 
 @media all and (orientation:landscape) {
-    /* Style adjustments for landscape mode goes here */
+  /* Style adjustments for landscape mode goes here */
 
 }
 
@@ -313,8 +335,8 @@ consider this: www.cloudfour.com/css-media-query-for-mobile-is-fools-gold/ */
 @media screen and (max-device-width: 480px) {
 
 
-    /* Uncomment if you don't want iOS and WinMobile to mobile-optimize the text for you: j.mp/textsizeadjust */
-    /* html { -webkit-text-size-adjust:none; -ms-text-size-adjust:none; } */
+  /* Uncomment if you don't want iOS and WinMobile to mobile-optimize the text for you: j.mp/textsizeadjust */
+  /* html { -webkit-text-size-adjust:none; -ms-text-size-adjust:none; } */
 }
 
 
@@ -324,17 +346,17 @@ consider this: www.cloudfour.com/css-media-query-for-mobile-is-fools-gold/ */
  * Inlined to avoid required HTTP connection: www.phpied.com/delay-loading-your-print-css/
  */
 @media print {
-    * { background: transparent !important; color: black !important; text-shadow: none !important; filter:none !important;
-        -ms-filter: none !important; } /* Black prints faster: sanbeiji.com/archives/953 */
-        a, a:visited { color: #444 !important; text-decoration: underline; }
-        a[href]:after { content: " (" attr(href) ")"; }
-        abbr[title]:after { content: " (" attr(title) ")"; }
-        .ir a:after, a[href^="javascript:"]:after, a[href^="#"]:after { content: ""; }  /* Don't show links for images, or javascript/internal links */
-        pre, blockquote { border: 1px solid #999; page-break-inside: avoid; }
-        thead { display: table-header-group; } /* css-discuss.incutio.com/wiki/Printing_Tables */
-        tr, img { page-break-inside: avoid; }
-        @page { margin: 0.5cm; }
-        p, h2, h3 { orphans: 3; widows: 3; }
-        h2, h3{ page-break-after: avoid; }
+  * { background: transparent !important; color: black !important; text-shadow: none !important; filter:none !important;
+    -ms-filter: none !important; } /* Black prints faster: sanbeiji.com/archives/953 */
+    a, a:visited { color: #444 !important; text-decoration: underline; }
+    a[href]:after { content: " (" attr(href) ")"; }
+    abbr[title]:after { content: " (" attr(title) ")"; }
+    .ir a:after, a[href^="javascript:"]:after, a[href^="#"]:after { content: ""; }  /* Don't show links for images, or javascript/internal links */
+    pre, blockquote { border: 1px solid #999; page-break-inside: avoid; }
+    thead { display: table-header-group; } /* css-discuss.incutio.com/wiki/Printing_Tables */
+    tr, img { page-break-inside: avoid; }
+    @page { margin: 0.5cm; }
+    p, h2, h3 { orphans: 3; widows: 3; }
+    h2, h3{ page-break-after: avoid; }
 }
 
