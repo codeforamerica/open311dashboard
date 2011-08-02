@@ -1,15 +1,11 @@
 from django.core.management.base import BaseCommand
+from open311dashboard.dashboard.models import Geography
 
 from django.db import connection
-from optparse import make_option
 import json
 
+# TODO: ABSTRACT THIS!
 class Command(BaseCommand):
-    # option_list = BaseCommand.option_list + (
-            # make_option('--directory', dest='directory',
-                # default='dashboard/static/geojson/',
-                # help="default directory to save tiles to")
-            # )
     help = """
 
     Grab relevant GeoJSON files to store and interact with the maps layer. We
@@ -38,6 +34,7 @@ class Command(BaseCommand):
         rows = cursor.fetchall()
 
         geojson1 = geojson
+        geojson2 = geojson
         for row in rows:
             geojson1['features'].append({"type": "Feature",
                 "geometry": json.loads(row[1]),
@@ -46,3 +43,19 @@ class Command(BaseCommand):
                     }})
         f = open('dashboard/static/test.json', 'w')
         f.write(json.dumps(geojson1))
+        f.close()
+
+        g = Geography.objects.all().transform()
+        geojson2['features'] = []
+
+        for shape in g:
+            geojson2['features'].append({"type": "Feature",
+                "geometry": json.loads(shape.geo.simplify(.0003,
+                    preserve_topology=True).json),
+                "properties": {
+                    "neighborhood": shape.name
+                    }})
+
+        h = open('dashboard/static/neighborhoods.json', 'w')
+        h.write(json.dumps(geojson2))
+        h.close()
