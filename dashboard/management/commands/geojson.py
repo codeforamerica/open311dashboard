@@ -46,17 +46,3 @@ class Command(BaseCommand):
                     }})
         f = open('dashboard/static/test.json', 'w')
         f.write(json.dumps(geojson1))
-
-
-        cursor.execute("""SELECT
-        ST_AsGeoJson(ST_simplify(ST_Transform(ST_SetSRID(geo, 900913), 4326),
-        0.0005)), name FROM dashboard_geography""")
-        rows = cursor.fetchall()
-        for row in rows:
-            geojson['features'].append({"type": "Feature",
-                "geometry": json.loads(row[0]),
-                "properties": {
-                    "name": row[1]
-                }})
-        f = open('dashboard/static/neighborhoods.json', 'w')
-        f.write(json.dumps(geojson))
