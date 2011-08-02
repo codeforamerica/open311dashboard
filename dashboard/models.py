@@ -79,7 +79,7 @@ if ENABLE_GEO is True:
         geo = models.MultiPolygonField(srid=900913)
 
         city = models.ForeignKey('City')
-        geo_type = models.ForeignKey('GeographyType')
+        #geo_type = models.ForeignKey('GeographyType')
 
         objects = models.GeoManager()
 
