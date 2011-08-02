@@ -34,10 +34,10 @@ def dt_handler(obj):
 ##
 def render_to_geojson(query_set, geom_field=None, mimetype='text/plain', pretty_print=True, exclude=[]):
     '''
-    
+
     Shortcut to render a GeoJson FeatureCollection from a Django QuerySet.
     Currently computes a bbox and adds a crs member as a sr.org link
-    
+
     '''
     collection = {}
 

@@ -4,10 +4,8 @@ from django.template import Context
 from django.shortcuts import render
 from django.db.models import Count
 
-from django.http import HttpResponseRedirect
-from django.core.urlresolvers import reverse
-
 from django.contrib.auth.decorators import login_required
+from django.contrib.gis.geos import MultiPolygon
 
 from open311dashboard.dashboard.utils import str_to_day, day_to_str, \
     date_range, dt_handler, render_to_geojson
@@ -56,7 +54,6 @@ def city_admin(request, shortname=None):
         })
 
     return render(request, 'admin/city_view.html', c)
-
     # except:
         # return HttpResponseRedirect(reverse(admin))
 

@@ -1,17 +1,6 @@
 {% extends 'base/main.html' %}
 
 {% block content %}
-<style>
-    #neighborhood path {
-        fill:blue;
-        stroke:yellow;
-        opacity:.8;
-    }
-
-    #neighborhood path:hover {
-        opacity:.3;
-    }
-</style>
 <div id="selector">
 <div id="position">Lat: <span id="lat"></span>; Long: <span id="long"></span></div>
 </div>
@@ -20,8 +9,9 @@
 {% endblock %}
 
 {% block custom_scripts %}
+<script src="/static/js/raycasting.js"></script>
 <script type="text/javascript">
-var po = org.polymaps;
+/* var po = org.polymaps;
 
 var map = po.map()
     .container(document.getElementById("map").appendChild(po.svg("svg")))
@@ -37,17 +27,51 @@ map.add(po.image()
               + "/39534/256/{Z}/{X}/{Y}.png")
          .hosts(["a.", "b.", "c.", ""])));
 
-map.add(po.image()
+/*map.add(po.image()
     .url(po.url("http://open311-tiles.s3-website-us-east-1.amazonaws.com"
-        +"/density/{Z}/{X}/{Y}.png")));
+    +"/density/{Z}/{X}/{Y}.png"))); */
+
+/* map.add(po.image()
+    .url(po.url("/static/tiles/{Z}/{X}/{Y}.png")));
+
+map.add(po.geoJson()
+    .url("/static/sf.json")
+    .id("neighborhoods"));
+
+map.add(po.geoJson()
+    .url("/static/test.json")
+    .id("hotspots")
+    .on("load", loadResponseTimes));
+
+
 
 map.add(po.compass()
     .pan("none"));
+
+function loadResponseTimes(e) {
+  for (var i = 0; i < e.features.length; i++) {
+    var feature = e.features[i],
+        average = feature.data.properties.average;
+    feature.element.setAttribute("stroke-width", 2);
+    feature.element.setAttribute("fill", "none");
+    if (average > 480) {
+      feature.element.setAttribute("stroke", "rgb(21,52,63)");
+    } else if (average > 384) {
+      feature.element.setAttribute("stroke", "rgb(35,103,127)");
+    } else if (average > 288) {
+      feature.element.setAttribute("stroke", "rgb(48,154,188)");
+    } else if (average > 192) {
+      feature.element.setAttribute("stroke", "rgb(123,190,215)");
+    } else {
+      feature.element.setAttribute("stroke", "rgb(158,205,227)");
+    }
+  }
+}
 
 document.getElementById("map").onmousemove = function(e) {
     var loc = map.pointLocation(map.mouse(e));
     document.getElementById("lat").innerHTML = loc.lat;
     document.getElementById("long").innerHTML = loc.lon;
-};
+}; */
 </script>
 {% endblock %}
