@@ -121,12 +121,13 @@ function onload(e){
     e.features[i].element.setAttribute('fill-opacity',0);
 
     var streetMouseOver = function(score,start_street,end_street,street,months,top_request,index){
+      alert("Over!");
       return function(evt){
         setStreetContent(evt,score,start_street,end_street,street,months,top_request,index);  
       };
     }(e.features[i].data.properties.score,e.features[i].data.properties.RT_FADD,e.features[i].data.properties.RT_TOADD,e.features[i].data.properties.STREETN_GC,e.features[i].data.properties.months,e.features[i].data.properties.top_request_type,i);
 
-    e.features[i].element.onmouseover = streetMouseOver;
+    e.features[i].element.onmouseover = //streetMouseOver;
     e.features[i].element.onmouseout = hideStreetContent;
 
 
@@ -168,7 +169,7 @@ function onresponseload(e){
     e.features[i].element.onmouseout = hideResponseContent;
 
 
-    if (e.features[i].data.properties.response_time < 480){
+    if (e.features[i].data.properties.average < 480){
       e.features[i].element.setAttribute("stroke",colorArray[0]);
       e.features[i].element.setAttribute("stroke-opacity", 0.65);
     } else {
@@ -179,14 +180,30 @@ function onresponseload(e){
 
     e.features[i].element.setAttribute("stroke-linecap","round");
   }
+
+}
+
+function onsidewalkload(e) {
+  var colorArray = ['rgb(21,52,63)','rgb(35,103,127)'];
+  for (var i = 0; i < e.features.length; i++) {
+    if (e.features[i].data.properties.percentile > .9) {
+      e.features[i].element.setAttribute("stroke", colorArray[0]);
+      e.features[i].element.setAttribute("stroke-opacity", 0.7);
+    } else if (e.features[i].data.properties.percentile > .8) {
+      e.features[i].element.setAttribute("stroke", colorArray[0]);
+      e.features[i].element.setAttribute("stroke-opacity", .65);
+    }
+    e.features[i].element.setAttribute("stroke-linecap", "round");
+    e.features[i].element.setAttribute("fill", "none");
+  }
 }
 
 function setResponseContent(e,score,start_street,end_street,street){
-  testNeighborhood(e);
+  // testNeighborhood(e);
 }
 
 function hideResponseContent(e){
-  testNeighborhood(e);
+  // testNeighborhood(e);
 }
 
 Map.createmap();
@@ -194,17 +211,34 @@ Map.createmap();
 var streetGroup = Map.addLayer("/static/tiles/{Z}/{X}/{Y}.png",
                                { type: "image",
                                  id: "street-base",
-                                 visible: true });
-Map.addLayer("/static/test.json",
-                    { id: "streets",
-                      load: onload,
-                      visible: true,
-                      group: streetGroup});
+                                 visible: true, index:1});
+var graffiti = Map.addLayer("/static/speed-graffiti/{Z}/{X}/{Y}.png",
+             { type: "image",
+               id: "graffiti", index:1 });
+
+var sidewalk_cleaning = Map.addLayer("/static/speed-sidewalk/{Z}/{X}/{Y}.png",
+                                    { type: "image", index:1 });
 
 Map.addLayer("/static/neighborhoods.json",
                     { id: "neighborhoods",
                       load: onloadneighborhoods,
-                      alwaysVisible: true});
+                      zoom: 14,
+                      alwaysVisible: true, index:5});
+
+Map.addLayer("/static/sidewalk_cleaning.json",
+             { id: "sidewalk_cleaning",
+               load: onsidewalkload,
+               group: sidewalk_cleaning, index: 10 });
+Map.addLayer("/static/graffiti.json",
+             { id: "graffiti-svg",
+               load: onsidewalkload,
+               group: graffiti, index: 10 });
+Map.addLayer("/static/test.json",
+                    { id: "streets",
+                      load: onresponseload,
+                      visible: true,
+                      group: streetGroup, index:10});
+
 /* 
 var context_map = po.image()
 .url(po.url("http://{S}tile.cloudmade.com"
