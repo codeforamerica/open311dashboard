@@ -136,6 +136,9 @@ def insert_data(requests):
 
         r = Request(**request_dict)
 
+        # Hardcoded for now.
+        r.city_id = 1
+
         try:
             r.save()
             print "Successfully saved %s" % r.service_request_id
