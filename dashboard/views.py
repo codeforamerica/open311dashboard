@@ -74,6 +74,39 @@ def index(request):
         })
     return render(request, 'index.html', c)
 
+def street(request, street_id):
+    street = Street.objects.get(pk=street_id)
+
+    # Max/min addresses
+    addresses = [street.left_low_address, street.left_high_address,
+                 street.right_low_address, street.right_high_address]
+    addresses.sort()
+
+    # Requests
+    requests = Request.objects.filter(street=street_id)
+    request_types = requests.values('service_name') \
+                .annotate(count=Count('service_name')).order_by('-count')
+    open_requests = requests.filter(status="Open") \
+            .order_by('-requested_datetime')[:10]
+
+    try:
+        request_averages = requests \
+            .extra({"average": "avg(updated_datetime - requested_datetime)"}) \
+            .values("average")
+        request_averages = request_averages[0]['average'].days
+    except:
+        request_averages = None
+
+    c = Context({
+        'street': street,
+        'addresses': addresses,
+        'request_types': request_types,
+        'averages': request_averages,
+        'open_requests': open_requests
+        })
+
+    return render(request, 'street.html', c)
+
 def map(request):
     return render(request, 'map.html')
 
