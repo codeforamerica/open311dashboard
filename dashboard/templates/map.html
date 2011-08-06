@@ -1,8 +1,13 @@
 {% extends 'base/main.html' %}
 
 {% block content %}
+<style>
+  #streets path:hover, #sidewalk_cleaning path:hover, #graffiti-svg path:hover {
+    stroke-width:5px;
+  }
+</style>
 <div id="selector">
-  <a href="javascript:if (Map.visibleIndex == 0) { Map.switchVisibleLayer(1); } else { Map.switchVisibleLayer(0) }">Click me!</a>
+  <a href="#" onmousedown="Map.switchVisibleLayer(graffiti)">Graffiti</a> <a href="#" onmousedown="Map.switchVisibleLayer(sidewalk_cleaning)">Sidewalk Cleaning</a>
 <div id="position">Lat: <span id="lat"></span>; Long: <span id="long"></span></div>
 </div>
 <div id="map">
@@ -10,6 +15,14 @@
 {% endblock %}
 
 {% block custom_scripts %}
+<link rel="stylesheet" href="/static/css/tipsy.css">
+<script src="/static/js/jquery.tipsy.js"></script>
 <script src="/static/js/map.js"></script>
 <script src="/static/js/raycasting.js"></script>
+
+<script>
+  $("#neighborhoods").ready(function () {
+    $("#neighborhoods path").tipsy({fallback: "Hello World", live:true});
+  });
+</script>
 {% endblock %}
