@@ -6,3 +6,4 @@ data/
 dashboard/static/tiles/
 epio.ini
 .epio-app
+*.json
