@@ -5,7 +5,6 @@ from django.shortcuts import render
 from django.db.models import Count
 
 from django.contrib.auth.decorators import login_required
-from django.contrib.gis.geos import MultiPolygon
 
 from open311dashboard.dashboard.utils import str_to_day, day_to_str, \
     date_range, dt_handler, render_to_geojson
@@ -18,10 +17,60 @@ import time
 def index(request):
     total_open = Request.objects.filter(status="Open").count()
     most_recent = Request.objects.latest('requested_datetime')
+    minus_7 = most_recent.requested_datetime-datetime.timedelta(days=7)
+    minus_14 = most_recent.requested_datetime-datetime.timedelta(days=14)
+
+    this_week = Request.objects.filter(requested_datetime__range= \
+            (minus_7, most_recent.requested_datetime))
+    last_week = Request.objects.filter(requested_datetime__range= \
+            (minus_14, minus_7))
+
+    # Calculate the request delta from the latest 2 weeks of data.
+    this_week_count = this_week.count()
+    last_week_count = last_week.count()
+
+    try:
+        delta_count = int(round(((float(this_week_count)/last_week_count)-1) *
+            100))
+    except:
+        delta_count = 100
+
+    # Calculate the number of closed tickets in the last week.
+    this_week_closed_count = this_week.filter(status="Closed").count()
+    last_week_closed_count = last_week.filter(status="Closed").count()
+
+    try:
+        delta_closed_count = int(round(((float(this_week_closed_count) /
+            last_week_closed_count)-1) * 100))
+    except:
+        delta_closed_count = 100
+
+    # Calculate the responsiveness delta from the latest 2 weeks of data.
+    this_week_time = this_week.filter(status="Closed") \
+            .extra({"average": "avg(updated_datetime - requested_datetime)"}) \
+            .values("average")
+    last_week_time = last_week.filter(status="Closed") \
+            .extra({"average": "avg(updated_datetime - requested_datetime)"}) \
+            .values("average")
+
+    this_week_days = this_week_time[0]["average"].days
+    last_week_days = last_week_time[0]["average"].days
+
+    try:
+        delta_time = int(round(((float(this_week_days) /
+            last_week_days)-1) * 100))
+    except:
+        delta_time = 100
 
     c = Context({
         'open_tickets': total_open,
-        'latest': most_recent.requested_datetime
+        'latest': most_recent.requested_datetime,
+        'delta_created_count': delta_count,
+        'delta_closed_count': delta_closed_count,
+        'this_week_created_count': this_week_count,
+        'this_week_closed_count': this_week_closed_count,
+        'this_week_time': this_week_days,
+        'delta_time': delta_time,
         })
     return render(request, 'index.html', c)
 
