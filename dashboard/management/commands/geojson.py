@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from open311dashboard.dashboard.models import Geography
+from open311dashboard.dashboard.models import Geography, Request, Street
 
 from django.db import connection
 import json
@@ -21,35 +21,71 @@ class Command(BaseCommand):
         # Select JSON
 
         cursor = connection.cursor()
-        cursor.execute("""SELECT extract(epoch from
-            avg(dashboard_request.updated_datetime -
-                dashboard_request.requested_datetime))/3600 as average,
-            ST_AsGeoJSON(transform(ST_SetSRID(dashboard_street.line, 900913),4326)) FROM dashboard_request,
-            dashboard_street WHERE dashboard_request.status='Closed' AND
-            dashboard_request.street_id=dashboard_street.id AND
-            dashboard_request.updated_datetime >
-            dashboard_request.requested_datetime AND requested_datetime >
-            '2010-12-31' GROUP BY dashboard_street.line ORDER BY average DESC LIMIT 2000
+        cursor.execute("""
+SELECT a.* FROM(
+SELECT
+	ST_AsGeoJSON(ST_Transform(ST_SetSRID(dashboard_street.line,900913),4326)),
+	extract(epoch from avg(dashboard_request.updated_datetime - dashboard_request.requested_datetime)) as average,
+	percent_rank() OVER (order by extract(epoch from avg(dashboard_request.updated_datetime - dashboard_request.requested_datetime))) as rank
+FROM dashboard_street
+LEFT OUTER JOIN
+	dashboard_request ON (dashboard_street.id = dashboard_request.street_id)
+WHERE
+	dashboard_request.status='Closed' AND
+	dashboard_request.updated_datetime > dashboard_request.requested_datetime AND
+	requested_datetime > '2010-12-31' AND
+	dashboard_request.service_code = '024'
+GROUP BY dashboard_street.line
+) AS a WHERE a.rank > .8
             """)
         rows = cursor.fetchall()
 
-        geojson1 = geojson
-        geojson2 = geojson
         for row in rows:
-            geojson1['features'].append({"type": "Feature",
-                "geometry": json.loads(row[1]),
+            geojson['features'].append({"type": "Feature",
+                "geometry": json.loads(row[0]),
                 "properties": {
-                    "average": row[0]
+                    "percentile": "%s" % row[2]
                     }})
-        f = open('dashboard/static/test.json', 'w')
-        f.write(json.dumps(geojson1))
+        f = open('dashboard/static/sidewalk_cleaning.json', 'w')
+        f.write(json.dumps(geojson))
         f.close()
 
+        geojson['features'] = []
+
+        cursor.execute("""
+SELECT a.* FROM(
+SELECT
+	ST_AsGeoJSON(ST_Transform(ST_SetSRID(dashboard_street.line,900913),4326)),
+	extract(epoch from avg(dashboard_request.updated_datetime - dashboard_request.requested_datetime)) as average,
+	percent_rank() OVER (order by extract(epoch from avg(dashboard_request.updated_datetime - dashboard_request.requested_datetime))) as rank
+FROM dashboard_street
+LEFT OUTER JOIN
+	dashboard_request ON (dashboard_street.id = dashboard_request.street_id)
+WHERE
+	dashboard_request.status='Closed' AND
+	dashboard_request.updated_datetime > dashboard_request.requested_datetime AND
+	requested_datetime > '2010-12-31' AND
+	dashboard_request.service_code = '049'
+GROUP BY dashboard_street.line
+) AS a WHERE a.rank > .8
+            """)
+        rows = cursor.fetchall()
+        for row in rows:
+            geojson['features'].append({"type": "Feature",
+                "geometry": json.loads(row[0]),
+                "properties": {
+                    "percentile": "%s" % row[2]
+                    }})
+        f = open('dashboard/static/graffiti.json', 'w')
+        f.write(json.dumps(geojson))
+        f.close()
+
+
         g = Geography.objects.all().transform()
-        geojson2['features'] = []
+        geojson['features'] = []
 
         for shape in g:
-            geojson2['features'].append({"type": "Feature",
+            geojson['features'].append({"type": "Feature",
                 "geometry": json.loads(shape.geo.simplify(.0003,
                     preserve_topology=True).json),
                 "properties": {
@@ -57,5 +93,5 @@ class Command(BaseCommand):
                     }})
 
         h = open('dashboard/static/neighborhoods.json', 'w')
-        h.write(json.dumps(geojson2))
+        h.write(json.dumps(geojson))
         h.close()
