@@ -1,0 +1,46 @@
+{% extends 'base/main.html' %}
+
+{% block content %}
+<h2>
+    {% if addresses.3 != 0 %}
+        {{ addresses|first }} - {{ addresses|last }}
+    {% endif %}
+    {{ street.street_name|title}}</h2>
+{% if averages %}
+Average response time: {{ averages }} day{{ averages|pluralize }}
+{% endif %}
+
+<div id="open-requests">
+    <h3>Open Requests</h3>
+    {% if open_requests|length > 0 %}
+<table>
+    {% for request in open_requests %}
+    <tr>
+        <td>{{ request.service_name }}</td>
+        <td>{{ request.requested_datetime }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<p>No requests currently open.</p>
+{% endif %}
+</div>
+
+{% if request_types %}
+<div id="top-requests">
+    <h3>Top Request Types</h3>
+    <table>
+    {% for request_type in request_types %}
+    <tr>
+        <td>{{request_type.service_name }}</td>
+        <td>{{ request_type.count }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endif %}
+</div>
+
+<div id="open-requests">
+</div>
+{% endblock %}
+
