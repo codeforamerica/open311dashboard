@@ -195,6 +195,8 @@ function onsidewalkload(e) {
     }
     e.features[i].element.setAttribute("stroke-linecap", "round");
     e.features[i].element.setAttribute("fill", "none");
+    var clickhandler = function () { alert("Hello"); };
+    e.features[i].element.onmouseup = clickhandler;
   }
 }
 

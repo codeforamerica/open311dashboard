@@ -71,7 +71,6 @@ var Map = {
     } else if (obj.alwaysVisible === true) {
       layer.visible(true);
 
-      // this._rebuildLayers();
       /* We need to save the alwaysVisible layers to reshow them whenever
        * we switch layers */
       this.alwaysVisible.push(layer);
@@ -92,7 +91,6 @@ var Map = {
 
     /* Update the visibleIndex */
     this.visibleIndex = id;
-
     this._rebuildLayers();
 
   },
@@ -147,6 +145,21 @@ var Map = {
 
   /* Various methods to handle events */
   event: {
-    /* TODO: Write this */
+    /**
+     * [ { condition: .9,
+     *     color: "#ccc" }]
+     **/
+    colorArray: [],
+
+    /* Abstraction of the color event */
+    color: function(e) {
+      for (i = 0; i < e.features.length; i += 1) {
+        for (j = 0; j < this.colorArray.length; j += 1) {
+          if (e.features[i].data.properties.percentile > this.colorArray[j].condition) {
+            e.features[i].element.setAttribute("stroke", this.colorArray[i].color);
+          }
+        }
+      }
+    }
   }
 };
