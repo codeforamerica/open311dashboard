@@ -3,8 +3,9 @@ from django.conf.urls.defaults import patterns, url
 urlpatterns = patterns('',
     url(r'^$', 'open311dashboard.dashboard.views.index'),
     url(r'^map/$', 'open311dashboard.dashboard.views.map'),
+    url(r'^street/$', 'open311dashboard.dashboard.views.street_list'),
     url(r'^street/(?P<street_id>\d+)/$',
-        'open311dashboard.dashboard.views.street'),
+        'open311dashboard.dashboard.views.street_view'),
 
     # Login
     url(r'^login/$', 'django.contrib.auth.views.login',

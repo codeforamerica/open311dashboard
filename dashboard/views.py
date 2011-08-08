@@ -74,7 +74,18 @@ def index(request):
         })
     return render(request, 'index.html', c)
 
-def street(request, street_id):
+def street_list(request):
+    streets = Street.objects.filter(request__status="Open") \
+            .annotate(count=Count('request__service_request_id')) \
+            .order_by('-count')[:10]
+
+    c = Context({
+        'top_streets': streets
+        })
+
+    return render(request, 'street_list.html', c)
+
+def street_view(request, street_id):
     street = Street.objects.get(pk=street_id)
 
     # Max/min addresses
@@ -105,7 +116,7 @@ def street(request, street_id):
         'open_requests': open_requests
         })
 
-    return render(request, 'street.html', c)
+    return render(request, 'street_detail.html', c)
 
 def map(request):
     return render(request, 'map.html')
