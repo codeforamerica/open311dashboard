@@ -3,14 +3,14 @@
 {% block content %}
 <h2>{{ neighborhood.name }}</h2>
 <div id="neighborhood-details">
-    Open requests: {{ requests_open }}</br>
-    Average response time: {{ request_averages }}
-    day{{ request_averages|pluralize }}
+    Open requests: {{ stats.open_request_count }}</br>
+    Average response time: {{ stats.average_response }}
+    day{{ stats.average_response|pluralize }}
 </div>
 
 <div id="neighborhood-types">
     <table>
-        {% for type in request_types %}
+        {% for type in stats.request_types %}
         <tr>
             <td>{{ type.service_name }}</td>
             <td>{{ type.count }}</td>
@@ -21,7 +21,7 @@
 
 <div id="open-requests">
     <table>
-        {% for request in open_requests %}
+        {% for request in stats.open_requests %}
         <tr>
             <td>{{ request.service_name }}</td>
             <td>{{ request.requested_datetime }}</td>

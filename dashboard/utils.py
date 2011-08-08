@@ -2,7 +2,37 @@ import datetime
 from django.contrib.gis.db.models.fields import GeometryField
 from django.utils import simplejson
 from django.http import HttpResponse
+from django.db.models import Count
 
+def run_stats(request_obj):
+    """
+
+    Returns stats on a given request set.
+
+
+    """
+    stats = {}
+
+    # Average response time.
+    stats['average_response'] = request_obj.filter(status="Closed") \
+        .extra({"average": "avg(updated_datetime - requested_datetime)"}) \
+        .values("average")
+    stats['average_response'] = stats['average_response'][0]["average"].days
+
+    # Request types.
+    stats['request_types'] = request_obj.values('service_name') \
+            .annotate(count=Count('service_name')).order_by('-count')[:10]
+
+    # Open request count.
+    stats['open_request_count'] = request_obj.filter(status="Open").count()
+
+    # Recently opened requests.
+    stats['open_requests'] = request_obj.filter(status="Open") \
+            .order_by('-requested_datetime')[:10]
+
+    return stats
+
+# Handle string/date conversion.
 def str_to_day(date):
     """Convert a YYYY-MM-DD string to a datetime object"""
     return datetime.datetime.strptime(date, '%Y-%m-%d')
