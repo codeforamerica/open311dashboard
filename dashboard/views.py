@@ -74,6 +74,43 @@ def index(request):
         })
     return render(request, 'index.html', c)
 
+# Neighborhood specific pages.
+def neighborhood_list(request):
+    neighborhoods = Geography.objects.all()
+
+    c = Context({
+        'neighborhoods': neighborhoods
+        })
+
+    return render(request, 'neighborhood_list.html', c)
+
+def neighborhood_detail(request, neighborhood_id):
+    neighborhood = Geography.objects.get(pk=neighborhood_id)
+
+    # Get the requests inside the neighborhood
+    requests = Request.objects.filter(geo_point__contained=neighborhood.geo)
+    requests_open = requests.filter(status="Open").count()
+
+
+    request_averages = requests \
+        .extra({"average": "avg(updated_datetime - requested_datetime)"}) \
+        .values("average")
+    request_averages = request_averages[0]['average'].days
+    request_types = requests.values('service_name') \
+        .annotate(count=Count('service_name')).order_by('-count')[:10]
+    open_requests = requests.filter(status="Open") \
+        .order_by('-requested_datetime')[:10]
+
+    c = Context({
+        'neighborhood': neighborhood,
+        'requests_open': requests_open,
+        'request_averages': request_averages,
+        'request_types': request_types,
+        'open_requests': open_requests
+        })
+    return render(request, 'neighborhood_detail.html', c)
+
+# Street specific pages.
 def street_list(request):
     streets = Street.objects.filter(request__status="Open") \
             .annotate(count=Count('request__service_request_id')) \

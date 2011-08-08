@@ -1,0 +1,14 @@
+{% extends 'base/main.html' %}
+
+{% block content %}
+<h2>Neighborhoods</h2>
+<ul>
+    {% for neighborhood in neighborhoods %}
+    <li>
+        <a href="{{ neighborhood.get_absolute_url }}">
+            {{ neighborhood.name }}
+        </a>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}
