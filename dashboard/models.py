@@ -32,7 +32,7 @@ class Request(models.Model):
 
     # Super top secret geographic data.
     if ENABLE_GEO is True:
-        geo_point = models.PointField(srid=4326, null=True)
+        geo_point = models.PointField(srid=900913, null=True)
         street = models.ForeignKey('Street')
         objects = models.GeoManager()
 
@@ -87,7 +87,7 @@ if ENABLE_GEO is True:
             return self.name
 
         def get_absolute_url(self):
-            return "/neighborhood/%i" %  self.id
+            return "/neighborhood/%i/" %  self.id
 
     class GeographyType(models.Model):
         """
