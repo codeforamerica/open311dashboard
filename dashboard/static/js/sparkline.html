@@ -58,7 +58,7 @@ Animated Sparkline<br><br>
 <input type="button" id="button" value="Click"/>
 <div class="chart"></div>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.js"></script>
-<script src="../../Projects/d3/d3.js"></script>
+<script src="https://raw.github.com/mbostock/d3/master/d3.js"></script>
 <script>
 $("#button").click(redraw);
 
@@ -85,6 +85,7 @@ var new_circles = vis.selectAll("circle.area")
 var line = d3.svg.line()
     .x(function(d,i) { return x(i); })
     .y(function(d) { return y(d); })
+    .interpolate("cardinal")
 
 //appending the line
 var initial_path = vis.append("svg:path").attr("d", line(data)).attr("stroke-linecap","round");
