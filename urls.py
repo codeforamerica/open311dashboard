@@ -3,9 +3,15 @@ from django.conf.urls.defaults import patterns, url
 urlpatterns = patterns('',
     url(r'^$', 'open311dashboard.dashboard.views.index'),
     url(r'^map/$', 'open311dashboard.dashboard.views.map'),
+
     url(r'^street/$', 'open311dashboard.dashboard.views.street_list'),
     url(r'^street/(?P<street_id>\d+)/$',
         'open311dashboard.dashboard.views.street_view'),
+
+    url(r'^neighborhood/$',
+        'open311dashboard.dashboard.views.neighborhood_list'),
+    url(r'^neighborhood/(?P<neighborhood_id>\d+)/$',
+        'open311dashboard.dashboard.views.neighborhood_detail'),
 
     # Login
     url(r'^login/$', 'django.contrib.auth.views.login',
