@@ -1,0 +1,14 @@
+{% extends 'base/main.html' %}
+
+{% block content %}
+<h2>Streets</h2>
+<ol>
+    {% for street in top_streets %}
+    <li>
+        <a href="{{ street.get_absolute_url }}">{{ street.street_name|title}}</a>
+            ({{ street.count }} open request{{street.count|pluralize}})
+    </li>
+    {% endfor %}
+</ol>
+
+{% endblock %}

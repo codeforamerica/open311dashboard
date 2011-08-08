@@ -86,6 +86,9 @@ if ENABLE_GEO is True:
         def __unicode__(self):
             return self.name
 
+        def get_absolute_url(self):
+            return "/neighborhood/%i" %  self.id
+
     class GeographyType(models.Model):
         """
 
@@ -116,3 +119,6 @@ if ENABLE_GEO is True:
 
         def __unicode__(self):
             return self.street_name
+
+        def get_absolute_url(self):
+            return "/street/%i/" % self.id
