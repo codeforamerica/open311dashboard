@@ -7,7 +7,7 @@ from django.db.models import Count
 from django.contrib.auth.decorators import login_required
 
 from open311dashboard.dashboard.utils import str_to_day, day_to_str, \
-    date_range, dt_handler, render_to_geojson
+    date_range, dt_handler, render_to_geojson, run_stats
 from open311dashboard.dashboard.decorators import ApiHandler
 
 import datetime
@@ -87,26 +87,13 @@ def neighborhood_list(request):
 def neighborhood_detail(request, neighborhood_id):
     neighborhood = Geography.objects.get(pk=neighborhood_id)
 
-    # Get the requests inside the neighborhood
+    # Get the requests inside the neighborhood, run the stats
     requests = Request.objects.filter(geo_point__contained=neighborhood.geo)
-    requests_open = requests.filter(status="Open").count()
-
-
-    request_averages = requests \
-        .extra({"average": "avg(updated_datetime - requested_datetime)"}) \
-        .values("average")
-    request_averages = request_averages[0]['average'].days
-    request_types = requests.values('service_name') \
-        .annotate(count=Count('service_name')).order_by('-count')[:10]
-    open_requests = requests.filter(status="Open") \
-        .order_by('-requested_datetime')[:10]
+    stats = run_stats(requests)
 
     c = Context({
         'neighborhood': neighborhood,
-        'requests_open': requests_open,
-        'request_averages': request_averages,
-        'request_types': request_types,
-        'open_requests': open_requests
+        'stats': stats
         })
     return render(request, 'neighborhood_detail.html', c)
 
