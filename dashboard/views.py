@@ -9,7 +9,9 @@ from django.contrib.auth.decorators import login_required
 from open311dashboard.dashboard.utils import str_to_day, day_to_str, \
     date_range, dt_handler, render_to_geojson, run_stats
 from open311dashboard.dashboard.decorators import ApiHandler
+
 from django.contrib.gis.geos import Point
+from django.contrib.gis.measure import Distance as D
 
 import datetime
 import qsstats
@@ -167,7 +169,10 @@ def street_search(request):
             point.srid = 4326
             point.transform(900913)
 
-            nearest_street = Street.objects.all().distance(point).order_by('distance')[:1]
+                    # .all() \
+            nearest_street = Street.objects \
+                    .filter(line__dwithin=(point, D(m=100))) \
+                    .distance(point).order_by('distance')[:1]
             return redirect(nearest_street[0])
         else:
             c = Context({'error': True})
