@@ -1,7 +1,7 @@
 from open311dashboard.dashboard.models import Request, City, Geography, Street
 
 from django.template import Context
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.db.models import Count
 
 from django.contrib.auth.decorators import login_required
@@ -9,10 +9,14 @@ from django.contrib.auth.decorators import login_required
 from open311dashboard.dashboard.utils import str_to_day, day_to_str, \
     date_range, dt_handler, render_to_geojson, run_stats
 from open311dashboard.dashboard.decorators import ApiHandler
+from django.contrib.gis.geos import Point
 
 import datetime
 import qsstats
 import time
+import json
+import urllib
+import urllib2
 
 def index(request):
     total_open = Request.objects.filter(status="Open").count()
@@ -141,6 +145,42 @@ def street_view(request, street_id):
         })
 
     return render(request, 'street_detail.html', c)
+
+# Search for an address!
+def street_search(request):
+    query = request.GET.get('q','')
+
+    if query:
+        # Lookup the search string with Yahoo!
+        url = "http://where.yahooapis.com/geocode"
+        params = {"addr": query,
+                "line2": "San Francisco, CA",
+                "flags": "J",
+                "appid": "1I9Jh.3V34HMiBXzxZRYmx.DO1JfVJtKh7uvDTJ4R0dRXnMnswRHXbai1NFdTzvC" }
+
+        query_params = urllib.urlencode(params)
+        data = urllib2.urlopen("%s?%s" % (url,
+            query_params)).read()
+
+        print data
+
+        temp_json = json.loads(data)
+
+        if temp_json['ResultSet']['Results'][0]['quality'] > 50:
+            lon = temp_json['ResultSet']['Results'][0]["longitude"]
+            lat = temp_json['ResultSet']['Results'][0]["latitude"]
+
+            point = Point(float(lon), float(lat))
+            point.srid = 4326
+            point.transform(900913)
+
+            nearest_street = Street.objects.all().distance(point).order_by('distance')[:1]
+            return redirect(nearest_street[0])
+        else:
+            c = Context({'error': True})
+            return render(request, 'search.html', c)
+    else:
+        return render(request, 'search.html')
 
 def map(request):
     return render(request, 'map.html')

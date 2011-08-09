@@ -13,6 +13,9 @@ urlpatterns = patterns('',
     url(r'^neighborhood/(?P<neighborhood_id>\d+)/$',
         'open311dashboard.dashboard.views.neighborhood_detail'),
 
+    url(r'^search/$',
+        'open311dashboard.dashboard.views.street_search'),
+
     # Login
     url(r'^login/$', 'django.contrib.auth.views.login',
         {'template_name': 'login.html'}),
