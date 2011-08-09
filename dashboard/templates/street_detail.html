@@ -1,46 +1,114 @@
 {% extends 'base/main.html' %}
 
 {% block content %}
-<h2>
-    {% if addresses.3 != 0 %}
-        {{ addresses|first }} - {{ addresses|last }}
-    {% endif %}
-    {{ street.street_name|title}}</h2>
-{% if averages %}
-Average response time: {{ averages }} day{{ averages|pluralize }}
-{% endif %}
+<style>
+  #street-content {
+    margin-top:10px;
+  }
+  #map {
+    height:350px;
+  }
+  #street-stats h2 {
+    font-size:16pt;
+    text-align:center;
+  }
 
-<div id="open-requests">
-    <h3>Open Requests</h3>
-    {% if open_requests|length > 0 %}
-<table>
-    {% for request in open_requests %}
-    <tr>
-        <td>{{ request.service_name }}</td>
-        <td>{{ request.requested_datetime }}</td>
-    </tr>
-    {% endfor %}
-</table>
-{% else %}
-<p>No requests currently open.</p>
-{% endif %}
-</div>
+  #top-requests {
+    width:100%;
+  }
 
-{% if request_types %}
-<div id="top-requests">
-    <h3>Top Request Types</h3>
-    <table>
-    {% for request_type in request_types %}
-    <tr>
-        <td>{{request_type.service_name }}</td>
-        <td>{{ request_type.count }}</td>
-    </tr>
-    {% endfor %}
-</table>
-{% endif %}
-</div>
+  #top-requests .service-name {
+    width:75%;
+  }
 
-<div id="open-requests">
+  #open-requests table {
+    width:100%;
+  }
+
+  #open-requests table .service-name {
+    width:75%;
+  }
+
+  #geometry path {
+    stroke:#000;
+    stroke-width:5px;
+    stroke-linecap:round;
+  }
+</style>
+<div class="container_12" id="street-content">
+  <div class="grid_8">
+    <div id="map">
+    </div>
+
+    <div id="open-requests">
+      <h2>Open Requests</h2>
+      {% if stats.open_requests|length > 0 %}
+      <table>
+        {% for request in stats.open_requests %}
+        <tr>
+            <td>{{ request.service_name }}</td>
+            <td>{{ request.requested_datetime }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+      {% else %}
+      <p>No requests currently open.</p>
+      {% endif %}
+    </div>
+  </div>
+  <div class="grid_4">
+    <div id="street-stats">
+      <h2>{{ title|title }}</h2>
+    <ul>
+      <li>Open requests: {{ stats.open_request_count }}</li>
+      <li>Average response time: {{ stats.average_response }}
+        day{{ stats.average_response|pluralize }}</li>
+    </ul>
+
+    <div id="spark_line"></div>
+    <p>30-Day Trend</p>
+
+    <table id="top-requests">
+      {% for type in stats.request_types %}
+        <tr>
+            <td>{{ type.service_name }}</td>
+            <td>{{ type.count }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    </div>
+
+    <div id="nearby">
+      <h2>Streets Nearby</h2>
+    </div>
+  </div>
 </div>
 {% endblock %}
 
+{% block custom_scripts %}
+<script>
+var po = org.polymaps;
+
+var map = po.map()
+    .container(document.getElementById("map").appendChild(po.svg("svg")))
+    .add(po.interact())
+    .add(po.hash());
+
+map.add(po.image()
+    .url(po.url("http://{S}tile.cloudmade.com"
+    + "/b60fbbd51f17456794d2b0e4ed4f0d0c" // http://cloudmade.com/register
+    + "/998/256/{Z}/{X}/{Y}.png")
+    .hosts(["a.", "b.", "c.", ""])));
+
+{% autoescape off %}
+map.add(po.geoJson()
+  .features([{ "type": "Feature",
+    "geometry":{{ geometry }},
+    "properties": {}}])
+  .id("geometry"));
+{% endautoescape %}
+
+map.add(po.compass()
+    .pan("none"));
+</script>
+{% endblock %}

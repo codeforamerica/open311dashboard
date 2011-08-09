@@ -121,27 +121,20 @@ def street_view(request, street_id):
                  street.right_low_address, street.right_high_address]
     addresses.sort()
 
+    title = "%s %i - %i" % (street.street_name, addresses[0], addresses[3])
+
     # Requests
     requests = Request.objects.filter(street=street_id)
-    request_types = requests.values('service_name') \
-                .annotate(count=Count('service_name')).order_by('-count')
-    open_requests = requests.filter(status="Open") \
-            .order_by('-requested_datetime')[:10]
+    stats = run_stats(requests)
 
-    try:
-        request_averages = requests \
-            .extra({"average": "avg(updated_datetime - requested_datetime)"}) \
-            .values("average")
-        request_averages = request_averages[0]['average'].days
-    except:
-        request_averages = None
+    street.line.transform(4326)
 
     c = Context({
         'street': street,
-        'addresses': addresses,
-        'request_types': request_types,
-        'averages': request_averages,
-        'open_requests': open_requests
+        'title': title,
+        'geometry': street.line.geojson,
+        'centroid': street.line.centroid.geojson,
+        'stats': stats
         })
 
     return render(request, 'street_detail.html', c)
