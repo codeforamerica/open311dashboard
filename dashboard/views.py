@@ -5,20 +5,19 @@ import json
 import urllib
 import urllib2
 
-from open311dashboard.dashboard.models import Request, City, Geography, Street
-
 from django.template import Context
 from django.shortcuts import render, redirect
 from django.db.models import Count
-
 from django.contrib.auth.decorators import login_required
+
+from django.contrib.gis.geos import Point
+from django.contrib.gis.measure import Distance as D
+
+from open311dashboard.dashboard.models import Request, City, Geography, Street
 
 from open311dashboard.dashboard.utils import str_to_day, day_to_str, \
     date_range, dt_handler, render_to_geojson, run_stats
 from open311dashboard.dashboard.decorators import ApiHandler
-
-from django.contrib.gis.geos import Point
-from django.contrib.gis.measure import Distance as D
 
 
 def index(request):
