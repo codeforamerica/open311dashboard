@@ -1,3 +1,10 @@
+import datetime
+import qsstats
+import time
+import json
+import urllib
+import urllib2
+
 from open311dashboard.dashboard.models import Request, City, Geography, Street
 
 from django.template import Context
@@ -13,12 +20,6 @@ from open311dashboard.dashboard.decorators import ApiHandler
 from django.contrib.gis.geos import Point
 from django.contrib.gis.measure import Distance as D
 
-import datetime
-import qsstats
-import time
-import json
-import urllib
-import urllib2
 
 def index(request):
     total_open = Request.objects.filter(status="Open").count()
