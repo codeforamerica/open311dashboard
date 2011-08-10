@@ -167,6 +167,67 @@ a:hover { color: #036; }
  *
  * Author: Chris Barna and mevans.
  */
+/*GENERAL STYLES*/
+body {
+	font-family: helvetica;	
+	background-color: #EDEDED;
+}
+
+h1 {
+	font-size: 18px;
+	font-weight: bold;
+	padding: 20px 10px;
+}
+
+h2 {
+	font-size: 14px;
+	text-align: center;
+	padding: 5px;
+}
+
+p {
+	font-size: 12px;
+	padding: 5px;
+}
+
+.caption {
+	text-align: center;
+	font-style: italic;
+	font-size: 14px;
+	margin: 0 15px;
+	display: block;
+	border-bottom: 1px solid #EDEDED;
+	
+}
+
+/*TABLES*/ 
+
+table {
+	width: 90%;
+	margin: 0 auto;	
+	font-size: 14px;
+}
+
+th {
+	text-align: left;
+	font-weight: bold;
+}
+
+td {
+	padding: 5px 0;
+}
+
+tr {
+    background-color: #fff;
+}
+
+tr:nth-child(2n) {
+	background-color: #EDEDED;
+}
+
+#street-stats td:nth-child(2), #nearby td:nth-child(2) {
+	text-align: right;
+}
 
 #container {
   min-width:960px;
@@ -189,63 +250,14 @@ a:hover { color: #036; }
   float:left;
 }
 
+#title h1 {     padding:0;  }
+
 #last-updated {
   width:49%;
   float:right;
   text-align:right;
   padding-top:8px;
   padding-right:1%;
-}
-
-#main {
-  position:relative;
-  height:100%;
-  border:1px solid #000;
-}
-
-#datepicker input {
-  width:80px;
-}
-
-#ui-datepicker-div {
-  display:none;
-}
-
-#top-bar {
-}
-
-#tabs {
-  width:80%;
-  float:left;
-}
-
-#tabs ul {
-  list-style-type:none;
-}
-
-#tabs ul li {
-  border-left:1px solid #000;
-  border-right:1px solid #000;
-  float:left;
-  text-align:center;
-  padding:1px 3px;
-}
-
-#tabs ul li .number {
-  font-weight:bold;
-  font-size:16pt;
-}
-
-#datepicker {
-  width:20%;
-  float:right;
-}
-
-#main-content {
-  position:relative;
-  margin:0 5px;
-  margin-bottom:5px;
-  border:1px solid #ccc;
 }
 
 #map {

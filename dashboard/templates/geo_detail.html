@@ -42,7 +42,7 @@
         </tr>
         {% endfor %}
     </table>
-    <div class="clear" style="padding-top:10px;"></div>
+    <div class="clear"></div>
     </div>
 
     <div id="nearby">
@@ -66,10 +66,7 @@ map.add(po.image()
     + "/b60fbbd51f17456794d2b0e4ed4f0d0c"
     + "/998/256/{Z}/{X}/{Y}.png")
     .hosts(["a.", "b.", "c.", ""])));
-  //.url(po.url("http://a.tile.openstreetmap.org/{Z}/{X}/{Y}.png")));
 
-//map.add(po.geoJson()
-//  .url("/static/stclines_4326.json"));
 map.add(po.image()
   .url(po.url("/static/fixed/{Z}/{X}/{Y}.png")));
 {% autoescape off %}

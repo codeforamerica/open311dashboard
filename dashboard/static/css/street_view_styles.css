@@ -1,66 +1,3 @@
-/* [BEGIN] Eric Meyer Reset
-/*GENERAL STYLES*/
-body {
-	font-family: helvetica;	
-	background-color: #EDEDED;
-}
-
-h1 {
-	font-size: 18px;
-	font-weight: bold;
-	padding: 20px 10px;
-}
-
-h2 {
-	font-size: 14px;
-	text-align: center;
-	padding: 5px;
-}
-
-p {
-	font-size: 12px;
-	padding: 5px;
-}
-
-.caption {
-	text-align: center;
-	font-style: italic;
-	font-size: 14px;
-	margin: 0 15px;
-	display: block;
-	border-bottom: 1px solid #EDEDED;
-	
-}
-
-/*TABLES*/ 
-
-table {
-	width: 90%;
-	margin: 0 auto;	
-	font-size: 14px;
-}
-
-th {
-	text-align: left;
-	font-weight: bold;
-}
-
-td {
-	padding: 5px 0;
-}
-
-tr {
-    background-color: #fff;
-}
-
-tr:nth-child(2n) {
-	background-color: #EDEDED;
-}
-
-#street-stats td:nth-child(2), #nearby td:nth-child(2) {
-	text-align: right;
-}
-
 /*CONTAINERS*/ 
 
 #nav {
@@ -78,10 +15,12 @@ tr:nth-child(2n) {
 	width: 100%;
 	float: left;
 	background-color: white;	
+    padding-bottom:10px;
 }
 
-#map, #open-requests {
+#map {
     height: 380px;
+    padding-bottom:0px;
 }
 
 /*MAP*/
