@@ -4,88 +4,125 @@ Last updated: {{ latest|date:"F jS, Y" }}
 {% endblock %}
 {% block content %}
 <style>
-    .block {
-        border:1px solid #000;
-        margin:9px;
-        text-align:center;
-        float:left;
-    }
+  .block {
+    border:1px solid #000;
+    margin:9px;
+    text-align:center;
+    float:left;
+  }
 
-    .block .main {
-        font-size:16pt;
-    }
+  .block .main {
+    font-size:16pt;
+  }
 
-    .main .number {
-        font-size:32pt;
-        font-weight:bold;
-    }
+  .main .number {
+    font-size:32pt;
+    font-weight:bold;
+  }
 
-    .red, .green { border:1px solid #fff; } 
+  .red, .green { border:1px solid #fff; } 
 
-    .red {
-        background-color: red;
-        color: white;
-    }
+  .red {
+    background-color: red;
+    color: white;
+  }
 
-    .green {
-        background-color: green;
-        color:white;
-    }
+  .green {
+    background-color: green;
+    color:white;
+  }
 </style>
 <div class="container_12" style="padding-top:5px;">
-    <div class="grid_12"><p>Hello 
-        <select class="chzn-select" id="neighborhood-selector" style="width:175px">
-            <option>San Francisco</option>
-            <optgroup label="Neighborhoods">
-                {% for neighborhood in neighborhoods %}
-                <option value="{{ neighborhood.id }}">{{ neighborhood.name }}</option>
-                {% endfor %}
-            </optgroup>
-        </select>,
-        let's see how responsive your city is this week.</p>
+  <div class="grid_12"><p>Hello 
+    <select class="chzn-select" id="neighborhood-selector" style="width:175px">
+      <option>San Francisco</option>
+      <optgroup label="Neighborhoods">
+        {% for neighborhood in neighborhoods %}
+        <option value="{{ neighborhood.id }}">{{ neighborhood.name }}</option>
+        {% endfor %}
+      </optgroup>
+    </select>,
+    let's see how responsive your city is this week.</p>
+  </div>
+  <div class="clear"></div>
+  <div class="grid_4 block" id="request-count">
+    <div class="main">
+      <div class="number">{{ this_week_stats.request_count }}</div> requests
+      opened this week.
     </div>
-    <div class="clear"></div>
-    <div class="grid_4 block" id="request-count">
-        <div class="main">
-            <div class="number">{{ this_week_stats.request_count }}</div> requests
-            opened this week.
-        </div>
-        {{ delta.created_count }}% change in requests from last week to
-        this.
-    </div>
+    <span class="delta">{{ delta.opened_count }}</span>% change in requests from last week to
+    this.
+  </div>
 
-    <div class="grid_4 block {% if delta.closed_count > 0 %}green{% else %}red{% endif %}" id="closed-count">
-        <div class="main">
-            <div class="number">{{ this_week_stats.closed_request_count }}</div> requests
-            closed this week.
-        </div>
-        {{ delta.closed_count}}% change in requests closed from last week to
-        this.
+  <div class="grid_4 block {% if delta.closed_count > 0 %}green{% else %}red{% endif %}" id="closed-count">
+    <div class="main">
+      <div class="number">{{ this_week_stats.closed_request_count }}</div> requests
+      closed this week.
     </div>
+    <span class="delta">{{ delta.closed_count}}</span>% change in requests closed from last week to
+    this.
+  </div>
 
-    <div class="grid_4 block {% if delta.time < 0 %}green{% else %}red{% endif %}" id="open-time">
-        <div class="main">
-            <div class="number">{{ this_week_stats.average_response }} day
-                {{ this_week_stats.average_response|pluralize }}</div>
-            average response time.
-        </div>
-        {{ delta.time }}% change in response time from last week to this.
+  <div class="grid_4 block {% if delta.time < 0 %}green{% else %}red{% endif %}" id="open-time">
+    <div class="main">
+      <div class="number">{{ this_week_stats.average_response }} day
+        {{ this_week_stats.average_response|pluralize }}</div>
+      average response time.
     </div>
-    <div class="clear"></div>
-    <p>Main content goes here! Until then, check out our <a href="/map/">map</a>!</p>
+    <span class="delta">{{ delta.time }}</span>% change in response time from last week to this.
+  </div>
+  <div class="clear"></div>
+  <p>Main content goes here! Until then, check out our <a href="/map/">map</a>!</p>
 </div>
 {% endblock %}
 
 {% block custom_scripts %}
 <script>
-    $(document).ready(function() {
-        $('.chzn-select').chosen();
+  $(document).ready(function() {
+    $('.chzn-select').chosen();
 
-        $('#neighborhood-selector').chosen().change(function (e, s) {
-            if (!isNaN(parseInt(this.value))) {
-                window.location = '/neighborhood/'+this.value+'/';
+    $('#neighborhood-selector').chosen().change(function (e, s) {
+      if (!isNaN(parseInt(this.value))) {
+        //window.location = '/neighborhood/'+this.value+'/';
+        url = "/api/home/"+this.value+".json";
+        $.ajax({
+          url: url,
+          success: function (data) {
+            this_week = data.this_week_stats;
+            // Update the numbers
+            $("#request-count .number").html(this_week.open_request_count);
+            $("#closed-count .number").html(this_week.closed_request_count);
+            $("#open-time .number").html(this_week.average_response);
+
+            if (this_week.average_response === 1) {
+              $("#open-time .number").append(" day");
+              } else {
+              $("#open-time .number").append(" days");
             }
+
+            // Update the deltas
+            delta = data.delta;
+            $("#request-count .delta").html(delta.opened_count);
+            $("#closed-count .delta").html(delta.closed_count);
+            $("#open-time .delta").html(delta.time);
+
+            $("#closed-count, #open-time").removeClass('red').removeClass('green');
+
+            if (delta.closed_count > 0) {
+              $("#closed-count").addClass('green');
+            } else {
+              $("#closed-count").addClass('red');
+            }
+
+            if (delta.time < 0) {
+              $("#open-time").addClass('green');
+            } else {
+              $("#open-time").addClass('red');
+            }
+          }
         });
+      }
     });
+  });
 </script>
 {% endblock %}
