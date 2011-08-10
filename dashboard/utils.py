@@ -4,7 +4,7 @@ from django.utils import simplejson
 from django.http import HttpResponse
 from django.db.models import Count
 
-def run_stats(request_obj):
+def run_stats(request_obj, **kwargs):
     """
 
     Returns stats on a given request set.
@@ -23,8 +23,9 @@ def run_stats(request_obj):
     stats['average_response'] = stats['average_response'][0]["average"].days
 
     # Request types.
-    stats['request_types'] = request_obj.values('service_name') \
-            .annotate(count=Count('service_name')).order_by('-count')[:10]
+    if kwargs['request_types'] is not False:
+        stats['request_types'] = request_obj.values('service_name') \
+                .annotate(count=Count('service_name')).order_by('-count')[:10]
 
     # Open request count.
     stats['open_request_count'] = request_obj.filter(status="Open").count()
@@ -33,8 +34,9 @@ def run_stats(request_obj):
     stats['closed_request_count'] = request_obj.filter(status="Closed").count()
 
     # Recently opened requests.
-    stats['open_requests'] = request_obj.filter(status="Open") \
-            .order_by('-requested_datetime')[:10]
+    if kwargs['open_requests'] is not False:
+        stats['open_requests'] = request_obj.filter(status="Open") \
+                .order_by('-requested_datetime')[:10]
 
     return stats
 

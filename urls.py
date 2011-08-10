@@ -21,6 +21,9 @@ urlpatterns = patterns('',
         {'template_name': 'login.html'}),
 
     # API Calls
+    url(r'^api/home/(?P<geography>\d+).json$',
+        'open311dashboard.dashboard.views.index', {'is_json':True}),
+
     url(r'^api/tickets/$', 'open311dashboard.dashboard.views.ticket_days'),
     url(r'^api/tickets/(?P<ticket_status>open|closed|both)/$',
         'open311dashboard.dashboard.views.ticket_days'),

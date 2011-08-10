@@ -9,6 +9,7 @@ from django.template import Context
 from django.shortcuts import render, redirect
 from django.db.models import Count
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 
 from django.contrib.gis.geos import Point
 from django.contrib.gis.measure import Distance as D
@@ -20,19 +21,27 @@ from open311dashboard.dashboard.utils import str_to_day, day_to_str, \
 from open311dashboard.dashboard.decorators import ApiHandler
 
 
-def index(request, geography=None, json=False):
-    total_open = Request.objects.filter(status="Open").count()
-    most_recent = Request.objects.latest('requested_datetime')
+def index(request, geography=None, is_json=False):
+    if geography is None:
+        requests = Request.objects.all()
+    else:
+        neighborhood = Geography.objects.get(pk=geography)
+        requests = Request.objects.filter(geo_point__contained=neighborhood.geo)
+
+    total_open = requests.filter(status="Open").count()
+    most_recent = requests.latest('requested_datetime')
     minus_7 = most_recent.requested_datetime-datetime.timedelta(days=7)
     minus_14 = most_recent.requested_datetime-datetime.timedelta(days=14)
 
-    this_week = Request.objects.filter(requested_datetime__range= \
+    this_week = requests.filter(requested_datetime__range= \
             (minus_7, most_recent.requested_datetime))
-    last_week = Request.objects.filter(requested_datetime__range= \
+    last_week = requests.filter(requested_datetime__range= \
             (minus_14, minus_7))
 
-    this_week_stats = run_stats(this_week)
-    last_week_stats = run_stats(last_week)
+    this_week_stats = run_stats(this_week, request_types=False,
+            open_requests=False)
+    last_week_stats = run_stats(last_week, request_types=False,
+            open_requests=False)
 
     # Calculate deltas
     delta = {}
@@ -41,23 +50,29 @@ def index(request, geography=None, json=False):
     delta['closed_count'] = calculate_delta( \
             this_week_stats['closed_request_count'],
             last_week_stats['closed_request_count'])
+    delta['opened_count'] = calculate_delta( \
+            this_week_stats['open_request_count'],
+            last_week_stats['open_request_count'])
     delta['time'] = calculate_delta(this_week_stats['average_response'],
             last_week_stats['average_response'])
-
-    neighborhoods = Geography.objects.all()
 
     # Put everything in a dict so we can do what we want with it.
     c_dict = {
         'open_tickets': total_open,
         'this_week_stats': this_week_stats,
         'last_week_stats': last_week_stats,
-        'latest': most_recent.requested_datetime,
         'delta': delta,
-        'neighborhoods': neighborhoods,
         }
 
-    c = Context(c_dict)
-    return render(request, 'index.html', c)
+    if is_json is False:
+        neighborhoods = Geography.objects.all()
+        c_dict['neighborhoods'] = neighborhoods
+        c_dict['latest'] = most_recent.requested_datetime,
+        c = Context(c_dict)
+        return render(request, 'index.html', c)
+    else:
+        data = json.dumps(c_dict, True)
+        return HttpResponse(data, content_type='application/json')
 
 # Neighborhood specific pages.
 def neighborhood_list(request):
