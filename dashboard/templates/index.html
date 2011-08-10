@@ -114,7 +114,7 @@ Last updated: {{ latest|date:"F jS, Y" }}
               $("#closed-count").addClass('red');
             }
 
-            if (delta.time < 0) {
+            if (delta.time <= 0) {
               $("#open-time").addClass('green');
             } else {
               $("#open-time").addClass('red');
