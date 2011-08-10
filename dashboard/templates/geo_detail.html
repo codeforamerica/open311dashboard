@@ -1,0 +1,86 @@
+{% extends 'base/main.html' %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ STATIC_URL }}css/street_view_styles.css">
+<div class="container_12" id="street-content">
+  <div class="grid_8">
+    <div id="map">
+    </div>
+
+    <div id="open-requests">
+      <h1>Open Requests</h1>
+      {% if stats.open_requests|length > 0 %}
+      <table>
+        {% for request in stats.open_requests %}
+        <tr>
+            <td>{{ request.service_name }}</td>
+            <td>{{ request.requested_datetime }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+      {% else %}
+      <p>No requests currently open.</p>
+      {% endif %}
+    </div>
+  </div>
+  <div class="grid_4">
+    <div id="street-stats">
+      <h1>{{ title|title }}</h1>
+      <div id="spark-line"></div>
+      <p class="caption">30-Day Trend</p>
+      <p id="response-time">{{ stats.average_response }}
+      day{{ stats.average_response|pluralize }}</p>
+      <p class="caption">Average Response Time</p>
+
+
+    <h1>Top Requests</h1>
+    <table id="top-requests">
+      {% for type in stats.request_types %}
+        <tr>
+            <td>{{ type.service_name }}</td>
+            <td>{{ type.count }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <div class="clear" style="padding-top:10px;"></div>
+    </div>
+
+    <div id="nearby">
+      <h2>Streets Nearby</h2>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block custom_scripts %}
+<script>
+var po = org.polymaps;
+
+var map = po.map()
+    .container(document.getElementById("map").appendChild(po.svg("svg")))
+    .add(po.interact())
+    .add(po.hash());
+
+map.add(po.image()
+    .url(po.url("http://{S}tile.cloudmade.com"
+    + "/b60fbbd51f17456794d2b0e4ed4f0d0c"
+    + "/998/256/{Z}/{X}/{Y}.png")
+    .hosts(["a.", "b.", "c.", ""])));
+  //.url(po.url("http://a.tile.openstreetmap.org/{Z}/{X}/{Y}.png")));
+
+//map.add(po.geoJson()
+//  .url("/static/stclines_4326.json"));
+map.add(po.image()
+  .url(po.url("/static/fixed/{Z}/{X}/{Y}.png")));
+{% autoescape off %}
+map.add(po.geoJson()
+  .features([{ "type": "Feature",
+    "geometry": {{ geometry }},
+    "properties": {}}])
+  .id("geometry"));
+{% endautoescape %}
+
+map.add(po.compass()
+    .pan("none"));
+</script>
+{% endblock %}

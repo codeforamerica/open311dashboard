@@ -167,9 +167,6 @@ a:hover { color: #036; }
  *
  * Author: Chris Barna and mevans.
  */
-html, body {
-  height:100%;
-}
 
 #container {
   min-width:960px;
