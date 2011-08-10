@@ -13,6 +13,9 @@ def run_stats(request_obj):
     """
     stats = {}
 
+    # Total request count.
+    stats['request_count'] = request_obj.count()
+
     # Average response time.
     stats['average_response'] = request_obj.filter(status="Closed") \
         .extra({"average": "avg(updated_datetime - requested_datetime)"}) \
@@ -26,11 +29,22 @@ def run_stats(request_obj):
     # Open request count.
     stats['open_request_count'] = request_obj.filter(status="Open").count()
 
+    # Closed request count.
+    stats['closed_request_count'] = request_obj.filter(status="Closed").count()
+
     # Recently opened requests.
     stats['open_requests'] = request_obj.filter(status="Open") \
             .order_by('-requested_datetime')[:10]
 
     return stats
+
+def calculate_delta(new, old):
+    try:
+        delta = int(round(((float(new) / old)-1) * 100))
+    except:
+        delta = 100
+
+    return delta
 
 # Handle string/date conversion.
 def str_to_day(date):

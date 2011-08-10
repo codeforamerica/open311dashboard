@@ -16,11 +16,11 @@ from django.contrib.gis.measure import Distance as D
 from open311dashboard.dashboard.models import Request, City, Geography, Street
 
 from open311dashboard.dashboard.utils import str_to_day, day_to_str, \
-    date_range, dt_handler, render_to_geojson, run_stats
+    date_range, dt_handler, render_to_geojson, run_stats, calculate_delta
 from open311dashboard.dashboard.decorators import ApiHandler
 
 
-def index(request):
+def index(request, geography=None, json=False):
     total_open = Request.objects.filter(status="Open").count()
     most_recent = Request.objects.latest('requested_datetime')
     minus_7 = most_recent.requested_datetime-datetime.timedelta(days=7)
@@ -31,53 +31,32 @@ def index(request):
     last_week = Request.objects.filter(requested_datetime__range= \
             (minus_14, minus_7))
 
-    # Calculate the request delta from the latest 2 weeks of data.
-    this_week_count = this_week.count()
-    last_week_count = last_week.count()
+    this_week_stats = run_stats(this_week)
+    last_week_stats = run_stats(last_week)
 
-    try:
-        delta_count = int(round(((float(this_week_count)/last_week_count)-1) *
-            100))
-    except:
-        delta_count = 100
+    # Calculate deltas
+    delta = {}
+    delta['count'] = calculate_delta(this_week_stats['request_count'],
+            last_week_stats['request_count'])
+    delta['closed_count'] = calculate_delta( \
+            this_week_stats['closed_request_count'],
+            last_week_stats['closed_request_count'])
+    delta['time'] = calculate_delta(this_week_stats['average_response'],
+            last_week_stats['average_response'])
 
-    # Calculate the number of closed tickets in the last week.
-    this_week_closed_count = this_week.filter(status="Closed").count()
-    last_week_closed_count = last_week.filter(status="Closed").count()
+    neighborhoods = Geography.objects.all()
 
-    try:
-        delta_closed_count = int(round(((float(this_week_closed_count) /
-            last_week_closed_count)-1) * 100))
-    except:
-        delta_closed_count = 100
-
-    # Calculate the responsiveness delta from the latest 2 weeks of data.
-    this_week_time = this_week.filter(status="Closed") \
-            .extra({"average": "avg(updated_datetime - requested_datetime)"}) \
-            .values("average")
-    last_week_time = last_week.filter(status="Closed") \
-            .extra({"average": "avg(updated_datetime - requested_datetime)"}) \
-            .values("average")
-
-    this_week_days = this_week_time[0]["average"].days
-    last_week_days = last_week_time[0]["average"].days
-
-    try:
-        delta_time = int(round(((float(this_week_days) /
-            last_week_days)-1) * 100))
-    except:
-        delta_time = 100
-
-    c = Context({
+    # Put everything in a dict so we can do what we want with it.
+    c_dict = {
         'open_tickets': total_open,
+        'this_week_stats': this_week_stats,
+        'last_week_stats': last_week_stats,
         'latest': most_recent.requested_datetime,
-        'delta_created_count': delta_count,
-        'delta_closed_count': delta_closed_count,
-        'this_week_created_count': this_week_count,
-        'this_week_closed_count': this_week_closed_count,
-        'this_week_time': this_week_days,
-        'delta_time': delta_time,
-        })
+        'delta': delta,
+        'neighborhoods': neighborhoods,
+        }
+
+    c = Context(c_dict)
     return render(request, 'index.html', c)
 
 # Neighborhood specific pages.
@@ -130,6 +109,7 @@ def street_view(request, street_id):
     stats = run_stats(requests)
 
     street.line.transform(4326)
+    # street.line.transform(4269)
 
     c = Context({
         'street': street,
