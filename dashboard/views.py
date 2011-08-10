@@ -91,11 +91,26 @@ def neighborhood_detail(request, neighborhood_id):
     requests = Request.objects.filter(geo_point__contained=neighborhood.geo)
     stats = run_stats(requests)
 
+    # c = Context({
+        # 'neighborhood': neighborhood,
+        # 'stats': stats
+        # })
+    # return render(request, 'neighborhood_detail.html', c)
+
+    title = neighborhood.name
+
+    neighborhood.geo.transform(4326)
+    simple_shape = neighborhood.geo.simplify(.0003,
+            preserve_topology=True)
+
     c = Context({
-        'neighborhood': neighborhood,
+        'title': title,
+        'geometry': simple_shape.geojson,
+        'centroid': simple_shape.centroid.geojson,
         'stats': stats
         })
-    return render(request, 'neighborhood_detail.html', c)
+
+    return render(request, 'geo_detail.html', c)
 
 # Street specific pages.
 def street_list(request):
@@ -124,17 +139,15 @@ def street_view(request, street_id):
     stats = run_stats(requests)
 
     street.line.transform(4326)
-    # street.line.transform(4269)
 
     c = Context({
-        'street': street,
         'title': title,
         'geometry': street.line.geojson,
         'centroid': street.line.centroid.geojson,
         'stats': stats
         })
 
-    return render(request, 'street_detail.html', c)
+    return render(request, 'geo_detail.html', c)
 
 # Search for an address!
 def street_search(request):

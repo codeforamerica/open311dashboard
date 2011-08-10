@@ -23,7 +23,7 @@ def run_stats(request_obj, **kwargs):
     stats['average_response'] = stats['average_response'][0]["average"].days
 
     # Request types.
-    if kwargs['request_types'] is not False:
+    if kwargs.has_key('request_types') is False:
         stats['request_types'] = request_obj.values('service_name') \
                 .annotate(count=Count('service_name')).order_by('-count')[:10]
 
@@ -34,7 +34,7 @@ def run_stats(request_obj, **kwargs):
     stats['closed_request_count'] = request_obj.filter(status="Closed").count()
 
     # Recently opened requests.
-    if kwargs['open_requests'] is not False:
+    if kwargs.has_key('open_requests') is False:
         stats['open_requests'] = request_obj.filter(status="Open") \
                 .order_by('-requested_datetime')[:10]
 
