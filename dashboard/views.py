@@ -102,9 +102,11 @@ def neighborhood_detail(request, neighborhood_id):
     c = Context({
         'title': title,
         'geometry': simple_shape.geojson,
-        'centroid': simple_shape.centroid.geojson,
+        'centroid': [simple_shape.centroid[0], simple_shape.centroid[1]],
+        'extent': simple_shape.extent,
         'stats': stats,
-        'nearby': nearby
+        'nearby': nearby,
+        'type': 'neighborhood'
         })
 
     return render(request, 'geo_detail.html', c)
@@ -123,6 +125,9 @@ def street_list(request):
 
 def street_view(request, street_id):
     street = Street.objects.get(pk=street_id)
+    nearby = Street.objects.all().distance(street.line) \
+            .exclude(street_name=street.street_name).order_by('distance')[:5]
+    neighborhood = Geography.objects.filter(geo__contains=street.line)
 
     # Max/min addresses
     addresses = [street.left_low_address, street.left_high_address,
@@ -140,8 +145,12 @@ def street_view(request, street_id):
     c = Context({
         'title': title,
         'geometry': street.line.geojson,
-        'centroid': street.line.centroid.geojson,
-        'stats': stats
+        'centroid': [street.line.centroid[0], street.line.centroid[1]],
+        'extent': street.line.extent,
+        'stats': stats,
+        'nearby': nearby,
+        'neighborhood': neighborhood[0],
+        'type': 'street'
         })
 
     return render(request, 'geo_detail.html', c)

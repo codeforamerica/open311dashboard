@@ -36,20 +36,33 @@
 
 <body>
 
-    <div id="container" class="">
-        <header>
+    <div id="container" class="container_12">
+        <header class="grid_12 border-radius">
             <div id="title">
-                <h1>Open311 Dashboard</h1>
+                <h1><a href="/">Open311 Dashboard</a></h1>
                 <p>Yeah, we're pretty awesome&hellip;</p>
             </div>
-            <div id="last-updated">{% block last_updated %}{% endblock %}</div>
+            <div id="home-nav">
+                <ul>
+                <a href="/map/">Map</a>
+                <a href="/street/">Streets</a>
+                <a href="/neighborhood/">Neighborhoods</a>
+                <a href="/search/">Search</a>
+            </ul>
+            </div>
             <div class="clear"></div>
         </header>
             <div id="main" role="main">
                 {% block content %}{% endblock %}
             </div>
             <footer>
-
+            <div class="grid_12 border-radius" style="background-color:#fff;">
+                <p>A project of <a href="http://codeforamerica.org/">Code for
+                    America</a> brought to you by
+                <a href="http://twitter.com/EvansML">@EvansML</a>,
+                <a href="http://twitter.com/ctbarna">@ctbarna</a>, and
+                <a href="http://twitter.com/baileyspace">@baileyspace</a>.</p>
+            </div>
             </footer>
         </div> <!--! end of #container -->
 

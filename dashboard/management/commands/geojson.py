@@ -57,7 +57,8 @@ SELECT a.* FROM(
 SELECT
 	ST_AsGeoJSON(ST_Transform(ST_SetSRID(dashboard_street.line,900913),4326)),
 	extract(epoch from avg(dashboard_request.updated_datetime - dashboard_request.requested_datetime)) as average,
-	percent_rank() OVER (order by extract(epoch from avg(dashboard_request.updated_datetime - dashboard_request.requested_datetime))) as rank
+	percent_rank() OVER (order by extract(epoch from avg(dashboard_request.updated_datetime - dashboard_request.requested_datetime))) as rank,
+    dashboard_street.id
 FROM dashboard_street
 LEFT OUTER JOIN
 	dashboard_request ON (dashboard_street.id = dashboard_request.street_id)
@@ -66,7 +67,7 @@ WHERE
 	dashboard_request.updated_datetime > dashboard_request.requested_datetime AND
 	requested_datetime > '2010-12-31' AND
 	dashboard_request.service_code = '049'
-GROUP BY dashboard_street.line
+GROUP BY dashboard_street.line, dashboard_street.id
 ) AS a WHERE a.rank > .8
             """)
         rows = cursor.fetchall()
@@ -74,7 +75,8 @@ GROUP BY dashboard_street.line
             geojson['features'].append({"type": "Feature",
                 "geometry": json.loads(row[0]),
                 "properties": {
-                    "percentile": "%s" % row[2]
+                    "percentile": "%s" % row[2],
+                    "id": "%s" % row[3]
                     }})
         f = open('dashboard/static/graffiti.json', 'w')
         f.write(json.dumps(geojson))
@@ -89,7 +91,8 @@ GROUP BY dashboard_street.line
                 "geometry": json.loads(shape.geo.simplify(.0003,
                     preserve_topology=True).json),
                 "properties": {
-                    "neighborhood": shape.name
+                    "neighborhood": shape.name,
+                    "id": shape.id
                     }})
 
         h = open('dashboard/static/neighborhoods.json', 'w')

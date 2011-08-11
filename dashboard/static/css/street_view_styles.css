@@ -25,10 +25,19 @@
 
 /*MAP*/
 #geometry path {
-  stroke:#000;
-  stroke-width:5px;
+  stroke:#666;
   stroke-linecap:round;
-  fill:none;
+}
+
+.street path {
+    fill:none;
+    stroke-width:5px;
+}
+
+.neighborhood path {
+    stroke-width:3px;
+    fill:#fff;
+    fill-opacity:.4;
 }
 
 /*STREET STATS*/
