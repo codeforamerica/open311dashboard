@@ -67,7 +67,7 @@ def index(request, geography=None, is_json=False):
     if is_json is False:
         neighborhoods = Geography.objects.all()
         c_dict['neighborhoods'] = neighborhoods
-        c_dict['latest'] = most_recent.requested_datetime,
+        c_dict['latest'] = most_recent.requested_datetime
         c = Context(c_dict)
         return render(request, 'index.html', c)
     else:
@@ -86,17 +86,13 @@ def neighborhood_list(request):
 
 def neighborhood_detail(request, neighborhood_id):
     neighborhood = Geography.objects.get(pk=neighborhood_id)
+    nearby = Geography.objects.all().distance(neighborhood.geo) \
+            .exclude(name=neighborhood.name).order_by('distance')[:5]
 
     # Get the requests inside the neighborhood, run the stats
     requests = Request.objects.filter(geo_point__contained=neighborhood.geo)
     stats = run_stats(requests)
-
-    # c = Context({
-        # 'neighborhood': neighborhood,
-        # 'stats': stats
-        # })
-    # return render(request, 'neighborhood_detail.html', c)
-
+    
     title = neighborhood.name
 
     neighborhood.geo.transform(4326)
@@ -107,7 +103,8 @@ def neighborhood_detail(request, neighborhood_id):
         'title': title,
         'geometry': simple_shape.geojson,
         'centroid': simple_shape.centroid.geojson,
-        'stats': stats
+        'stats': stats,
+        'nearby': nearby
         })
 
     return render(request, 'geo_detail.html', c)

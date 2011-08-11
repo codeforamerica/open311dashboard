@@ -65,11 +65,11 @@ $("#button").click(redraw);
 var w = 200,
 h = 50;
 
-var data = [3,6,2,7,5,2,1,3,8,9,21,5,7,8,13,14,15,16,17,18,19,20];
-var x = d3.scale.linear().domain([0, data.length - 1]).range([0, w]);
-var y = d3.scale.linear().domain([0, d3.max(data)]).range([h, 0]);
-var max = d3.max(data);
-var min = d3.min(data);
+var sparkData = [3,6,2,7,5,2,1,3,8,9,21,5,7,8,13,14,15,16,17,18,19,20];
+var x = d3.scale.linear().domain([0, sparkData.length - 1]).range([0, w]);
+var y = d3.scale.linear().domain([0, d3.max(sparkData)]).range([h, 0]);
+var max = d3.max(sparkData);
+var min = d3.min(sparkData);
 
 var vis = d3.select("body")
     .append("svg:svg")
@@ -91,7 +91,7 @@ var line = d3.svg.line()
 var initial_path = vis.append("svg:path").attr("d", line(data)).attr("stroke-linecap","round");
 
 var initial_circles = vis.selectAll("circle.area")
-    .data(data)
+    .data(sparkData)
   .enter().append("svg:circle")
     .attr("class", function(d,i) {if (d === max) { return 'point max'; } else if (d === min) { return 'point min' } else { return 'point'}})
     .attr("cx", function(d,i) { return x(i); })
