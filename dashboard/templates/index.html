@@ -65,8 +65,7 @@ Last updated: {{ latest|date:"F jS, Y" }}
 
   <div class="grid_4 block {% if delta.time < 0 %}green{% else %}red{% endif %}" id="open-time">
     <div class="main">
-      <div class="number">{{ this_week_stats.average_response }} day
-        {{ this_week_stats.average_response|pluralize }}</div>
+      <div class="number">{{ this_week_stats.average_response }} day{{ this_week_stats.average_response|pluralize }}</div>
       average response time.
     </div>
     <span class="delta">{{ delta.time }}</span>% change in response time from last week to this.

@@ -2,6 +2,29 @@
 
 {% block content %}
 <link rel="stylesheet" href="{{ STATIC_URL }}css/street_view_styles.css">
+<style>
+    #spark-line path {
+    stroke: steelblue;
+    stroke-width: 2;
+    fill: none;
+    }
+
+.line, circle.area {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
+
+circle.area {
+  fill: #fff;
+}
+
+.point {
+    fill: #C80000;
+    stroke: #FFFFFF;
+    stroke-width: 0px;
+}
+</style>
 <div class="container_12" id="street-content">
   <div class="grid_8">
     <div id="map">
@@ -24,7 +47,7 @@
     </div>
   </div>
   <div class="grid_4">
-    <div id="street-stats">
+    <div id="street-stats" style="">
       <h1>{{ title|title }}</h1>
       <div id="spark-line"></div>
       <p class="caption">30-Day Trend</p>
@@ -34,10 +57,10 @@
 
 
     <h1>Top Requests</h1>
-    <table id="top-requests">
+    <table id="top-requests" style="table-layout:fixed;">
       {% for type in stats.request_types %}
         <tr>
-            <td>{{ type.service_name }}</td>
+            <td style="overflow:hidden;white-space:nowrap;width:75%;">{{ type.service_name }}</td>
             <td>{{ type.count }}</td>
         </tr>
         {% endfor %}
@@ -46,10 +69,20 @@
     </div>
 
     <div id="nearby">
-      <h2>Streets Nearby</h2>
+      <h2>Nearby</h2>
+      <table>
+          {% for nearby_place in nearby %}
+          <tr>
+              <td><a href="{{ nearby_place.get_absolute_url }}">{{ nearby_place.name }}</a></td>
+          </tr>
+          {% endfor %}
+      </table>
     </div>
   </div>
 </div>
+<script>
+    var sparkData = [10,5,11];
+</script>
 {% endblock %}
 
 {% block custom_scripts %}
@@ -79,5 +112,41 @@ map.add(po.geoJson()
 
 map.add(po.compass()
     .pan("none"));
+
+var w = 200,
+h = 50;
+
+var sparkData = {{ stats.opened_by_day }};
+var x = d3.scale.linear().domain([0, sparkData.length - 1]).range([0, w]);
+var y = d3.scale.linear().domain([0, d3.max(sparkData)]).range([h, 0]);
+var max = d3.max(sparkData);
+var min = d3.min(sparkData);
+
+var vis = d3.select("#spark-line")
+    .append("svg:svg")
+        .attr("width", w + 40)
+        .attr("height", h + 40)
+    .append("svg:g")
+        .attr("transform", "translate(" + 20 + ", " + 20 + ")");
+
+var new_circles = vis.selectAll("circle.area")
+    .data(sparkData)
+  .enter().append("svg:circle");
+
+var line = d3.svg.line()
+    .x(function(d,i) { return x(i); })
+    .y(function(d) { return y(d); })
+    .interpolate("cardinal")
+
+//appending the line
+var initial_path = vis.append("svg:path").attr("d", line(sparkData)).attr("stroke-linecap","round");
+
+var initial_circles = vis.selectAll("circle.area")
+    .data(sparkData)
+  .enter().append("svg:circle")
+    .attr("class", function(d,i) {if (d === max) { return 'point max'; } else if (d === min) { return 'point min' } else { return 'point'}})
+    .attr("cx", function(d,i) { return x(i); })
+    .attr("cy", function(d,i) { return y(d); })
+    .attr("r", function(d) { if (d === max || d === min) { return 3.5 } else { return 0}});
 </script>
 {% endblock %}

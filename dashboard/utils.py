@@ -1,4 +1,6 @@
 import datetime
+
+import qsstats
 from django.contrib.gis.db.models.fields import GeometryField
 from django.utils import simplejson
 from django.http import HttpResponse
@@ -37,6 +39,14 @@ def run_stats(request_obj, **kwargs):
     if kwargs.has_key('open_requests') is False:
         stats['open_requests'] = request_obj.filter(status="Open") \
                 .order_by('-requested_datetime')[:10]
+
+    # Opened requests by day (limit: 30)
+    time_delta = datetime.timedelta(days=30)
+    latest = request_obj.latest('requested_datetime')
+    qss = qsstats.QuerySetStats(request_obj, 'requested_datetime')
+    time_series = qss.time_series(latest.requested_datetime - time_delta,
+            latest.requested_datetime)
+    stats['opened_by_day'] = [t[1] for t in time_series]
 
     return stats
 
