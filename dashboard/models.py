@@ -1,4 +1,6 @@
 from django.contrib.gis.db import models
+from django.contrib.gis.geos import Point
+from django.contrib.gis.measure import Distance as D
 from open311dashboard.settings import ENABLE_GEO
 
 class Request(models.Model):
@@ -30,11 +32,29 @@ class Request(models.Model):
 
     city = models.ForeignKey('City')
 
+
     # Super top secret geographic data.
     if ENABLE_GEO is True:
         geo_point = models.PointField(srid=900913, null=True)
         street = models.ForeignKey('Street')
         objects = models.GeoManager()
+
+        def save(self):
+            if (float(self.long) != 0.0 and float(self.lat) != 0.0):
+                # Save the geo_point.
+                point = Point(float(self.long), float(self.lat), srid=4326)
+                point.transform(900913)
+
+                self.geo_point = point
+
+                # Lookup the nearest street
+                street = Street.objects.filter(line__dwithin=(point, D(m=100))) \
+                        .distance(point).order_by('distance')[:1]
+
+                if len(street) > 0:
+                    self.street = street[0]
+
+            super(Request, self).save()
 
 class Service(models.Model):
     """
