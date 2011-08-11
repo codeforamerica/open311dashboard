@@ -2,13 +2,15 @@
 
 {% block content %}
 
+<div class="white grid_12 border-radius">
 {% if error %}
 Sorry, your lookup failed.
 {% endif %}
 
 <form action="." method="GET">
-    <label for="q">Search: </label>
+    <label for="q">Type in an address or intersection: </label>
     <input type="text" name="q" value="{{ query|escape }}">
     <input type="submit" value="Search">
 </form>
+</div>
 {% endblock %}

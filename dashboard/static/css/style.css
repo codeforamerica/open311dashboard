@@ -238,11 +238,19 @@ tr:nth-child(2n) {
 
 #container header {
   background:#ccc;
-  position:relative;
-  /* height:50px;*/
-  top:0;
-  left:0;
-  right:0;
+  padding:5px 0px;
+}
+
+.border-radius {
+    margin-top:10px;
+    -moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px; 
+	-khtml-border-radius: 5px;
+}
+
+.white {
+    background-color:#fff;
 }
 
 #title {
@@ -250,9 +258,9 @@ tr:nth-child(2n) {
   float:left;
 }
 
-#title h1 {     padding:0;  }
+#title h1 {     padding:0 5px;  }
 
-#last-updated {
+#home-nav {
   width:49%;
   float:right;
   text-align:right;
@@ -280,6 +288,28 @@ tr:nth-child(2n) {
 }
 .direction {
   fill:none;
+}
+
+#home-nav ul {
+    margin:0;
+    padding:0;
+    padding-top:8px;
+    list-style-type:none;
+}
+
+#home-nav li {
+    float:right;
+    margin-right:10px;
+}
+
+#home-nav a:link, #home-nav a:visited {
+    font-weight:bold;
+    text-decoration:none;
+    padding-right:10px;
+}
+
+header h1 a:link, header h1 a:visited {
+    text-decoration:none;
 }
 
 /* http://sonspring.com/journal/clearing-floats */

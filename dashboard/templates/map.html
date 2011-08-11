@@ -2,15 +2,24 @@
 
 {% block content %}
 <style>
-  #streets path:hover, #sidewalk_cleaning path:hover, #graffiti-svg path:hover {
+  #streets path:hover, #sidewalk_cleaning path:hover, #graffiti path:hover {
     stroke-width:5px;
   }
 </style>
-<div id="selector">
-  <a href="#" onmousedown="Map.switchVisibleLayer(graffiti)">Graffiti</a> <a href="#" onmousedown="Map.switchVisibleLayer(sidewalk_cleaning)">Sidewalk Cleaning</a>
-<div id="position">Lat: <span id="lat"></span>; Long: <span id="long"></span></div>
+<div id="selector" class="grid_12 border-radius" style="background-color:#fff">
+Select a map:
+  <select id="layer-select" class="chzn-select">
+    <option value="cleaning">Street/Sidewalk Cleaning</option>
+    <option value="cans">Trash Cans</option>
+    <option value="dumping">Illegal Dumping</option>
+    <option value="graffiti" selected="true">Graffiti</option>
+    <option value="overflowing">Overflowing City Recepticles</option>
+    <option value="pavementdefect">Pavement Defect</option>
+    <option value="sewer">Sewer</option>
+    <option value="vehicle">Abandoned Vehicle</option>
+  </select>
 </div>
-<div id="map">
+<div id="map" style="height:500px; border:1px solid #ccc; margin:5px 8px;" class="grid_12 border-radius">
 </div>
 {% endblock %}
 
@@ -21,8 +30,12 @@
 <script src="/static/js/raycasting.js"></script>
 
 <script>
-  $("#neighborhoods").ready(function () {
-    $("#neighborhoods path").tipsy({fallback: "Hello World", live:true});
+  $(document).ready(function () {
+    $('.chzn-select').chosen();
+
+    $("#layer-select").chosen().change(function (e) {
+      Map.switchVisibleLayer(window[this.value]);
+    });
   });
 </script>
 {% endblock %}

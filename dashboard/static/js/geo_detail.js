@@ -2,8 +2,10 @@ var po = org.polymaps;
 
 var map = po.map()
     .container(document.getElementById("map").appendChild(po.svg("svg")))
-    .add(po.interact())
-    .add(po.hash());
+
+map.center(centroid)
+    .zoomRange([12,16])
+    .extent(extent);
 
 map.add(po.image()
     .url(po.url("http://{S}tile.cloudmade.com"
@@ -19,9 +21,6 @@ map.add(po.geoJson()
     "geometry": geometry,
     "properties": {}}])
   .id("geometry"));
-
-map.add(po.compass()
-    .pan("none"));
 
 var w = 200,
 h = 50;
@@ -53,8 +52,8 @@ var initial_path = vis.append("svg:path").attr("d", line(sparkData)).attr("strok
 var initial_circles = vis.selectAll("circle.area")
     .data(sparkData)
   .enter().append("svg:circle")
-    .attr("class", function(d,i) {if (d === max) { return 'point max'; } else if (d === min) { return 'point min' } else { return 'point'}})
+    .attr("class", function(d,i) {if (d === max) { return 'point max'; } else if (d === min) { return 'point' } else { return 'point'}})
     .attr("cx", function(d,i) { return x(i); })
     .attr("cy", function(d,i) { return y(d); })
-    .attr("r", function(d) { if (d === max || d === min) { return 3.5 } else { return 0}});
+    .attr("r", function(d) { if (d === max) { return 3.5 } else { return 0}});
 

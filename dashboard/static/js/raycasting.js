@@ -58,6 +58,7 @@ function onloadneighborhoods(e){
     neighborhood_features[i] = e.features[i];
     neighborhood_features[i].element.setAttribute('fill','#fff');
     neighborhood_features[i].element.setAttribute('fill-opacity','0');
+    neighborhood_features[i].element.setAttribute('id', "neighbrohood-"+e.features[i].data.properties.id);
 
     features_coordinates[i] = e.features[i].data.geometry.coordinates[0];
 
@@ -70,6 +71,12 @@ function onloadneighborhoods(e){
     e.features[i].element.onmouseover = testNeighborhood;
     e.features[i].element.onmousemove = testNeighborhood;
     e.features[i].element.onmouseout = testNeighborhood;
+
+    e.features[i].element.onclick = function () {
+      id = this.getAttribute('id');
+      id = id.split('-');
+      window.location = "/neighborhood/"+id[1]+"/";
+    };
   }
 
 }
@@ -195,8 +202,12 @@ function onsidewalkload(e) {
     }
     e.features[i].element.setAttribute("stroke-linecap", "round");
     e.features[i].element.setAttribute("fill", "none");
-    var clickhandler = function () { alert("Hello"); };
-    e.features[i].element.onmouseup = clickhandler;
+    e.features[i].element.setAttribute("id", "street-"+e.features[i].data.properties.id);
+    e.features[i].element.onclick = function () {
+      id = this.getAttribute('id');
+      id = id.split('-');
+      window.location = "/street/"+id[1]+"/";
+    };
   }
 }
 
@@ -210,16 +221,29 @@ function hideResponseContent(e){
 
 Map.createmap();
 
-var streetGroup = Map.addLayer("/static/tiles/{Z}/{X}/{Y}.png",
-                               { type: "image",
-                                 id: "street-base",
-                                 visible: true, index:1});
-var graffiti = Map.addLayer("/static/speed-graffiti/{Z}/{X}/{Y}.png",
-             { type: "image",
-               id: "graffiti", index:1 });
+aws_url = "http://open311-tiles.s3-website-us-east-1.amazonaws.com/";
+zxy = "/{Z}/{X}/{Y}.png";
 
-var sidewalk_cleaning = Map.addLayer("/static/speed-sidewalk/{Z}/{X}/{Y}.png",
-                                    { type: "image", index:1 });
+var cleaning = Map.addLayer(aws_url+"speed-cleaning"+zxy,
+                            { type: "image", index:1 });
+var cans = Map.addLayer(aws_url+"speed-cans"+zxy,
+                            { type: "image", index:1 });
+var dumping = Map.addLayer(aws_url+"speed-dumping"+zxy,
+                            { type: "image", index:1 });
+var graffiti = Map.addLayer(aws_url+"speed-graffiti.final"+zxy,
+                            { type: "image", index:1, visible:true });
+
+var overflowing = Map.addLayer(aws_url+"speed-overflowing"+zxy,
+                            { type: "image", index:1 });
+var pavementdefect = Map.addLayer(aws_url+"speed-pavementdefect"+zxy,
+                            { type: "image", index:1 });
+var sewer = Map.addLayer(aws_url+"speed-sewer"+zxy,
+                            { type: "image", index:1 });
+var sidewalk = Map.addLayer(aws_url+"speed-sidewalk"+zxy,
+                            { type: "image", index:1 });
+var vehicle = Map.addLayer(aws_url+"speed-vehicle"+zxy,
+                            { type: "image", index:1 });
+
 
 Map.addLayer("/static/neighborhoods.json",
                     { id: "neighborhoods",
@@ -227,19 +251,10 @@ Map.addLayer("/static/neighborhoods.json",
                       zoom: 14,
                       alwaysVisible: true, index:5});
 
-Map.addLayer("/static/sidewalk_cleaning.json",
-             { id: "sidewalk_cleaning",
-               load: onsidewalkload,
-               group: sidewalk_cleaning, index: 10 });
 Map.addLayer("/static/graffiti.json",
-             { id: "graffiti-svg",
+             { id: "graffiti",
                load: onsidewalkload,
-               group: graffiti, index: 10 });
-Map.addLayer("/static/test.json",
-                    { id: "streets",
-                      load: onresponseload,
-                      visible: true,
-                      group: streetGroup, index:10});
+               group: graffiti, index: 10, visible:true });
 
 /* 
 var context_map = po.image()
