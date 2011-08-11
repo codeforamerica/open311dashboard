@@ -45,8 +45,8 @@
   <div class="grid_4 block border-radius" id="request-count">
     <div class="main">
       <div class="numberbox"><span class="number">{{ this_week_stats.request_count}}</span>
-      requests</div>
-      opened this week.
+      </div>
+      requests opened this week.
     </div>
     <span class="delta">{{ delta.opened_count }}</span>% change in requests from last week to
     this.
@@ -55,8 +55,8 @@
   <div class="grid_4 block border-radius {% if delta.closed_count > 0 %}green{% else %}red{% endif %}" id="closed-count">
     <div class="main">
       <div class="numberbox"><span class="number">{{ this_week_stats.closed_request_count }}</span>
-      requests</div> 
-      closed this week.
+      </div>
+      requests closed this week.
     </div>
     <span class="delta">{{ delta.closed_count}}</span>% change in requests closed from last week to
     this.
