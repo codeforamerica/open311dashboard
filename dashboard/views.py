@@ -10,6 +10,7 @@ from django.shortcuts import render, redirect
 from django.db.models import Count
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
+from django.core import serializers
 
 from django.contrib.gis.geos import Point
 from django.contrib.gis.measure import Distance as D
@@ -17,7 +18,9 @@ from django.contrib.gis.measure import Distance as D
 from open311dashboard.dashboard.models import Request, City, Geography, Street
 
 from open311dashboard.dashboard.utils import str_to_day, day_to_str, \
-    date_range, dt_handler, render_to_geojson, run_stats, calculate_delta
+    date_range, dt_handler, render_to_geojson, run_stats, calculate_delta, \
+    json_response_from
+
 from open311dashboard.dashboard.decorators import ApiHandler
 
 
@@ -92,7 +95,7 @@ def neighborhood_detail(request, neighborhood_id):
     # Get the requests inside the neighborhood, run the stats
     requests = Request.objects.filter(geo_point__contained=neighborhood.geo)
     stats = run_stats(requests)
-    
+
     title = neighborhood.name
 
     neighborhood.geo.transform(4326)
@@ -106,10 +109,16 @@ def neighborhood_detail(request, neighborhood_id):
         'extent': simple_shape.extent,
         'stats': stats,
         'nearby': nearby,
-        'type': 'neighborhood'
+        'type': 'neighborhood',
+        'id': neighborhood_id
         })
 
     return render(request, 'geo_detail.html', c)
+
+def neighborhood_detail_json(request, neighborhood_id):
+    neighborhood = Geography.objects.get(pk=neighborhood_id)
+    requests = Request.objects.filter(geo_point__contained=neighborhood.geo)
+    return json_response_from(requests)
 
 # Street specific pages.
 def street_list(request):
@@ -150,10 +159,16 @@ def street_view(request, street_id):
         'stats': stats,
         'nearby': nearby,
         'neighborhood': neighborhood[0],
-        'type': 'street'
+        'type': 'street',
+        'id': street_id
         })
 
     return render(request, 'geo_detail.html', c)
+
+def street_view_json(request, street_id):
+    requests = Request.objects.filter(street=street_id)
+    return json_response_from(requests)
+
 
 # Search for an address!
 def street_search(request):

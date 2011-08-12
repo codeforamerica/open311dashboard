@@ -87,6 +87,9 @@ class City(models.Model):
     jurisdiction_id = models.CharField(max_length=100)
     paginated = models.BooleanField()
 
+    def natural_key(self):
+        return self.name
+
 if ENABLE_GEO is True:
     class Geography(models.Model):
         """
@@ -138,6 +141,9 @@ if ENABLE_GEO is True:
         objects = models.GeoManager()
 
         def __unicode__(self):
+            return self.street_name
+
+        def natural_key(self):
             return self.street_name
 
         def get_absolute_url(self):
