@@ -19,7 +19,8 @@ Getting Started
 2. `pip install -r requirements.txt`
 3. `python manage.py syncdb` creates the database schema.
 4. `python manage.py update_db` imports initial data.
-5. `python manage.py runserver`
+5. Generate GeoJSON files with `python manage.py geojson`
+6. `python manage.py runserver`
 
 A Word on Mapnik
 ----------------
@@ -39,7 +40,6 @@ To set up automatic updates (midnight every night):
 
 1. `crontab -e`
 2. Insert `0 0 * * * /path/to/dir/manage.py update_db`
-
 
 API Access
 ----------
