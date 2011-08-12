@@ -15,12 +15,12 @@ Basically, you need all of the libraries to run [GeoDjango](https://docs.djangop
 Getting Started
 ---------------
 1. Set up a database using the [PostGIS spatial database template](https://docs.djangoproject.com/en/dev/ref/contrib/gis/install/#spatialdb-template).
-1. Rename settings_local.example.py to settings_local.py and set your db/secretkey variables.
-2. `pip install -r requirements.txt`
-3. `python manage.py syncdb` creates the database schema.
-4. `python manage.py update_db` imports initial data.
-5. Generate GeoJSON files with `python manage.py geojson`
-6. `python manage.py runserver`
+2. Rename settings_local.example.py to settings_local.py and set your db/secretkey variables.
+3. `pip install -r requirements.txt`
+4. `python manage.py syncdb` creates the database schema.
+5. `python manage.py update_db` imports initial data.
+6. Generate GeoJSON files with `python manage.py geojson`
+7. `python manage.py runserver`
 
 A Word on Mapnik
 ----------------
