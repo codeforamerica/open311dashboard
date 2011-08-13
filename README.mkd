@@ -11,7 +11,7 @@ Basically, you need all of the libraries to run [GeoDjango](https://docs.djangop
 * [GDAL](http://www.gdal.org/)
 * [PROJ.4](http://trac.osgeo.org/proj/)
 * [PostGIS](http://postgis.refractions.net/)
-* [Mapnik2](http://trac.mapnik.org/wiki/Mapnik2) (not explicitely required but this generates map tiles, see below.)
+* [Mapnik2](http://trac.mapnik.org/wiki/Mapnik2) (not explicitly required but this generates map tiles, see below.)
 
 Getting Started
 ---------------
@@ -25,7 +25,7 @@ Getting Started
 
 A Word on Mapnik
 ----------------
-Mapnik is a real pain to install. The [TileMill](http://tilemill.com/index.html)homepage has resources and packages for installing Mapnik2 on Mac and Ubuntu.
+Mapnik is a real pain to install. The [TileMill](http://tilemill.com/index.html) homepage has resources and packages for installing Mapnik2 on Mac and Ubuntu.
 
 Database Update Script
 ----------------------
