@@ -5,6 +5,7 @@ We are creating a set of interactive widgets to help people visualize and analyz
 Non-Python Requirements
 -----------------------
 Basically, you need all of the libraries to run [GeoDjango](https://docs.djangoproject.com/en/dev/ref/contrib/gis/install/). If you are so inclined, you can install most of these with [homebrew](https://github.com/mxcl/homebrew).
+[KyngChaos](http://www.kyngchaos.com/software:frameworks) may also be a useful resource for MacOS X users. 
 
 * [GEOS](http://trac.osgeo.org/geos/)
 * [GDAL](http://www.gdal.org/)
