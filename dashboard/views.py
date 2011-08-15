@@ -135,7 +135,8 @@ def street_view(request, street_id):
     street = Street.objects.get(pk=street_id)
     nearby = Street.objects.all().distance(street.line) \
             .exclude(street_name=street.street_name).order_by('distance')[:5]
-    neighborhood = Geography.objects.filter(geo__contains=street.line)
+    neighborhood = Geography.objects.all() \
+            .distance(street.line).order_by('distance')[:1]
 
     # Max/min addresses
     addresses = [street.left_low_address, street.left_high_address,
