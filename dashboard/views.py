@@ -265,51 +265,6 @@ def map(request):
     """
     return render(request, 'map.html')
 
-# Admin Pages
-@login_required
-def admin(request):
-    """
-
-    Admin home page. Just list the cities.
-
-    """
-    cities = City.objects.all()
-
-    c = Context({
-        'cities': cities
-        })
-    return render(request, 'admin/index.html', c)
-
-@login_required
-def city_admin(request, shortname=None):
-    """
-
-    Administer a specific city (and associated data)
-
-    """
-    city = City.objects.get(short_name=shortname)
-    geographies = Geography.objects.filter(city=city.id).count()
-    streets = Street.objects.filter(city=city.id).count()
-    requests = Request.objects.filter(city=city.id).count()
-
-    c = Context({
-        'city': city,
-        'geographies': geographies,
-        'streets': streets,
-        'requests': requests
-        })
-
-    return render(request, 'admin/city_view.html', c)
-
-@login_required
-def city_add (request):
-    """
-
-    Add a new city.
-
-    """
-    return render(request, 'admin/city_add.html')
-
 # API Views
 @ApiHandler
 def ticket_days(request, ticket_status="open", start=None, end=None,
