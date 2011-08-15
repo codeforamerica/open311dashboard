@@ -1,6 +1,4 @@
 import datetime
-import qsstats
-import time
 import json
 import urllib
 import urllib2
@@ -16,11 +14,9 @@ from django.contrib.gis.measure import Distance as D
 
 from open311dashboard.dashboard.models import Request, City, Geography, Street
 
-from open311dashboard.dashboard.utils import str_to_day, day_to_str, \
+from open311dashboard.dashboard.utils import \
     date_range, dt_handler, render_to_geojson, run_stats, calculate_delta, \
     json_response_from
-
-from open311dashboard.dashboard.decorators import ApiHandler
 
 
 def index(request, geography=None, is_json=False):
