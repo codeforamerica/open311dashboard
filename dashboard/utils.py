@@ -23,37 +23,44 @@ def run_stats(request_obj, **kwargs):
     # Total request count.
     stats['request_count'] = request_obj.count()
 
-    # Average response time.
-    stats['average_response'] = request_obj.filter(status="Closed") \
-        .extra({"average": "avg(updated_datetime - requested_datetime)"}) \
-        .values("average")
-    stats['average_response'] = stats['average_response'][0]["average"].days
-
     # Request types.
     if kwargs.has_key('request_types') is False:
         stats['request_types'] = request_obj.values('service_name') \
                 .annotate(count=Count('service_name')).order_by('-count')[:10]
 
-    # Open request count.
-    stats['open_request_count'] = request_obj.filter(status="Open").count()
+
+    if stats['request_count'] == 0:
+      stats['average_response'] = 0
+      stats['open_request_count'] = 0
+      stats['closed_request_count'] = 0
+      stats['opened_by_day'] = 0
+
+    else:
+    # Average response time.
+      stats['average_response'] = request_obj.filter(status="Closed") \
+        .extra({"average": "avg(updated_datetime - requested_datetime)"}) \
+        .values("average")
+      stats['average_response'] = stats['average_response'][0]["average"].days
+
+    # Opened requests by day (limit: 30)
+      time_delta = datetime.timedelta(days=30)
+      latest = request_obj.latest('requested_datetime')
+      qss = qsstats.QuerySetStats(request_obj, 'requested_datetime')
+      time_series = qss.time_series(latest.requested_datetime - time_delta,        latest.requested_datetime)
+      stats['opened_by_day'] = [t[1] for t in time_series]
+
+       # Open request count.
+      stats['open_request_count'] = request_obj.filter(status="Open").count()
 
     # Closed request count.
-    stats['closed_request_count'] = request_obj.filter(status="Closed").count()
+      stats['closed_request_count'] = request_obj.filter(status="Closed").count()
 
     # Recently opened requests.
     if kwargs.has_key('open_requests') is False:
         stats['open_requests'] = request_obj.filter(status="Open") \
                 .order_by('-requested_datetime')[:10]
 
-    # Opened requests by day (limit: 30)
-    time_delta = datetime.timedelta(days=30)
-    latest = request_obj.latest('requested_datetime')
-    qss = qsstats.QuerySetStats(request_obj, 'requested_datetime')
-    time_series = qss.time_series(latest.requested_datetime - time_delta,
-            latest.requested_datetime)
-    stats['opened_by_day'] = [t[1] for t in time_series]
-
-    return stats
+        return stats
 
 def calculate_delta(new, old):
     try:
@@ -118,11 +125,11 @@ def render_to_geojson(query_set, geom_field=None, mimetype='text/plain', pretty_
     else:
         geo_field = geo_fields[0] # no support yet for multiple geometry fields
 
-    #remove other geom fields from showing up in attributes    
+    #remove other geom fields from showing up in attributes
     if len(geo_fields) > 1:
         for gf in geo_fields:
             if gf.name not in exclude: exclude.append(gf.name)
-        exclude.remove(geo_field.name) 
+        exclude.remove(geo_field.name)
 
     # Gather the projection information
     crs = {}
@@ -130,7 +137,7 @@ def render_to_geojson(query_set, geom_field=None, mimetype='text/plain', pretty_
     crs_properties = {}
     crs_properties['href'] = 'http://spatialreference.org/ref/epsg/%s/' % geo_field.srid
     crs_properties['type'] = 'proj4'
-    crs['properties'] = crs_properties 
+    crs['properties'] = crs_properties
     collection['crs'] = crs
 
     # Build list of features
@@ -151,7 +158,7 @@ def render_to_geojson(query_set, geom_field=None, mimetype='text/plain', pretty_
         pass #features.append({'type':'Feature','geometry': {},'properties':{}})
 
     # Label as FeatureCollection and add Features
-    collection['type'] = "FeatureCollection"    
+    collection['type'] = "FeatureCollection"
     collection['features'] = features
 
     # Attach extent of all features
@@ -166,13 +173,13 @@ def render_to_geojson(query_set, geom_field=None, mimetype='text/plain', pretty_
     if pretty_print:
         response.write('%s' % simplejson.dumps(collection, indent=1))
     else:
-        response.write('%s' % simplejson.dumps(collection))    
+        response.write('%s' % simplejson.dumps(collection))
     response['Content-length'] = str(len(response.content))
     response['Content-Type'] = mimetype
     return response
 
 ##
-# JSON SERIALIZER FROM: 
+# JSON SERIALIZER FROM:
 ##
 class UnableToSerializeError(Exception):
     """ Error for not implemented classes """
