@@ -24,6 +24,11 @@ from open311dashboard.dashboard.decorators import ApiHandler
 
 
 def index(request, geography=None, is_json=False):
+    """
+
+    Homepage view. Can also return json for the city or neighborhoods.
+
+    """
     if geography is None:
         requests = Request.objects.all()
     else:
@@ -78,6 +83,11 @@ def index(request, geography=None, is_json=False):
 
 # Neighborhood specific pages.
 def neighborhood_list(request):
+    """
+
+    List the neighborhoods.
+
+    """
     neighborhoods = Geography.objects.all()
 
     c = Context({
@@ -87,6 +97,11 @@ def neighborhood_list(request):
     return render(request, 'neighborhood_list.html', c)
 
 def neighborhood_detail(request, neighborhood_id):
+    """
+
+    Show detail for a specific neighborhood. Uses templates/geo_detail.html
+
+    """
     neighborhood = Geography.objects.get(pk=neighborhood_id)
     nearby = Geography.objects.all().distance(neighborhood.geo) \
             .exclude(name=neighborhood.name).order_by('distance')[:5]
@@ -115,12 +130,24 @@ def neighborhood_detail(request, neighborhood_id):
     return render(request, 'geo_detail.html', c)
 
 def neighborhood_detail_json(request, neighborhood_id):
+    """
+
+    Download JSON of the requests that built the page. Caution: slow!
+
+    TODO: Speed it up.
+
+    """
     neighborhood = Geography.objects.get(pk=neighborhood_id)
     requests = Request.objects.filter(geo_point__contained=neighborhood.geo)
     return json_response_from(requests)
 
 # Street specific pages.
 def street_list(request):
+    """
+
+    List the top 10 streets by open service requests.
+
+    """
     streets = Street.objects.filter(request__status="Open") \
             .annotate(count=Count('request__service_request_id')) \
             .order_by('-count')[:10]
@@ -132,6 +159,11 @@ def street_list(request):
     return render(request, 'street_list.html', c)
 
 def street_view(request, street_id):
+    """
+
+    View details for a specific street. Renders geo_detail.html like
+    neighborhood_detail does.
+    """
     street = Street.objects.get(pk=street_id)
     nearby = Street.objects.all().distance(street.line) \
             .exclude(street_name=street.street_name).order_by('distance')[:5]
@@ -166,12 +198,25 @@ def street_view(request, street_id):
     return render(request, 'geo_detail.html', c)
 
 def street_view_json(request, street_id):
+    """
+
+    Download the JSON for the requests that built the page.
+
+    """
     requests = Request.objects.filter(street=street_id)
     return json_response_from(requests)
 
 
 # Search for an address!
 def street_search(request):
+    """
+
+    Do a San Francisco specific geocode and then match that against our street
+    centerline data.
+
+    TODO: Maybe cache the lookups?
+
+    """
     query = request.GET.get('q','')
 
     if query:
@@ -210,11 +255,24 @@ def street_search(request):
         return render(request, 'search.html')
 
 def map(request):
+    """
+
+    Simply render the map.
+
+    TODO: Get the centroid and bounding box of the city and set that. (See
+    neighborhood_detail and geo_detail.html for how this would look)
+
+    """
     return render(request, 'map.html')
 
 # Admin Pages
 @login_required
 def admin(request):
+    """
+
+    Admin home page. Just list the cities.
+
+    """
     cities = City.objects.all()
 
     c = Context({
@@ -224,7 +282,11 @@ def admin(request):
 
 @login_required
 def city_admin(request, shortname=None):
-    # try:
+    """
+
+    Administer a specific city (and associated data)
+
+    """
     city = City.objects.get(short_name=shortname)
     geographies = Geography.objects.filter(city=city.id).count()
     streets = Street.objects.filter(city=city.id).count()
@@ -238,11 +300,14 @@ def city_admin(request, shortname=None):
         })
 
     return render(request, 'admin/city_view.html', c)
-    # except:
-        # return HttpResponseRedirect(reverse(admin))
 
 @login_required
 def city_add (request):
+    """
+
+    Add a new city.
+
+    """
     return render(request, 'admin/city_add.html')
 
 # API Views
@@ -313,9 +378,13 @@ def ticket_days(request, ticket_status="open", start=None, end=None,
             data.append(temp_data)
     return data
 
-# Get service_name stats for a range of dates
 @ApiHandler
 def ticket_day(request, begin=day_to_str(datetime.date.today()), end=None):
+    """
+
+    Get service_name stats for a range of dates.
+
+    """
     if end == None:
         key = begin
     else:
@@ -333,6 +402,11 @@ def ticket_day(request, begin=day_to_str(datetime.date.today()), end=None):
 # List requests in a given date range
 @ApiHandler
 def list_requests(request, begin=day_to_str(datetime.date.today()), end=None):
+    """
+
+    List requests opened in a given date range
+
+    """
     requests = Request.objects \
         .filter(requested_datetime__range=date_range(begin,end))
 
