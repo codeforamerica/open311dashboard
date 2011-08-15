@@ -60,7 +60,8 @@ def run_stats(request_obj, **kwargs):
         stats['open_requests'] = request_obj.filter(status="Open") \
                 .order_by('-requested_datetime')[:10]
 
-        return stats
+    # Return
+    return stats
 
 def calculate_delta(new, old):
     try:
