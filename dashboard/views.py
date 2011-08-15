@@ -10,7 +10,6 @@ from django.shortcuts import render, redirect
 from django.db.models import Count
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
-from django.core import serializers
 
 from django.contrib.gis.geos import Point
 from django.contrib.gis.measure import Distance as D
