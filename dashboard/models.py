@@ -36,7 +36,7 @@ class Request(models.Model):
     # Super top secret geographic data.
     if ENABLE_GEO is True:
         geo_point = models.PointField(srid=900913, null=True)
-        street = models.ForeignKey('Street')
+        street = models.ForeignKey('Street', null=True)
         objects = models.GeoManager()
 
         def save(self):
@@ -56,23 +56,23 @@ class Request(models.Model):
 
             super(Request, self).save()
 
-class Service(models.Model):
+# class Service(models.Model):
     """
 
     In a perfect world, this would be related to each Request but separate
     implementations are, again, different.
 
     """
-    service_code = models.CharField(max_length=100)
-    metadata = models.CharField(max_length=100)
-    type = models.CharField(max_length=50)
-    keywords = models.TextField(blank=True, null=True)
-    group = models.CharField(max_length=100)
-    service_name = models.CharField(max_length=100)
-    description = models.TextField()
+    # service_code = models.CharField(max_length=100)
+    # metadata = models.CharField(max_length=100)
+    # type = models.CharField(max_length=50)
+    # keywords = models.TextField(blank=True, null=True)
+    # group = models.CharField(max_length=100)
+    # service_name = models.CharField(max_length=100)
+    # description = models.TextField()
 
-    city = models.ForeignKey('City')
-    street = models.ForeignKey('Street')
+    # city = models.ForeignKey('City')
+    # street = models.ForeignKey('Street')
 
 class City(models.Model):
     """
@@ -112,16 +112,16 @@ if ENABLE_GEO is True:
         def get_absolute_url(self):
             return "/neighborhood/%i/" %  self.id
 
-    class GeographyType(models.Model):
+    # class GeographyType(models.Model):
         """
 
         Ex: Neighborhood, Congressional Districts...
 
         """
-        name = models.CharField(max_length=25)
+        # name = models.CharField(max_length=25)
 
         # Thank @ravoreyer for recommending this.
-        city = models.ForeignKey('City')
+        # city = models.ForeignKey('City')
 
     class Street(models.Model):
         """
