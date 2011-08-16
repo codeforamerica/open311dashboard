@@ -20,45 +20,48 @@ def run_stats(request_obj, **kwargs):
     """
     stats = {}
 
-    # Total request count.
-    stats['request_count'] = request_obj.count()
 
-    # Request types.
-    if kwargs.has_key('request_types') is False:
-        stats['request_types'] = request_obj.values('service_name') \
-                .annotate(count=Count('service_name')).order_by('-count')[:10]
+    try:
+        # Average response time.
+        stats['average_response'] = request_obj.filter(status="Closed") \
+            .extra({"average": "avg(updated_datetime - requested_datetime)"}) \
+            .values("average")
+        stats['average_response'] = stats['average_response'][0]["average"].days
 
+        # Total request count.
+        stats['request_count'] = request_obj.count()
 
-    if stats['request_count'] == 0:
+        # Request types.
+        if kwargs.has_key('request_types') is False:
+            stats['request_types'] = request_obj.values('service_name') \
+                    .annotate(count=Count('service_name')).order_by('-count')[:10]
+
+        # Opened requests by day (limit: 30)
+        time_delta = datetime.timedelta(days=30)
+        latest = request_obj.latest('requested_datetime')
+        qss = qsstats.QuerySetStats(request_obj, 'requested_datetime')
+        time_series = qss.time_series(latest.requested_datetime - time_delta,
+               latest.requested_datetime)
+        stats['opened_by_day'] = [t[1] for t in time_series]
+
+        # Open request count.
+        stats['open_request_count'] = request_obj.filter(status="Open").count()
+
+        # Closed request count.
+        stats['closed_request_count'] = request_obj.filter(status="Closed").count()
+
+        # Recently opened requests.
+        if kwargs.has_key('open_requests') is False:
+            stats['open_requests'] = request_obj.filter(status="Open") \
+                    .order_by('-requested_datetime')[:10]
+
+    except:
       stats['average_response'] = 0
+      stats['request_count'] = 0
+      stats['request_types'] = []
       stats['open_request_count'] = 0
       stats['closed_request_count'] = 0
-      stats['opened_by_day'] = 0
-
-    else:
-    # Average response time.
-      stats['average_response'] = request_obj.filter(status="Closed") \
-        .extra({"average": "avg(updated_datetime - requested_datetime)"}) \
-        .values("average")
-      stats['average_response'] = stats['average_response'][0]["average"].days
-
-    # Opened requests by day (limit: 30)
-      time_delta = datetime.timedelta(days=30)
-      latest = request_obj.latest('requested_datetime')
-      qss = qsstats.QuerySetStats(request_obj, 'requested_datetime')
-      time_series = qss.time_series(latest.requested_datetime - time_delta,        latest.requested_datetime)
-      stats['opened_by_day'] = [t[1] for t in time_series]
-
-       # Open request count.
-      stats['open_request_count'] = request_obj.filter(status="Open").count()
-
-    # Closed request count.
-      stats['closed_request_count'] = request_obj.filter(status="Closed").count()
-
-    # Recently opened requests.
-    if kwargs.has_key('open_requests') is False:
-        stats['open_requests'] = request_obj.filter(status="Open") \
-                .order_by('-requested_datetime')[:10]
+      stats['opened_by_day'] = [0]
 
     # Return
     return stats
