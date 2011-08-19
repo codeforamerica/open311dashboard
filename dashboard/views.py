@@ -8,26 +8,27 @@ import urllib2
 from django.template import Context
 from django.shortcuts import render, redirect
 from django.db.models import Count
-from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import cache_page
 
 from django.contrib.gis.geos import Point
 from django.contrib.gis.measure import Distance as D
 
-from open311dashboard.dashboard.models import Request, City, Geography, Street
-
-from open311dashboard.dashboard.utils import str_to_day, day_to_str, \
+from dashboard.models import Request, City, Geography, Street
+from dashboard.decorators import ApiHandler
+from dashboard.utils import str_to_day, day_to_str, \
     date_range, dt_handler, render_to_geojson, run_stats, calculate_delta, \
     json_response_from
 
-from open311dashboard.dashboard.decorators import ApiHandler
 
+# Thirty minutes for caching.
+CACHE_TIME = 30 * 60
 
+@cache_page(CACHE_TIME)
 def index(request, geography=None, is_json=False):
     """
-
     Homepage view. Can also return json for the city or neighborhoods.
-
     """
     if geography is None:
         requests = Request.objects.all()
@@ -69,7 +70,7 @@ def index(request, geography=None, is_json=False):
         'this_week_stats': this_week_stats,
         'last_week_stats': last_week_stats,
         'delta': delta,
-        }
+    }
 
     if is_json is False:
         neighborhoods = Geography.objects.all()
@@ -82,11 +83,10 @@ def index(request, geography=None, is_json=False):
         return HttpResponse(data, content_type='application/json')
 
 # Neighborhood specific pages.
+@cache_page(CACHE_TIME)
 def neighborhood_list(request):
     """
-
     List the neighborhoods.
-
     """
     neighborhoods = Geography.objects.all()
 
@@ -96,6 +96,7 @@ def neighborhood_list(request):
 
     return render(request, 'neighborhood_list.html', c)
 
+@cache_page(CACHE_TIME)
 def neighborhood_detail(request, neighborhood_id):
     """
 
@@ -129,6 +130,7 @@ def neighborhood_detail(request, neighborhood_id):
 
     return render(request, 'geo_detail.html', c)
 
+@cache_page(CACHE_TIME)
 def neighborhood_detail_json(request, neighborhood_id):
     """
 
@@ -142,6 +144,7 @@ def neighborhood_detail_json(request, neighborhood_id):
     return json_response_from(requests)
 
 # Street specific pages.
+@cache_page(CACHE_TIME)
 def street_list(request):
     """
 
@@ -158,6 +161,7 @@ def street_list(request):
 
     return render(request, 'street_list.html', c)
 
+@cache_page(CACHE_TIME)
 def street_view(request, street_id):
     """
 
@@ -208,14 +212,13 @@ def street_view_json(request, street_id):
 
 
 # Search for an address!
+@cache_page(CACHE_TIME)
 def street_search(request):
     """
-
     Do a San Francisco specific geocode and then match that against our street
     centerline data.
 
     TODO: Maybe cache the lookups?
-
     """
     query = request.GET.get('q','')
 
@@ -254,14 +257,13 @@ def street_search(request):
     else:
         return render(request, 'search.html')
 
+@cache_page(CACHE_TIME)
 def map(request):
     """
-
     Simply render the map.
 
     TODO: Get the centroid and bounding box of the city and set that. (See
     neighborhood_detail and geo_detail.html for how this would look)
-
     """
     return render(request, 'map.html')
 
@@ -274,10 +276,7 @@ def admin(request):
 
     """
     cities = City.objects.all()
-
-    c = Context({
-        'cities': cities
-        })
+    c = Context({'cities': cities})
     return render(request, 'admin/index.html', c)
 
 @login_required
@@ -313,7 +312,7 @@ def city_add (request):
 # API Views
 @ApiHandler
 def ticket_days(request, ticket_status="open", start=None, end=None,
-        num_days=None):
+                num_days=None):
     '''Returns JSON with the number of opened/closed tickets in a specified
     date range'''
 
@@ -371,10 +370,11 @@ def ticket_days(request, ticket_status="open", start=None, end=None,
         opened_data = stats_opened.time_series(start, end)
         closed_data = stats_closed.time_series(start, end)
         for i in range(len(opened_data)):
-            temp_data = {'date': int(time.mktime(opened_data[i][0].timetuple())),
-                    'open_count': opened_data[i][1],
-                     'closed_count': closed_data[i][1],
-                     }
+            temp_data = {
+                'date': int(time.mktime(opened_data[i][0].timetuple())),
+                'open_count': opened_data[i][1],
+                'closed_count': closed_data[i][1],
+            }
             data.append(temp_data)
     return data
 
