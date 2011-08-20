@@ -112,7 +112,7 @@ function handleHighlight(i){
 var count = 0;
 
 function highlightNeighborhood(i){
-  neighborhood_features[i].element.setAttribute('style','stroke-width:1;stroke:#050505;stroke-opacity:.75;fill:#fff;fill-opacity:.4;');
+  neighborhood_features[i].element.setAttribute('style','stroke-width:1;stroke:#050505;stroke-opacity:1;fill:#fff;fill-opacity:.4;');
 }
 
 function unhighlightNeighborhood(i){
