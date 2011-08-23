@@ -13,7 +13,8 @@ Sorry, your lookup failed.
 
 <form action="." method="GET">
     <label for="q">Type in an address or intersection: </label>
-    <input type="text" name="q" value="{{ query|escape }}">
+    <input type="text" name="q" value="{{ query|escape }}"
+           autocomplete="off" autocorrect="off">
     <input type="submit" value="Search">
 </form>
 </div>
