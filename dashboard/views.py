@@ -10,7 +10,6 @@ from django.shortcuts import render, redirect
 from django.db.models import Count
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.cache import cache_page
 
 from django.contrib.gis.geos import Point
 from django.contrib.gis.measure import Distance as D
@@ -22,10 +21,6 @@ from dashboard.utils import str_to_day, day_to_str, \
     json_response_from
 
 
-# Thirty minutes for caching.
-CACHE_TIME = 30 * 60
-
-@cache_page(CACHE_TIME)
 def index(request, geography=None, is_json=False):
     """
     Homepage view. Can also return json for the city or neighborhoods.
@@ -82,8 +77,8 @@ def index(request, geography=None, is_json=False):
         data = json.dumps(c_dict, True)
         return HttpResponse(data, content_type='application/json')
 
+
 # Neighborhood specific pages.
-@cache_page(CACHE_TIME)
 def neighborhood_list(request):
     """
     List the neighborhoods.
@@ -96,7 +91,7 @@ def neighborhood_list(request):
 
     return render(request, 'neighborhood_list.html', c)
 
-@cache_page(CACHE_TIME)
+
 def neighborhood_detail(request, neighborhood_id):
     """
 
@@ -130,7 +125,7 @@ def neighborhood_detail(request, neighborhood_id):
 
     return render(request, 'geo_detail.html', c)
 
-@cache_page(CACHE_TIME)
+
 def neighborhood_detail_json(request, neighborhood_id):
     """
 
@@ -143,8 +138,8 @@ def neighborhood_detail_json(request, neighborhood_id):
     requests = Request.objects.filter(geo_point__contained=neighborhood.geo)
     return json_response_from(requests)
 
+
 # Street specific pages.
-@cache_page(CACHE_TIME)
 def street_list(request):
     """
 
@@ -157,14 +152,13 @@ def street_list(request):
 
     c = Context({
         'top_streets': streets
-        })
+    })
 
     return render(request, 'street_list.html', c)
 
-@cache_page(CACHE_TIME)
+
 def street_view(request, street_id):
     """
-
     View details for a specific street. Renders geo_detail.html like
     neighborhood_detail does.
     """
@@ -201,6 +195,7 @@ def street_view(request, street_id):
 
     return render(request, 'geo_detail.html', c)
 
+
 def street_view_json(request, street_id):
     """
 
@@ -212,17 +207,18 @@ def street_view_json(request, street_id):
 
 
 # Search for an address!
-@cache_page(CACHE_TIME)
 def street_search(request):
     """
     Do a San Francisco specific geocode and then match that against our street
     centerline data.
-
-    TODO: Maybe cache the lookups?
     """
-    query = request.GET.get('q','')
-
-    if query:
+    query = request.GET.get('q')
+    lat = request.GET.get('lat')
+    lon = request.GET.get('lng')
+    if not query:
+        # They haven't searched for anything.
+        return render(request, 'search.html')
+    elif query and not lat:
         # Lookup the search string with Yahoo!
         url = "http://where.yahooapis.com/geocode"
         params = {"addr": query,
@@ -231,8 +227,7 @@ def street_search(request):
                 "appid": "1I9Jh.3V34HMiBXzxZRYmx.DO1JfVJtKh7uvDTJ4R0dRXnMnswRHXbai1NFdTzvC" }
 
         query_params = urllib.urlencode(params)
-        data = urllib2.urlopen("%s?%s" % (url,
-            query_params)).read()
+        data = urllib2.urlopen("%s?%s" % (url, query_params)).read()
 
         print data
 
@@ -241,21 +236,23 @@ def street_search(request):
         if temp_json['ResultSet']['Results'][0]['quality'] > 50:
             lon = temp_json['ResultSet']['Results'][0]["longitude"]
             lat = temp_json['ResultSet']['Results'][0]["latitude"]
-
-            point = Point(float(lon), float(lat))
-            point.srid = 4326
-            point.transform(900913)
-
-                    # .all() \
-            nearest_street = Street.objects \
-                    .filter(line__dwithin=(point, D(m=100))) \
-                    .distance(point).order_by('distance')[:1]
-            return redirect(nearest_street[0])
         else:
-            c = Context({'error': True})
-            return render(request, 'search.html', c)
-    else:
-        return render(request, 'search.html')
+            lat, lon = None, None
+
+    if lat and lon:
+        point = Point(float(lon), float(lat))
+        point.srid = 4326
+        point.transform(900913)
+        nearest_street = Street.objects \
+                               .filter(line__dwithin=(point, D(m=100))) \
+                               .distance(point).order_by('distance')[:1]
+        try:
+            return redirect(nearest_street[0])
+        except IndexError:
+            pass
+    c = Context({'error': True})
+    return render(request, 'search.html', c)
+
 
 @cache_page(CACHE_TIME)
 def map(request):
@@ -301,7 +298,7 @@ def city_admin(request, shortname=None):
     return render(request, 'admin/city_view.html', c)
 
 @login_required
-def city_add (request):
+def city_add(request):
     """
 
     Add a new city.
