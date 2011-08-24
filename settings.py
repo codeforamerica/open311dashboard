@@ -106,7 +106,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
 )
 
-ROOT_URLCONF = 'open311dashboard.urls'
+ROOT_URLCONF = 'urls'
 
 TEMPLATE_DIRS = (
         os.path.join(SITE_ROOT, 'dashboard/templates')
@@ -125,7 +125,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.gis',
     'django.contrib.humanize',
-    'open311dashboard.dashboard',
+    'dashboard',
 )
 
 # A sample logging configuration. The only tangible logging
