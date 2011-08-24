@@ -1,0 +1,58 @@
+<html>
+  <head>
+    <title>
+      Bootstrap test
+    </title>
+
+    <link rel="stylesheet" type="text/css" href="bootstrap/bootstrap-1.0.0.min.css">
+    <link rel="stylesheet" type="text/css" href="bootstrap/open311.css">
+    <script src="lib/jquery-1.5.1.min.js"></script>
+    <script src="lib/chosen.jquery.min.js"></script>
+    <script src="lib/polymaps.min.js"></script>
+    <script src="map.js"></script>
+
+  </head>
+  <body>
+    <script>
+      $(document).ready(function () {
+        Map.createmap();
+      });
+    </script>
+  <div class="container">
+    <div class="topbar" style="z-index: 5;">
+      <div class="container fixed">
+        <h3>
+          <a href="#" class="logo">Open311 Dashboard</a>
+        </h3>
+        <form action>
+          <input style="height:30px;" type="text" placeholder="Search" class="search-bar">
+          <select class="medium search-select">
+            <option>Streets</option>
+            <option>Neighborhoods</option>
+          </select>
+        </form>
+        <ul class="nav secondary-nav">
+          <li><a href="#" class="active">Map</a></li>
+          <li><a href="#">Neighborhoods</a></li>
+          <li><a href="#">Streets</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="row show-grid">
+    </div>
+    <div class="row show-grid">
+      <div class="span6 column" id="open-requests">
+        requests open this week
+      </div>
+      <div class="span5 column" id="closed-requests">
+        requests closed this week
+      </div>
+      <div class="span5 column" id="avg-response-time">
+        Average response time
+      </div>
+    </div>
+    <div class="container" id="map">
+    </div>
+  </div>
+</body>
+</html>
