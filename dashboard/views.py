@@ -254,7 +254,6 @@ def street_search(request):
     return render(request, 'search.html', c)
 
 
-@cache_page(CACHE_TIME)
 def map(request):
     """
     Simply render the map.
