@@ -1,11 +1,9 @@
 from django.core.management.base import BaseCommand, CommandError
 from django.core.exceptions import ValidationError
-from open311dashboard.dashboard.models import Request
+from open311dashboard.dashboard.models import City, Request
 from dateutil import parser
-from open311dashboard.settings import CITY
 
 from optparse import make_option
-import httplib
 import urllib2
 import urllib
 import datetime as dt
@@ -40,7 +38,7 @@ def validate_dt_value(datetime):
     if datetime.tzinfo is not None:
         raise ValueError('Tzinfo on datetime must be None: %s' % datetime)
 
-def get_requests_from_SF(start,end,page):
+def get_requests_from_SF(start,end,page,city):
     """
     Retrieve the requests from the San Francisco 311 API within the time range
     specified by the dates start and end.
@@ -52,11 +50,11 @@ def get_requests_from_SF(start,end,page):
     validate_dt_value(end)
 
     #url = r'https://open311.sfgov.org/dev/Open311/v2/requests.xml' #dev
-    url = CITY['URL']
+    url = city.url
     query_data = {
         'start_date' : start.isoformat() + 'Z',
         'end_date' : end.isoformat() + 'Z',
-        'jurisdiction_id' : CITY['JURISDICTION'],
+        'jurisdiction_id' : city.jurisdiction_id,
     }
 
     if page > 0:
@@ -113,7 +111,7 @@ def parse_requests_doc(stream):
         values.append(indiv_values_list)
     return (columns,values)
 
-def insert_data(requests):
+def insert_data(requests, city):
     '''
     Takes the requests tuple, turns it into a dictionary, and saves it to the
     Requests model in django.
@@ -137,7 +135,7 @@ def insert_data(requests):
         r = Request(**request_dict)
 
         # Hardcoded for now.
-        r.city_id = 1
+        r.city_id = city.id
 
         try:
             r.save()
@@ -146,20 +144,20 @@ def insert_data(requests):
             raise CommandError('Request "%s" does not validate correctly\n %s' %
                     (r.service_request_id, e))
 
-def process_requests(start, end, page):
-    requests_stream = get_requests_from_SF(start, end, page)
+def process_requests(start, end, page, city):
+    requests_stream = get_requests_from_SF(start, end, page, city)
     requests = parse_requests_doc(requests_stream)
 
     if requests != False:
-        insert_data(requests)
+        insert_data(requests, city)
 
         if page != 0:
             page = page+1
-            process_requests(start, end, page)
+            process_requests(start, end, page, city)
     return requests
 
-def handle_open_requests():
-    url = CITY['URL']
+def handle_open_requests(city):
+    url = city.url
     open_requests = Request.objects.all().filter(status__iexact="open")
     length = len(open_requests)
     print "Checking %d tickets for changed status" % length
@@ -170,7 +168,7 @@ def handle_open_requests():
             data.append(open_requests[index + i].service_request_id)
 
         query_data = {
-                'jurisdiction_id': CITY['JURISDICTION'],
+                'jurisdiction_id': city.jurisdiction_id,
                 'service_request_id': ','.join(data)
                 }
 
@@ -199,32 +197,35 @@ class Command(BaseCommand):
     Makes calls one day at a time"""
 
     def handle(self, *args, **options):
-        if options['default'] is True:
-            if len(args) >= 1:
-                start, end = get_time_range(dt.datetime.strptime(args[0], '%Y-%m-%d'))
-            else:
-                start, end = get_time_range()
+        cities = City.objects.all()
 
-            if len(args) >= 2:
-                num_days = int(args[1])
-                print(args[1])
-            else:
-                num_days = 1
+        for city in cities:
+            if options['default'] is True:
+                if len(args) >= 1:
+                    start, end = get_time_range(dt.datetime.strptime(args[0], '%Y-%m-%d'))
+                else:
+                    start, end = get_time_range()
 
-            if CITY['PAGINATE']:
-                page = 1
-            else:
-                page = False
+                if len(args) >= 2:
+                    num_days = int(args[1])
+                    print(args[1])
+                else:
+                    num_days = 1
 
-            for _ in xrange(num_days):
-                requests = process_requests(start, end, page)
+                if city.paginated:
+                    page = 1
+                else:
+                    page = False
 
-                start -= ONE_DAY
-                end -= ONE_DAY
+                for _ in xrange(num_days):
+                    requests = process_requests(start, end, page, city)
 
-                print start
+                    start -= ONE_DAY
+                    end -= ONE_DAY
 
-        if options['open'] is True:
-            handle_open_requests()
+                    print start
+
+            if options['open'] is True:
+                handle_open_requests()
 
 
