@@ -22,7 +22,7 @@ def inside_rect_bounds(polygon_bounds,request_location):
   request_lat = request_location[0]
   request_lon = request_location[1]
   
-  for i in range(1,len(polygon_bounds[0])):
+  for i in xrange(1,len(polygon_bounds[0])):
     if minLon > polygon_bounds[0][i][0]:
       minLon = polygon_bounds[0][i][0]
     if maxLon < polygon_bounds[0][i][0]:
@@ -52,7 +52,7 @@ def inside_polygon(polygon_bounds,request_location):
   if inside_rect_bounds(polygon_bounds,request_location) == False:
     return False
   else:
-    for i in range(vertices_count):
+    for i in xrange(vertices_count):
       vertexA = polygon_bounds[0][i]
       vertexB = polygon_bounds[0][j]
       
@@ -69,7 +69,7 @@ blocks = simplejson.load(urllib.urlopen(blocks_url))
 #block_totals = [] #maps to 7386 blocks
 block_totals = [0]*len(blocks["features"])
 
-for i in range(len(service_requests["rows"])):
+for i in xrange(len(service_requests["rows"])):
   print i
   request_lat = service_requests["rows"][i]["value"]["lat"]
   request_lon = service_requests["rows"][i]["value"]["long"]
@@ -78,7 +78,7 @@ for i in range(len(service_requests["rows"])):
   print request_location
   
   if math.fabs(request_location[0]) != 0 or math.fabs(request_location[1]) != 0:
-    for j in range(len(blocks["features"])):
+    for j in xrange(len(blocks["features"])):
       polygon_bounds = blocks["features"][j]["geometry"]["coordinates"]
       
       if inside_polygon(polygon_bounds,request_location) == True:
@@ -87,7 +87,7 @@ for i in range(len(service_requests["rows"])):
         continue
   print block_totals
   
-for i in range(len(block_totals)):
+for i in xrange(len(block_totals)):
   blocks["features"][i]["properties"]["count"] = block_totals[i]
   
 f = open('output/block_with_counts.json','w')
