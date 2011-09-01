@@ -75,7 +75,7 @@ for i in xrange(len(service_requests["rows"])):
   request_lon = service_requests["rows"][i]["value"]["long"]
   request_location = [float(request_lat),float(request_lon)]
   
-  print request_location
+  #print request_location
   
   if math.fabs(request_location[0]) != 0 or math.fabs(request_location[1]) != 0:
     for j in xrange(len(blocks["features"])):
@@ -85,8 +85,10 @@ for i in xrange(len(service_requests["rows"])):
         block_totals[j] = block_totals[j] + 1
       else:
         continue
-  print block_totals
-  
+  #print block_totals
+
+print 'block_totals: ', block_totals
+
 for i in xrange(len(block_totals)):
   blocks["features"][i]["properties"]["count"] = block_totals[i]
   
