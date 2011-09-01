@@ -86,3 +86,10 @@ for i in range(len(service_requests["rows"])):
       else:
         continue
   print block_totals
+  
+for i in range(len(block_totals)):
+  blocks["features"][i]["properties"]["count"] = block_totals[i]
+  
+f = open('output/block_with_counts.json','w')
+simplejson.dump(blocks,f)
+f.close()
