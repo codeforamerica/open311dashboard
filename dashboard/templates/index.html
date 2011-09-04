@@ -26,9 +26,27 @@
     color:white;
   }
 </style>
-<div style="padding-top:5px;">
-  <div class="grid_12 border-radius" style="background-color:#fff;">
-    <div style="width:70%; float:left;"><p>Hello 
+<div class="row">
+  <div class="span5 column {% if delta.closed_count > 0 %}green{% else %}red{% endif %}" id="closed-count">
+    {{ this_week_stats.closed_request_count }} requests closed this week.
+    {{ delta.closed_count}}% change in requests closed from last week to
+    this.
+  </div>
+  
+  <div class="span5 column" id="request-count">
+    {{ this_week_stats.request_count}} requests opened this week.
+    {{ delta.opened_count }}% change in requests from last week to
+    this.
+  </div>
+
+  <div class="span5 column {% if delta.time < 0 %}green{% else %}red{% endif %}" id="open-time">
+    {{ this_week_stats.average_response }} day{{ this_week_stats.average_response|pluralize }}
+      average response time.
+   {{ delta.time }}% change in response time from last week to this.
+  </div>
+
+  <div class="span12 column" style="background-color:#fff; height:20px;">
+    <div style="float:left;"><p>Hello 
     <select class="chzn-select" id="neighborhood-selector" style="width:175px">
       <option>San Francisco</option>
       <optgroup label="Neighborhoods">
@@ -37,43 +55,52 @@
         {% endfor %}
       </optgroup>
     </select>,
-    let's see how responsive your city is this week.</p></div>
-
-    <div style="width:25%; float:right; text-align:right;" class="see-more"></div>
-  </div>
-  <div class="clear"></div>
-  <div class="grid_4 block border-radius" id="request-count">
-    <div class="main">
-      <div class="numberbox"><span class="number">{{ this_week_stats.request_count}}</span>
-      </div>
-      requests opened this week.
+    let's see how responsive your city is this week.
     </div>
-    <span class="delta">{{ delta.opened_count }}</span>% change in requests from last week to
-    this.
   </div>
 
-  <div class="grid_4 block border-radius {% if delta.closed_count > 0 %}green{% else %}red{% endif %}" id="closed-count">
-    <div class="main">
-      <div class="numberbox"><span class="number">{{ this_week_stats.closed_request_count }}</span>
-      </div>
-      requests closed this week.
-    </div>
-    <span class="delta">{{ delta.closed_count}}</span>% change in requests closed from last week to
-    this.
+
+  <div id="selector" class="span12 column border-radius" style="background-color:#fff">
+    Select a map:
+    <select id="layer-select" class="chzn-select">
+      <option value="cleaning">Street/Sidewalk Cleaning</option>
+      <option value="cans">Trash Cans</option>
+      <option value="dumping">Illegal Dumping</option>
+      <option value="graffiti" selected="true">Graffiti</option>
+      <option value="overflowing">Overflowing City Recepticles</option>
+      <option value="pavementdefect">Pavement Defect</option>
+      <option value="sewer">Sewer</option>
+      <option value="vehicle">Abandoned Vehicle</option>
+    </select>
   </div>
 
-  <div class="grid_4 block border-radius {% if delta.time < 0 %}green{% else %}red{% endif %}" id="open-time">
-    <div class="main">
-      <div class="numberbox">{{ this_week_stats.average_response }} day{{ this_week_stats.average_response|pluralize }}</div>
-      average response time.
-    </div>
-    <span class="delta">{{ delta.time }}</span>% change in response time from last week to this.
-  </div>
-  <div class="clear"></div>
+<!-- Display map here -->
+<style>
+  #streets path:hover, #sidewalk_cleaning path:hover, #graffiti path:hover {
+    stroke-width:5px;
+  }
+</style>
+
+<div id="map" style="border:1px solid #ccc; margin-top:11%;" class="container border-radius">
 </div>
 {% endblock %}
 
 {% block custom_scripts %}
+<link rel="stylesheet" href="/static/css/tipsy.css">
+<script src="/static/js/jquery.tipsy.js"></script>
+<script src="/static/js/map.js"></script>
+<script src="/static/js/raycasting.js"></script>
+
+<script>
+  $(document).ready(function () {
+    $('.chzn-select').chosen();
+
+    $("#layer-select").chosen().change(function (e) {
+      Map.switchVisibleLayer(window[this.value]);
+    });
+  });
+</script>
+
 <script>
   $(document).ready(function() {
     $('.chzn-select').chosen();

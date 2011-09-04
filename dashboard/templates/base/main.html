@@ -1,4 +1,5 @@
 <!doctype html>
+<html>
 <!--[if lt IE 7 ]> <html class="no-js ie6" lang="en"> <![endif]-->
 <!--[if IE 7 ]>    <html class="no-js ie7" lang="en"> <![endif]-->
 <!--[if IE 8 ]>    <html class="no-js ie8" lang="en"> <![endif]-->
@@ -21,7 +22,6 @@
     {# <link rel="shortcut icon" href="{{ STATIC_URL }}favicon.ico"> #}
     {# <link rel="apple-touch-icon" href="{{ STATIC_URL }}apple-touch-icon.png"> #}
 
-
     <!-- CSS: implied media="all" -->
     <link rel="stylesheet" href="{{ STATIC_URL }}css/style.css?v=2">
 
@@ -29,34 +29,41 @@
     <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.0/themes/ui-lightness/jquery-ui.css">
     <link rel="stylesheet" href="{{ STATIC_URL }}css/960.css">
     <link rel="stylesheet" href="{{ STATIC_URL }}css/chosen.css">
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap-1.0.0.min.css">
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/open311.css">
 
     <script src="{{ STATIC_URL }}js/libs/modernizr-1.7.min.js"></script>
 
 </head>
 
 <body>
-
-    <div id="container" class="container_12">
-        <header class="grid_12 border-radius">
-            <div id="title">
-                <h1><a href="/">Open311 Dashboard</a></h1>
-                <p>Yeah, we're pretty awesome&hellip;</p>
-            </div>
-            <div id="home-nav">
-                <ul>
-                <a href="/map/">Map</a>
-                <a href="/street/">Streets</a>
-                <a href="/neighborhood/">Neighborhoods</a>
-                <a href="/search/">Search</a>
-            </ul>
-            </div>
-            <div class="clear"></div>
-        </header>
-            <div id="main" role="main">
-                {% block content %}{% endblock %}
-            </div>
-            <footer>
-            <div class="grid_12 border-radius" style="background-color:#fff;">
+  <div class="container">
+     <div class="topbar" style="z-index: 5;">
+      <div class="container fixed">
+        <h3>
+          <a href="/" class="logo">Open311 Dashboard</a>
+        </h3>
+        <form action>
+          <input type="text" placeholder="Search" class="search-bar">
+          <!--<select class="medium search-select">
+            <option>Streets</option>
+            <option>Neighborhoods</option>
+          </select> -->
+        </form>
+        <ul class="nav secondary-nav">
+          <li><a href="/neighborhood/" class="active">Neighborhoods</a></li>
+          <li><a href="/street/">Streets</a></li>
+          <li><a href="/search/">Search</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="row show-grid">
+    </div>
+      {% block content %}{% endblock %}
+      
+    </div> 
+      <footer>
+      <div class="grid_12 border-radius" style="background-color:#fff;">
                 <p>A project of <a href="http://codeforamerica.org/">Code for
                     America</a> brought to you by
                 <a href="http://twitter.com/EvansML">@EvansML</a>,
@@ -64,7 +71,7 @@
                 <a href="http://twitter.com/baileyspace">@baileyspace</a>.</p>
             </div>
             </footer>
-        </div> <!--! end of #container -->
+          </div> <!--! end of #container -->
 
 
 
@@ -89,4 +96,5 @@
             <![endif]-->
 
         </body>
-    </html>
+      
+</html>
