@@ -27,24 +27,26 @@
   }
 </style>
 <div class="row">
-  <div class="span5 column {% if delta.closed_count > 0 %}green{% else %}red{% endif %}" id="closed-count">
+  <div class="span-one-third column {% if delta.closed_count > 0 %}green{% else %}red{% endif %}">
     {{ this_week_stats.closed_request_count }} requests closed this week.
     {{ delta.closed_count}}% change in requests closed from last week to
     this.
   </div>
   
-  <div class="span5 column" id="request-count">
+  <div class="span-one-third column">
     {{ this_week_stats.request_count}} requests opened this week.
     {{ delta.opened_count }}% change in requests from last week to
     this.
   </div>
 
-  <div class="span5 column {% if delta.time < 0 %}green{% else %}red{% endif %}" id="open-time">
+  <div class="span-one-third column {% if delta.time < 0 %}green{% else %}red{% endif %}">
     {{ this_week_stats.average_response }} day{{ this_week_stats.average_response|pluralize }}
       average response time.
    {{ delta.time }}% change in response time from last week to this.
   </div>
+</div>
 
+<div class="row">
   <div class="span12 column" style="background-color:#fff; height:20px;">
     <div style="float:left;"><p>Hello 
     <select class="chzn-select" id="neighborhood-selector" style="width:175px">
@@ -58,8 +60,8 @@
     let's see how responsive your city is this week.
     </div>
   </div>
-
-
+</div>
+<div class="row">
   <div id="selector" class="span12 column border-radius" style="background-color:#fff">
     Select a map:
     <select id="layer-select" class="chzn-select">
@@ -73,7 +75,7 @@
       <option value="vehicle">Abandoned Vehicle</option>
     </select>
   </div>
-
+</div>
 <!-- Display map here -->
 <style>
   #streets path:hover, #sidewalk_cleaning path:hover, #graffiti path:hover {
@@ -81,7 +83,7 @@
   }
 </style>
 
-<div id="map" style="border:1px solid #ccc; margin-top:11%;" class="container border-radius">
+<div id="map" style="border:1px solid #ccc;" class="container border-radius">
 </div>
 {% endblock %}
 

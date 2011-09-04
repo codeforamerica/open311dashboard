@@ -25,12 +25,10 @@ circle.area {
     stroke-width: 0px;
 }
 </style>
-<div class="" id="street-content">
-  <div class="grid_8">
-      <div id="map" class="{{ type }}">
-    </div>
 
-    <div id="open-requests">
+<div class="row">
+   <div class="span12 column">
+    <div id="map" class="{{ type }}"> </div>
       <h1>Open Requests</h1>
       {% if stats.open_requests|length > 0 %}
       <table>
@@ -45,10 +43,9 @@ circle.area {
       <p>No requests currently open.</p>
       {% endif %}
     </div>
-  </div>
-  <div class="grid_4">
-    <div id="street-stats" style="">
-        <h1 style="text-align:center; padding-bottom:0px;padding-top:15px;">{{ title|title }}</h1>
+ <div class="span4 column">
+    <div id="street-stat" style="">
+        <h1>{{ title|title }}</h1>
         {% if neighborhood %}<p style="font-size:13pt; margin:0; padding:0; text-align:center;">
         <a style="text-decoration:none" href="{{ neighborhood.get_absolute_url }}">{{ neighborhood.name }}</a>
         </p>{% endif %}
@@ -57,20 +54,19 @@ circle.area {
       <p id="response-time">{{ stats.average_response }}
       day{{ stats.average_response|pluralize }}</p>
       <p class="caption">Average Response Time</p>
-
+    </div>
 
     <h1>Top Requests</h1>
-    <table id="top-requests" style="table-layout:fixed;">
+    <table id="top-requests">
       {% for type in stats.request_types %}
         <tr>
-            <td style="overflow:hidden;white-space:nowrap;width:75%;">{{ type.service_name }}</td>
+            <td style="overflow:hidden;white-space:nowrap;">{{ type.service_name }}</td>
             <td>{{ type.count }}</td>
         </tr>
         {% endfor %}
     </table>
     <div class="clear"></div>
     <p><a href="/{{ type }}/{{ id }}.json">JSON Export</a></p>
-    </div>
 
     <div id="nearby">
       <h2>Nearby</h2>
@@ -83,6 +79,7 @@ circle.area {
       </table>
     </div>
   </div>
+  
 </div>
 <script>
     sparkData = {{ stats.opened_by_day }};
