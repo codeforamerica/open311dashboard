@@ -12,7 +12,6 @@ div .topbar {
   border-radius: 4px;
 }
 
-
 body{
   overflow:hidden;
 }
@@ -35,4 +34,9 @@ body{
   border-radius: 5px;
   height: 83%;
   background-color: #DCEAF4;
+}
+
+
+.ui-autocomplet,.ui-corner-all{
+  width: 100px;
 }

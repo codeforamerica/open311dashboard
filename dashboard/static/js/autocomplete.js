@@ -33,7 +33,7 @@
              window._results[item.formatted_address] = coordinates;
              return {
                label: item.formatted_address,
-               value: item.formatted_address
+               value: item.formatted_address, 
              }
            }));
         });
