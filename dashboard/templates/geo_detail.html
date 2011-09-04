@@ -34,7 +34,7 @@ circle.area {
       <table>
         {% for request in stats.open_requests %}
         <tr>
-            <td>{{ request.service_name }}</td>
+            <td>{{ request.get_service_name }}</td>
             <td>{{ request.requested_datetime }}</td>
         </tr>
         {% endfor %}
