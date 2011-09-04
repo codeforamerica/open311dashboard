@@ -26,16 +26,17 @@
     color:white;
   }
 </style>
-<div class="row">
+<div class="row show-grid">
   <div class="span-one-third column {% if delta.closed_count > 0 %}green{% else %}red{% endif %}">
-    {{ this_week_stats.closed_request_count }} requests closed this week.
-    {{ delta.closed_count}}% change in requests closed from last week to
+    <strong>{{ this_week_stats.closed_request_count }} </strong> 
+    requests closed this week.
+    <strong>{{ delta.closed_count}}%</strong> change in requests closed from last week to
     this.
   </div>
   
   <div class="span-one-third column">
-    {{ this_week_stats.request_count}} requests opened this week.
-    {{ delta.opened_count }}% change in requests from last week to
+    <strong>{{ this_week_stats.request_count}} </strong>requests opened this week.
+    <strong>{{ delta.opened_count }}%</strong> change in requests from last week to
     this.
   </div>
 

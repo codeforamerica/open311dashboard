@@ -32,6 +32,9 @@ class Request(models.Model):
 
     city = models.ForeignKey('City')
 
+    def get_service_name(self):
+      return self.service_name.replace('_', ' ')
+
 
     # Super top secret geographic data.
     if ENABLE_GEO is True:
