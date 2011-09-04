@@ -43,8 +43,8 @@
         <h3>
           <a href="/" class="logo">Open311 Dashboard</a>
         </h3>
-        <form action>
-          <input type="text" placeholder="Search" class="search-bar">
+        <form action="." method="GET">
+          <input type="text" name="q" placeholder="Search" value="{{ query|escape }}" class="search-bar" autocomplete="off" autocorrect="off">
           <!--<select class="medium search-select">
             <option>Streets</option>
             <option>Neighborhoods</option>
@@ -87,6 +87,7 @@
             <!-- scripts concatenated and minified via ant build script-->
             <script src="{{ STATIC_URL }}js/plugins.js"></script>
             <script src="{{ STATIC_URL }}js/script.js"></script>
+            <script src="{{ STATIC_URL }}js/autocomplete.js" type="text/javascript" charset="utf-8"></script>
             <!-- end scripts-->
 
 
