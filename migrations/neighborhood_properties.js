@@ -4,13 +4,13 @@
  *
  * Fix up the metadata from SF's imported data.
  **/
-var cursor = db.geometries.find()
+var cursor = db.polygons.find()
 
 while (cursor.hasNext()) {
   var doc = cursor.next();
   print(doc.properties.NBRHOOD);
-  db.geometries.update({_id : doc._id}, {$set : { properties :
+  db.polygons.update({_id : doc._id}, {$set : { properties :
                      { name : doc.properties.NBRHOOD,
-                       type : "neighborhood" } } }) //,
+                       type : "neighborhood" } } });
 }
 
