@@ -4,7 +4,7 @@
  *
  * Fix up the metadata from SF's imported data.
  **/
-var cursor = db.polygons.find()
+var cursor = db.polygons.find();
 
 while (cursor.hasNext()) {
   var doc = cursor.next();
@@ -14,3 +14,4 @@ while (cursor.hasNext()) {
                        type : "neighborhood" } } });
 }
 
+db.polygons.ensureIndex({ 'geometry.coordinates.0' : '2d' });

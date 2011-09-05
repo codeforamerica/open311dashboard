@@ -16,3 +16,4 @@ while (cursor.hasNext()) {
                        } }});
 }
 
+db.streets.ensureIndex({'geometry.coordinates' : '2d'});
