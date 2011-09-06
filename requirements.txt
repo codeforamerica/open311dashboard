@@ -2,13 +2,11 @@
 # Django
 # ----------------------
 Django==1.3
--e git+https://github.com/kmike/django-qsstats-magic.git#egg=django-qsstats-magic
-
 
 # ----------------------
 # Database
 # ----------------------
-psycopg2==2.4.1
+pymongo==2.0.1
 
 
 # ----------------------
@@ -17,9 +15,3 @@ psycopg2==2.4.1
 mock
 coverage
 django-test-coverage
-
-
-# ----------------------
-# Utilities
-# ----------------------
-python-dateutil==1.5
