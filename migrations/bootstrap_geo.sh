@@ -1,6 +1,6 @@
 # Download and automagically migrate SF geographic data.
 # @author Chris Barna <chris@unbrain.net>
-DATABASE=open311test
+DATABASE=open311
 
 echo "Making temporary directory..."
 mkdir tmp
