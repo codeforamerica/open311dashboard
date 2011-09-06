@@ -6,8 +6,8 @@
 <ul>
     {% for neighborhood in neighborhoods %}
     <li>
-        <a href="{{ neighborhood.get_absolute_url }}">
-            {{ neighborhood.name }}
+        <a href="#">
+            {{ neighborhood.properties.name }}
         </a>
     </li>
     {% endfor %}
