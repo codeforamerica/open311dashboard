@@ -1,6 +1,8 @@
-import datetime
-import time
-import json
+try:
+    import simplejson as json
+except:
+    import json
+
 import urllib
 import urllib2
 
@@ -11,8 +13,6 @@ from django.shortcuts import render # , redirect
 from pymongo.connection import Connection
 
 from settings import MONGODB
-
-from dashboard.decorators import ApiHandler
 
 # Set up the database connection as a global variable
 connection = Connection(MONGODB['host'])
@@ -56,12 +56,24 @@ def neighborhood_list(request):
     return render(request, 'neighborhood_list.html', c)
 
 
-def neighborhood_detail(request, neighborhood_id):
+def neighborhood_detail(request, neighborhood_slug):
     """
 
     Show detail for a specific neighborhood. Uses templates/geo_detail.html
 
     """
+    neighborhood = db.polygons \
+            .find_one({ 'properties.slug' : neighborhood_slug})
+    requests = db.requests.find({'coordinates' :
+        { '$within' : neighborhood['geometry']['coordinates'] }
+        }).limit(10)
+
+    c = Context({
+        'neighborhood' : neighborhood,
+        'json' : json.dumps(neighborhood['geometry']),
+        'requests' : requests
+        })
+    return render(request, 'neighborhood_test.html', c)
     """c = Context({
         'title': title,
         'geometry': simple_shape.geojson,
@@ -179,27 +191,3 @@ def map(request):
     neighborhood_detail and geo_detail.html for how this would look)
     """
     return render(request, 'map.html')
-
-# API Views
-@ApiHandler
-def ticket_days(request, ticket_status="open", start=None, end=None,
-                num_days=None):
-    '''Returns JSON with the number of opened/closed tickets in a specified
-    date range'''
-
-@ApiHandler
-def ticket_day(request, begin=day_to_str(datetime.date.today()), end=None):
-    """
-
-    Get service_name stats for a range of dates.
-
-    """
-
-# List requests in a given date range
-@ApiHandler
-def list_requests(request, begin=day_to_str(datetime.date.today()), end=None):
-    """
-
-    List requests opened in a given date range
-
-    """

@@ -6,7 +6,7 @@
 <ul>
     {% for neighborhood in neighborhoods %}
     <li>
-        <a href="#">
+    <a href="/neighborhood/{{ neighborhood.properties.name|slugify }}/">
             {{ neighborhood.properties.name }}
         </a>
     </li>

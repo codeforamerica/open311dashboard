@@ -13,9 +13,6 @@ map.add(po.image()
     + "/998/256/{Z}/{X}/{Y}.png")
     .hosts(["a.", "b.", "c.", ""])));
 
-map.add(po.image()
-  .url(po.url("/static/fixed/{Z}/{X}/{Y}.png")));
-
 map.add(po.geoJson()
   .features([{ "type": "Feature",
     "geometry": geometry,

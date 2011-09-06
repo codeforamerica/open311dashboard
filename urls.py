@@ -12,10 +12,10 @@ urlpatterns = patterns('',
 
     url(r'^neighborhood/$',
         'dashboard.views.neighborhood_list'),
-    url(r'^neighborhood/(?P<neighborhood_id>\d+)/$',
+    url(r'^neighborhood/(?P<neighborhood_slug>.+)/$',
         'dashboard.views.neighborhood_detail'),
-    url(r'^neighborhood/(?P<neighborhood_id>\d+).json$',
-        'dashboard.views.neighborhood_detail_json'),
+    # url(r'^neighborhood/(?P<neighborhood_id>\d+).json$',
+        # 'dashboard.views.neighborhood_detail_json'),
 
     url(r'^search/$',
         'dashboard.views.street_search'),
