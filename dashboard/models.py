@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 from django.contrib.gis.db import models
 from django.contrib.gis.geos import Point
 from django.contrib.gis.measure import Distance as D
@@ -151,3 +152,6 @@ if ENABLE_GEO is True:
 
         def get_absolute_url(self):
             return "/street/%i/" % self.id
+=======
+# This is supposed to be empty.
+>>>>>>> 5f4ccabfb1a920b8ed67c1521414746f2d775a45

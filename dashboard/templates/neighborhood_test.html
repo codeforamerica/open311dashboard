@@ -1,0 +1,33 @@
+{% extends 'base/main.html' %}
+{% block content %}
+<h1>{{ neighborhood.properties.name }}</h1>
+<div class="span12 column">
+  <div id="map"></div>
+</div>
+<script type="text/javascript">
+  {% autoescape off %}
+  geometry = {{ json }};
+  {% endautoescape %}
+</script>
+{% endblock %}
+
+{% block custom_scripts %}
+<script type="text/javascript">
+var po = org.polymaps;
+
+var map = po.map()
+    .container(document.getElementById("map").appendChild(po.svg("svg")))
+
+map.add(po.image()
+    .url(po.url("http://{S}tile.cloudmade.com"
+    + "/b60fbbd51f17456794d2b0e4ed4f0d0c"
+    + "/998/256/{Z}/{X}/{Y}.png")
+    .hosts(["a.", "b.", "c.", ""])));
+
+map.add(po.geoJson()
+  .features([{ "type": "Feature",
+    "geometry": geometry,
+    "properties": {}}])
+  .id("geometry"));
+</script>
+{% endblock %}
