@@ -5,10 +5,10 @@ urlpatterns = patterns('',
     url(r'^map/$', 'dashboard.views.map'),
 
     url(r'^street/$', 'dashboard.views.street_list'),
-    url(r'^street/(?P<street_id>\d+)/$',
+    url(r'^street/(?P<street_name>.+)/(?P<min_val>\d+)-(?P<max_val>\d+)/$',
         'dashboard.views.street_view'),
-    url(r'^street/(?P<street_id>\d+).json',
-        'dashboard.views.street_view_json'),
+    # url(r'^street/(?P<street_id>\d+).json',
+        # 'dashboard.views.street_view_json'),
 
     url(r'^neighborhood/$',
         'dashboard.views.neighborhood_list'),
