@@ -22,5 +22,9 @@ def clean_up(filter = {}):
                         'slug' : slugify(polygon['properties']['NBRHOOD'])
                         } } } )
 
+def add_indexes():
+    db.polygons.ensure_index([('geometry.coordinates.0', '2d')])
+
 if __name__ == "__main__":
     clean_up()
+    add_indexes()

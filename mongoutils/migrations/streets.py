@@ -36,5 +36,9 @@ def clean_up(filter = {}):
                         'slug' : slugify(street['properties']['STREETN_GC'])
                         } } } )
 
+def add_indexes():
+    db.streets.ensure_index([( 'geometry.coordinates', '2d' )])
+
 if __name__ == "__main__":
     clean_up()
+    add_indexes()
