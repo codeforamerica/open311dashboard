@@ -14,4 +14,4 @@ pymongo==2.0.1
 # ----------------------
 mock
 coverage
-django-test-coverage
+django-coverage

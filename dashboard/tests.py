@@ -1,176 +1,145 @@
-from django.test import TestCase
+"""
+Run tests.
 
-import json
-import random
+We can't use django's build in TestCase because it requires a database so we're
+using unittest.TestCase
+"""
+from unittest import TestCase
+from django.test.client import Client
+
+from pymongo.connection import Connection
+
+from settings import MONGODB
+
+# Set up the database connection as a global variable
+connection = Connection(MONGODB['host'])
+db = connection[MONGODB['db']]
 
 class IndexTest(TestCase):
-    """Test the index view and related json"""
-    fixtures = ['test.json']
+    """ Test / """
+
+    def setUp(self):
+        self.client = Client()
 
     def test_success(self):
-        """Test that the index works"""
-        response = self.client.get("/")
-        self.assertEqual(response.status_code, 200)
+        """ GET / should return status_code 200 """
+        response = self.client.get('/')
+        self.assertEquals(response.status_code, 200)
 
-    def test_template(self):
-        """Test that the correct templates are being rendered"""
-        response = self.client.get("/")
-        self.assertTemplateUsed(response, 'index.html')
-        self.assertTemplateUsed(response, 'base/main.html')
+class NeighborhoodListTest(TestCase):
+    """ Test /neighborhood/ """
 
-    def test_api_success(self):
-        """Test the JSON API"""
-        rand = random.randint(1,5)
-        response = self.client.get("/api/home/%s.json" % rand)
+    def setUp(self):
+        self.client = Client()
+        self.response = self.client.get('/neighborhood/')
 
-        self.assertEqual(response.status_code, 200)
+    def test_success(self):
+        """ GET /neighborhood/ should return status_code 200 """
+        self.assertEquals(self.response.status_code, 200)
 
-    def test_api_valid(self):
-        """Test that the JSON is valid"""
-        rand = random.randint(1,5)
-        response = self.client.get("/api/home/%s.json" % rand)
-        data = json.loads(response.content)
+    def test_redirect(self):
+        """ GET /neighborhood should return status_code 301 """
+        response = self.client.get('/neighborhood')
+        self.assertEquals(response.status_code, 301)
 
-        self.assertIsInstance(data, dict)
+class NeighborhoodDetailTest(TestCase):
+    """ Test /neighborhood/__slug__/ """
 
-class NeighborhoodTest(TestCase):
-    """Test the neighborhood views"""
-    fixtures = ['test.json']
+    def setUp(self):
+        self.client = Client()
 
-    def test_success_list(self):
-        """Check to make sure the neighborhood list is working"""
-        response = self.client.get("/neighborhood/")
-        self.assertEqual(response.status_code, 200)
+        # Find a single neighborhood.
+        neighborhood = db.polygons.find_one({ 'properties.type' :
+            'neighborhood'})
+        try:
+            self.slug = neighborhood['properties']['slug']
+        except:
+            error =  "No slug found for '%s'" \
+                    % neighborhood['properties']['name']
+            raise KeyError(error)
 
-    def test_success_detail(self):
-        """Check to make sure neighborhood detail is working"""
-        rand = random.randint(1, 5)
-        response = self.client.get("/neighborhood/%s/" % rand)
+        self.response = self.client.get('/neighborhood/%s/' % self.slug)
 
-        self.assertEqual(response.status_code, 200)
+    def test_success(self):
+        """ GET /neighborhood/__slug__/ should return status_code 200 """
+        self.assertEquals(self.response.status_code, 200)
 
-    def test_success_api(self):
-        """Check to make sure the API works"""
-        rand = random.randint(1, 5)
-        response = self.client.get("/neighborhood/%s.json" % rand)
-        self.assertEqual(response.status_code, 200)
+    def test_redirect(self):
+        """ GET /neighborhood/__slug__ should return status_code 304 """
+        response = self.client.get('/neighborhood/%s' % self.slug)
+        self.assertEquals(response.status_code, 301)
 
-    def test_template_list(self):
-        """Check the template that is rendered for the neighborhood list."""
-        response = self.client.get("/neighborhood/")
-        self.assertTemplateUsed(response, "neighborhood_list.html")
-        self.assertTemplateUsed(response, "base/main.html")
+class StreetListTest(TestCase):
+    """ Test /street/ """
 
-    def test_template_detail(self):
-        """Check the template that is rendered for the neighborhood detail."""
-        rand = random.randint(1, 5)
-        response = self.client.get("/neighborhood/%s/" % rand)
+    def setUp(self):
+        self.client = Client()
+        self.response = self.client.get('/street/')
 
-        self.assertTemplateUsed(response, "geo_detail.html")
-        self.assertTemplateUsed(response, "base/main.html")
+    def test_success(self):
+        """ GET /street/ should return status_code 200 """
+        self.assertEquals(self.response.status_code, 200)
 
-    def test_redirect_list(self):
-        """Check the neighborhood list redirect"""
-        response = self.client.get("/neighborhood")
-        self.assertEqual(response.status_code, 301)
+    def test_redirect(self):
+        """ GET /street should return status_code 301 """
+        response = self.client.get('/street')
+        self.assertEquals(response.status_code, 301)
 
-    def test_redirect_detail(self):
-        """Check the neighborhood detail redirect"""
-        rand = random.randint(1, 5)
-        response = self.client.get("/neighborhood/%s" % rand)
-        self.assertEqual(response.status_code, 301)
+class StreetDetailTest(TestCase):
+    """ Test /street/__slug__/ """
 
-    def test_valid_api(self):
-        """Make sure the neighborhood detail api is working"""
-        rand = random.randint(1, 5)
-        response = self.client.get("/neighborhood/%s.json" % rand)
-        data = json.loads(response.content)
+    def setUp(self):
+        self.client = Client()
 
-        self.assertIsInstance(data, list)
+        # Find a single street.
+        street = db.streets.find_one()
 
-class StreetTest(TestCase):
-    """Test the street pages"""
-    fixtures = ['test.json']
-    def test_success_list(self):
-        """Check that the street list works"""
-        response = self.client.get("/street/")
-        self.assertEqual(response.status_code, 200)
+        try:
+            self.slug = street['properties']['slug']
+        except:
+            error = "No slug found for '%s'" % street['properties']['name']
+            raise KeyError(error)
 
-    def test_success_detail(self):
-        """Check that the street detail is working"""
-        rand = random.randint(2, 50)
-        response = self.client.get("/street/%s/" % rand)
-        self.assertEqual(response.status_code, 200)
+        self.response = self.client.get('/street/%s/' % self.slug)
 
-    def test_success_api(self):
-        """Check that the street api is working"""
-        rand = random.randint(2, 50)
-        response = self.client.get("/street/%s.json" % rand)
-        self.assertEqual(response.status_code, 200)
+    def test_success(self):
+        """ GET /street/__slug__/ should return status_code 200 """
+        self.assertEquals(self.response.status_code, 200)
 
-    def test_template_list(self):
-        """Check the street list templates"""
-        response = self.client.get("/street/")
-        self.assertTemplateUsed(response, "street_list.html")
-        self.assertTemplateUsed(response, "base/main.html")
-
-    def test_template_detail(self):
-        """Check the street detail templates"""
-        rand = random.randint(2, 50)
-        response = self.client.get("/street/%s/" % rand)
-        self.assertTemplateUsed(response, "geo_detail.html")
-        self.assertTemplateUsed(response, "base/main.html")
-
-    def test_redirect_list(self):
-        """Check street list redirect"""
-        response = self.client.get("/street")
-        self.assertEqual(response.status_code, 301)
-
-    def test_redirect_detail(self):
-        """Check street detail redirect"""
-        rand = random.randint(2, 50)
-        response = self.client.get("/street/%s" % rand)
-        self.assertEqual(response.status_code, 301)
-
-    def test_valid_api(self):
-        """Check that the API is valid"""
-        rand = random.randint(2, 50)
-        response = self.client.get("/street/%s.json" % rand)
-        data = json.loads(response.content)
-        self.assertIsInstance(data, list)
+    def test_redirect(self):
+        """ GET /street/__slug__ should return status_code 301 """
+        response = self.client.get('/street/%s' % self.slug)
+        self.assertEquals(response.status_code, 301)
 
 class SearchTest(TestCase):
-    """Test the search"""
+    """ Test /search/ """
 
-    def test_success_search(self):
-        """Check for success rendering the status page"""
-        response = self.client.get("/search/")
-        self.assertEqual(response.status_code, 200)
+    def setUp(self):
+        self.client = Client()
+        self.response = self.client.get('/search/')
 
-    def test_template_search(self):
-        """Check the template rendered on the search page"""
-        response = self.client.get("/search/")
-        self.assertTemplateUsed(response, "search.html")
-        self.assertTemplateUsed(response, "base/main.html")
+    def test_success(self):
+        """ GET /search/ should return status_code 200 """
+        self.assertEquals(self.response.status_code, 200)
 
-    def test_redirect_search(self):
-        """Check the redirect on the search page"""
-        response = self.client.get("/search")
-        self.assertEqual(response.status_code, 301)
+    def test_redirect(self):
+        """ GET /search should return status_code 301 """
+        response = self.client.get('/search')
+        self.assertEquals(response.status_code, 301)
 
 class MapTest(TestCase):
-    def test_success_map(self):
-        """Check that the map page works"""
-        response = self.client.get("/map/")
-        self.assertEqual(response.status_code, 200)
+    """ Test /map/ """
 
-    def test_template_map(self):
-        """Check the templates rendered on the map page"""
-        response = self.client.get("/map/")
-        self.assertTemplateUsed(response, "map.html")
-        self.assertTemplateUsed(response, "base/main.html")
+    def setUp(self):
+        self.client = Client()
+        self.response = self.client.get('/map/')
 
-    def test_redirect_map(self):
-        """Check that the redirect works on the map page"""
-        response = self.client.get("/map")
-        self.assertEqual(response.status_code, 301)
+    def test_success(self):
+        """ GET /map/ should return status_code 200 """
+        self.assertEquals(self.response.status_code, 200)
+
+    def test_redirect(self):
+        """ GET /map should return status_code 301 """
+        response = self.client.get('/map')
+        self.assertEquals(response.status_code, 301)
+

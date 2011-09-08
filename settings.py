@@ -1,6 +1,7 @@
 # Set PATH
 import os
 SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
+TEST_RUNNER = 'mongo_utils.tests.MongoTestRunner'
 
 # Django settings for open311dashboard project.
 
