@@ -4,10 +4,12 @@
 <div class="grid_12 border-radius white">
 <h1>Streets</h1>
 <ol>
-    {% for street in top_streets %}
+    {% for street in streets %}
     <li>
-        <a href="{{ street.get_absolute_url }}">{{ street.street_name|title}}</a>
-            ({{ street.count }} open request{{street.count|pluralize}})
+    <a href="/street/{{ street.properties.slug }}/{{ street.properties.min }}-{{ street.properties.max }}/">
+        {{ street.properties.min }}-{{ street.properties.max }}
+        {{ street.properties.name|title}}
+    </a>
     </li>
     {% endfor %}
 </ol>

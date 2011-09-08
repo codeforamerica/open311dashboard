@@ -22,6 +22,15 @@ def compute_area_of_polygon(polygon_points):
 
 def compute_centroid(polygon_points):
   num_of_vertices = len(polygon_points)
+
+  # do a line
+  if (num_of_vertices == 2):
+    x = (polygon_points[0][0] + polygon_points[1][0])/2.0
+    y = (polygon_points[0][1] + polygon_points[1][1])/2.0
+
+    return [x, y]
+
+
   j = num_of_vertices - 1
   x = 0
   y = 0
@@ -38,10 +47,8 @@ def compute_centroid(polygon_points):
     j = i
     
   factor = 6 * compute_area_of_polygon(polygon_points)
-  
-  centroid = [x/factor,y/factor]
 
-  print 'The centroid of the polygon is', centroid
+  centroid = [x/factor,y/factor]
 
   return centroid
 

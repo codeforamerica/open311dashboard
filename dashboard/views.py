@@ -104,39 +104,31 @@ def street_list(request):
     List the top 10 streets by open service requests.
 
     """
-    """c = Context({
-        'top_streets': streets
-    })
+    streets = db.streets.find({}).limit(25)
+    c = Context({
+        'streets' : streets
+        })
 
-    return render(request, 'street_list.html', c) """
+    return render(request, 'street_list.html', c)
 
 
-def street_view(request, street_id):
+def street_view(request, street_name, min_val, max_val):
     """
     View details for a specific street. Renders geo_detail.html like
     neighborhood_detail does.
     """
-    """c = Context({
-        'title': title,
-        'geometry': street.line.geojson,
-        'centroid': [street.line.centroid[0], street.line.centroid[1]],
-        'extent': street.line.extent,
-        'stats': stats,
-        'nearby': nearby,
-        'neighborhood': neighborhood[0],
-        'type': 'street',
-        'id': street_id
+    street = db.streets.find_one( {
+        'properties.slug' : street_name,
+        'properties.min' : int(min_val),
+        'properties.max' : int(max_val) }
+        )
+
+    c = Context({
+        'street': street,
+        'json' : json.dumps(street['geometry'])
         })
 
-    return render(request, 'geo_detail.html', c) """
-
-
-def street_view_json(request, street_id):
-    """
-
-    Download the JSON for the requests that built the page.
-
-    """
+    return render(request, 'street_test.html', c)
 
 # Search for an address!
 def street_search(request):

@@ -1,6 +1,13 @@
-e% extends 'base/main.html' %}
+{% extends 'base/main.html' %}
+
 {% block content %}
-<h1>{{ neighborhood.properties.name }}</h1>
+<h1>{{ street.properties.name|title }}</h1>
+<style>
+path {
+  stroke:#000;
+  stroke-width:5px;
+}
+</style>
 <div class="span12 column">
   <div id="map"></div>
 </div>
@@ -17,6 +24,8 @@ var po = org.polymaps;
 
 var map = po.map()
     .container(document.getElementById("map").appendChild(po.svg("svg")))
+    .add(po.interact())
+    .add(po.hash());
 
 map.add(po.image()
     .url(po.url("http://{S}tile.cloudmade.com"
@@ -30,4 +39,5 @@ map.add(po.geoJson()
     "properties": {}}])
   .id("geometry"));
 </script>
+
 {% endblock %}
