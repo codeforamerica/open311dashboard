@@ -5,10 +5,7 @@ DATABASE=open311
 echo "Making temporary directory..."
 mkdir tmp
 cd tmp
-<<<<<<< HEAD
 PWD=pwd
-=======
->>>>>>> 6a90c4bfca54347b19113b8fd17f253658912ca5
 
 for file in "realtor_neighborhoods" "StClines"
 do
@@ -27,31 +24,20 @@ do
 
   if [ $file == 'realtor_neighborhoods' ]; then
     COLLECTION=polygons
-<<<<<<< HEAD
     MIGRATION=mongoutils/migrations/polygons.py
   else
     COLLECTION=streets
     MIGRATION=mongoutils/migrations/streets.py
-=======
-    MIGRATION=../neighborhood_properties.js
-  else
-    COLLECTION=streets
-    MIGRATION=../street_properties.js
->>>>>>> 6a90c4bfca54347b19113b8fd17f253658912ca5
   fi
 
   echo "Importing $COLLECTION into $DATABASE..."
   mongoimport -d $DATABASE -collection $COLLECTION -file $file.4326.clean.json
 
   echo "Running $MIGRATION"
-<<<<<<< HEAD
   cd ../..
   python $MIGRATION
   cd migrations/tmp/
   # mongo $DATABASE $MIGRATION
-=======
-  mongo $DATABASE $MIGRATION
->>>>>>> 6a90c4bfca54347b19113b8fd17f253658912ca5
 
   echo "Finished importing $COLLECTION"
 done
