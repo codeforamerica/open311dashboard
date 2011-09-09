@@ -111,6 +111,15 @@ def street_list(request):
 
     return render(request, 'street_list.html', c)
 
+def street_specific_list(request, street_name):
+    """
+    View all of the blocks on a street.
+    """
+    streets = db.streets.find({ 'properties.slug' : street_name})
+
+    c = Context({ 'streets' : streets })
+    return render(request, 'street_list.html', c)
+
 
 def street_view(request, street_name, min_val, max_val):
     """

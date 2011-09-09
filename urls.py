@@ -7,8 +7,9 @@ urlpatterns = patterns('',
     url(r'^street/$', 'dashboard.views.street_list'),
     url(r'^street/(?P<street_name>.+)/(?P<min_val>\d+)-(?P<max_val>\d+)/$',
         'dashboard.views.street_view'),
-    # url(r'^street/(?P<street_id>\d+).json',
-        # 'dashboard.views.street_view_json'),
+    # Needs to be below for proper URL matching.
+    url(r'^street/(?P<street_name>.+)/$',
+        'dashboard.views.street_specific_list'),
 
     url(r'^neighborhood/$',
         'dashboard.views.neighborhood_list'),
