@@ -25,23 +25,6 @@ def index(request, geography=None, is_json=False):
     c = Context({'test' : "Hello World!"})
     return render(request, 'index.html', c)
 
-    """c_dict = {
-        'open_tickets': total_open,
-        'this_week_stats': this_week_stats,
-        'last_week_stats': last_week_stats,
-        'delta': delta,
-    }
-
-    if is_json is False:
-        neighborhoods = Geography.objects.all()
-        c_dict['neighborhoods'] = neighborhoods
-        c_dict['latest'] = most_recent.requested_datetime
-        c = Context(c_dict)
-        return render(request, 'index.html', c)
-    else:
-        data = json.dumps(c_dict, True)
-        return HttpResponse(data, content_type='application/json')"""
-
 
 # Neighborhood specific pages.
 def neighborhood_list(request):
@@ -163,8 +146,6 @@ def street_search(request):
 
         query_params = urllib.urlencode(params)
         data = urllib2.urlopen("%s?%s" % (url, query_params)).read()
-
-        print data
 
         temp_json = json.loads(data)
 
