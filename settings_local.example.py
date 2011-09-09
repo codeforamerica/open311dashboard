@@ -1,20 +1,7 @@
-# Django local settings
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': '',
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': '',
-        'PORT': '',
+MONGODB = {
+    'db' : 'open311',
+    'host' : '',
     }
-}
-
-# SECRET KEY
-SECRET_KEY = ''
-
-# Enagle Geographic data
-ENABLE_GEO = True
 
 # Open311 City
 # See http://wiki.open311.org/GeoReport_v2/Servers
