@@ -1,6 +1,8 @@
 import os
 import sqlite3
 
+mbtiles_filename = 'filename.mbtiles'
+
 def extract_tiles():
   """
   Shoutout to @rosskarchner: https://gist.github.com/837851
@@ -9,7 +11,7 @@ def extract_tiles():
   """
 
   #Connect to the database
-  connection = sqlite3.connect('census_blocks.mbtiles')
+  connection = sqlite3.connect(mbtiles_filename)
   
   #Get everything out of the flat file
   pieces = conn.execute('select * from tiles').fetchall()
