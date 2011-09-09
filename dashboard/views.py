@@ -22,23 +22,8 @@ def index(request, geography=None, is_json=False):
     """
     Homepage view. Can also return json for the city or neighborhoods.
     """
-
-    """c_dict = {
-        'open_tickets': total_open,
-        'this_week_stats': this_week_stats,
-        'last_week_stats': last_week_stats,
-        'delta': delta,
-    }
-
-    if is_json is False:
-        neighborhoods = Geography.objects.all()
-        c_dict['neighborhoods'] = neighborhoods
-        c_dict['latest'] = most_recent.requested_datetime
-        c = Context(c_dict)
-        return render(request, 'index.html', c)
-    else:
-        data = json.dumps(c_dict, True)
-        return HttpResponse(data, content_type='application/json')"""
+    c = Context({'test' : "Hello World!"})
+    return render(request, 'index.html', c)
 
 
 # Neighborhood specific pages.
@@ -111,6 +96,15 @@ def street_list(request):
 
     return render(request, 'street_list.html', c)
 
+def street_specific_list(request, street_name):
+    """
+    View all of the blocks on a street.
+    """
+    streets = db.streets.find({ 'properties.slug' : street_name})
+
+    c = Context({ 'streets' : streets })
+    return render(request, 'street_list.html', c)
+
 
 def street_view(request, street_name, min_val, max_val):
     """
@@ -152,8 +146,6 @@ def street_search(request):
 
         query_params = urllib.urlencode(params)
         data = urllib2.urlopen("%s?%s" % (url, query_params)).read()
-
-        print data
 
         temp_json = json.loads(data)
 
