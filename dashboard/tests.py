@@ -4,7 +4,8 @@ Run tests.
 We can't use django's build in TestCase because it requires a database so we're
 using unittest.TestCase
 """
-from unittest import TestCase
+# from unittest import TestCase
+from django.test.simple import TestCase
 from django.test.client import Client
 
 from pymongo.connection import Connection
@@ -20,11 +21,15 @@ class IndexTest(TestCase):
 
     def setUp(self):
         self.client = Client()
+        self.response = self.client.get('/')
 
     def test_success(self):
         """ GET / should return status_code 200 """
-        response = self.client.get('/')
-        self.assertEquals(response.status_code, 200)
+        self.assertEquals(self.response.status_code, 200)
+
+    def test_templates(self):
+        """ GET / should use the correct templates """
+        self.assertTemplateUsed(self.response, 'index.html')
 
 class NeighborhoodListTest(TestCase):
     """ Test /neighborhood/ """
@@ -85,7 +90,7 @@ class StreetListTest(TestCase):
         response = self.client.get('/street')
         self.assertEquals(response.status_code, 301)
 
-class StreetDetailTest(TestCase):
+class StreetSpecificTest(TestCase):
     """ Test /street/__slug__/ """
 
     def setUp(self):
@@ -109,6 +114,36 @@ class StreetDetailTest(TestCase):
     def test_redirect(self):
         """ GET /street/__slug__ should return status_code 301 """
         response = self.client.get('/street/%s' % self.slug)
+        self.assertEquals(response.status_code, 301)
+
+class StreetDetailTest(TestCase):
+    """ Test /street/__slug__/ """
+
+    def setUp(self):
+        self.client = Client()
+
+        street = db.streets.find_one()
+
+        try:
+            self.slug = street['properties']['slug']
+        except:
+            error = "No slug found for '%s'" % street['properties']['name']
+            raise KeyError(error)
+
+        self.min = street['properties']['min']
+        self.max = street['properties']['max']
+
+        self.response = self.client.get('/street/%s/%d-%d/' %
+                (self.slug, self.min, self.max))
+
+    def test_success(self):
+        """ GET /street/__slug__/##-##/ should return status_code 200 """
+        self.assertEquals(self.response.status_code, 200)
+
+    def test_redirect(self):
+        """ GET /street/__slug__/##-## should return status_code 301 """
+        response = self.client.get('/street/%s/%d-%d' %
+                (self.slug, self.min, self.max))
         self.assertEquals(response.status_code, 301)
 
 class SearchTest(TestCase):

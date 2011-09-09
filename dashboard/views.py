@@ -22,6 +22,8 @@ def index(request, geography=None, is_json=False):
     """
     Homepage view. Can also return json for the city or neighborhoods.
     """
+    c = Context({'test' : "Hello World!"})
+    return render(request, 'index.html', c)
 
     """c_dict = {
         'open_tickets': total_open,

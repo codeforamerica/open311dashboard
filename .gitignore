@@ -3,6 +3,7 @@ settings_local.py
 *.pyc
 src/
 data/
+test.db
 dashboard/static/tiles/
 epio.ini
 .epio-app
