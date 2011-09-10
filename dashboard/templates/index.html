@@ -48,24 +48,20 @@
 </div>
 
 <div class="row">
-  <div class="span12 column" style="background-color:#fff; height:20px;">
-    <div style="float:left;"><p>Hello 
-    <select class="chzn-select" id="neighborhood-selector" style="width:175px">
+  <div class="span10 column" style="background-color:#fff;">
+   Hello 
+    <select class="chzn-select" id="neighborhood-selector">
       <option>San Francisco</option>
       <optgroup label="Neighborhoods">
         {% for neighborhood in neighborhoods %}
         <option value="{{ neighborhood.id }}">{{ neighborhood.name }}</option>
         {% endfor %}
       </optgroup>
-    </select>,
-    let's see how responsive your city is this week.
-    </div>
+    </select>, let's see how responsive your city is this week.
   </div>
-</div>
-<div class="row">
-  <div id="selector" class="span12 column border-radius" style="background-color:#fff">
+  <div id="selector" class="span6 column border-radius">
     Select a map:
-    <select id="layer-select" class="chzn-select">
+    <select id="layer-select" class="chzn-select" style="width:100px;">
       <option value="cleaning">Street/Sidewalk Cleaning</option>
       <option value="cans">Trash Cans</option>
       <option value="dumping">Illegal Dumping</option>
