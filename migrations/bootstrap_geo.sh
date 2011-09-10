@@ -1,6 +1,12 @@
 # Download and automagically migrate SF geographic data.
 # @author Chris Barna <chris@unbrain.net>
-DATABASE=open311
+
+# If an argument is passed in -- that's the name of the database.
+if [ "$1" != "" ]; then
+    DATABASE=$1
+else
+    DATABASE=open311
+fi
 
 echo "Making temporary directory..."
 mkdir tmp
