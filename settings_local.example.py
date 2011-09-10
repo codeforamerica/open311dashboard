@@ -1,7 +1,8 @@
+# NOTE: The database name will more than likely be specific to your machine.
 MONGODB = {
     'db' : 'open311',
-    'host' : '',
-    }
+    'host' : 'localhost',
+}
 
 # Open311 City
 # See http://wiki.open311.org/GeoReport_v2/Servers
