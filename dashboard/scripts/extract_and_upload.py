@@ -40,6 +40,10 @@ def extract_tiles():
     upload_to_s3()
 
 def upload_to_s3():
+  """
+  Assists you in uploading a set of directories/files to S3. Assumes that your S3 bucket
+  has already been created. Use the boto's create_bucket method if you don't have an existing bucket.
+  """
   AWS_ACCESS_KEY_ID = 'Your AWS Access Key ID'
   AWS_SECRET_ACCESS_KEY = 'Your AWS Secret Access Key'
   
@@ -64,7 +68,7 @@ def upload_to_s3():
   
   for root, dirs, files in os.walk(directory):
     for f in files:
-      print 'Uploading %s/%s to Amazon bucket %s' % (root, f, bucket_name) #debugging
+      print 'Uploading %s/%s to Amazon bucket %s' % (root, f, bucket_name)
       
       file_name = root + '/' + f
       
@@ -72,7 +76,10 @@ def upload_to_s3():
       k.set_contents_from_filename(file_name,cb=percent_cb,num_cb=10)
 
 if __name__ == '__main__':
-  """to_upload is a boolean variable"""
+  """
+    Pass is in Boolean variable on the command line to specify whether you want to upload your tiles to Amazon S3.
+    to_upload is a Boolean variable.
+  """
   script,to_upload = argv
   extract_tiles()
   
