@@ -3,7 +3,11 @@ from django.template.defaultfilters import slugify
 
 from dashboard.scripts.calculate_centroid import compute_centroid
 
-from settings import MONGODB
+# See if this fixes import errors.
+try:
+    from settings import MONGODB
+except ImportError:
+    from open311dashboard.settings import MONGODB
 
 connection = Connection(MONGODB['host'])
 db = connection[MONGODB['db']]
