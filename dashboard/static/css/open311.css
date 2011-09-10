@@ -32,11 +32,12 @@ body{
 #map{
   -moz-border-radius: 5px;
   border-radius: 5px;
-  height: 83%;
+  height: 500px;
   background-color: #DCEAF4;
 }
 
 
-.ui-autocomplet,.ui-corner-all{
-  width: 100px;
+.ui-autocomplete,.ui-corner-all{
+  list-style-type: none;
+  width: 250px;
 }
