@@ -12,7 +12,7 @@ def extract_tiles():
   connection = sqlite3.connect('census_blocks.mbtiles')
   
   #Get everything out of the flat file
-  pieces = conn.execute('select * from tiles').fetchall()
+  pieces = connection.execute('select * from tiles').fetchall()
   
   for piece in pieces:
     #the image is a png
