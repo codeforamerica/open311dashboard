@@ -22,7 +22,7 @@ urlpatterns = patterns('',
         'dashboard.views.street_search'),
 
     # API Calls
-    url(r'^api/home/(?P<geography>\d+).json$',
-        'dashboard.views.index', {'is_json': True}),
+    url(r'^api/(?P<collection>.+)/$',
+            'dashboard.views.api_handler'),
 
 )

@@ -3,14 +3,18 @@ try:
 except:
     import json
 
+from datetime import datetime
+import time
+import re
 import urllib
 import urllib2
 
 from django.template import Context
 from django.shortcuts import render # , redirect
-# from django.http import HttpResponse
+from django.http import HttpResponse
 
 from pymongo.connection import Connection
+import bson.json_util
 
 from settings import MONGODB
 
@@ -24,7 +28,6 @@ def index(request, geography=None, is_json=False):
     """
     c = Context({'test' : "Hello World!"})
     return render(request, 'index.html', c)
-
 
 # Neighborhood specific pages.
 def neighborhood_list(request):
@@ -72,16 +75,6 @@ def neighborhood_detail(request, neighborhood_slug):
 
     return render(request, 'geo_detail.html', c) """
 
-
-def neighborhood_detail_json(request, neighborhood_id):
-    """
-
-    Download JSON of the requests that built the page. Caution: slow!
-
-    TODO: Speed it up.
-
-    """
-
 # Street specific pages.
 def street_list(request):
     """
@@ -123,6 +116,90 @@ def street_view(request, street_name, min_val, max_val):
         })
 
     return render(request, 'street_test.html', c)
+
+def api_handler(request, collection):
+    """
+    Serialize values returned from the database.
+    """
+    resp = []
+    lookup = {}
+    get_params = request.GET.copy()
+    geo_collections = ['polygons', 'streets']
+
+    if collection in geo_collections:
+        prefix = 'properties.'
+    else:
+        prefix = ''
+
+    # What page number?
+    if 'page' in get_params:
+        page = int(get_params.get('page'))
+        del get_params['page']
+    else:
+        page = 1
+
+    # How big should the page be?
+    if 'page_size' in get_params:
+        page_size = int(get_params['page_size'])
+        del get_params['page_size']
+    else:
+        page_size = 1000
+
+    # Handle the special methods
+    for k, v in get_params.iteritems():
+
+        # Handle dates.
+        if re.search('date', k):
+            year, month, day = v.split('-')
+            v = datetime(int(year), int(month), int(day))
+
+        # Ranges
+        r = re.search('^(?P<key>.+)_(?P<side>start|end)$', k)
+        if r:
+            matches = r.groupdict()
+            k = matches['key']
+            map_dict = { 'start' : "$gte", 'end' : '$lte' }
+
+            if k in lookup:
+                lookup_v = lookup[k]
+            else:
+                lookup_v = {}
+
+            lookup_v[map_dict[matches['side']]] = v
+            v = lookup_v
+
+        # Inside polygon.
+        bounds = re.search('^(?P<key>.+)_bounds$', k)
+        if bounds:
+            if collection in geo_collections:
+                prefix = 'geometry.'
+
+            key = bounds.groups()[0]
+            json_bounds = json.loads(v)
+            lookup_type = '$box' if len(json_bounds) == 2 else '$polygon'
+
+            k = key
+            v = {'$within' : { lookup_type : json_bounds }}
+
+        lookup['%s%s' % (prefix, k)] = v
+
+    try:
+        results = db[collection].find(lookup,
+                skip=(page_size * (page-1)), limit=page_size)
+    except:
+        return HttpResponse('Error',status=400)
+
+    for row in results:
+        del row['_id']
+        resp.append(row)
+
+    if collection in geo_collections:
+        resp = { 'type' : "FeatureColection",
+                'features' : resp }
+
+    json_resp = json.dumps(resp, default=bson.json_util.default)
+    return HttpResponse(json_resp, 'application/json')
+
 
 # Search for an address!
 def street_search(request):
