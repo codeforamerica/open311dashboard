@@ -8,6 +8,7 @@ from boto.s3.key import Key
 #from boto import s3
 
 def percent_cb(complete, total):
+  """Command line updates."""
   sys.stdout.write('.')
   sys.stdout.flush()
 

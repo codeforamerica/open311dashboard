@@ -40,9 +40,9 @@ do
   mongoimport -d $DATABASE -collection $COLLECTION -file $file.4326.clean.json
 
   echo "Running $MIGRATION"
-  cd ../..
+  cd ../
   python $MIGRATION
-  cd migrations/tmp/
+  cd tmp/
   # mongo $DATABASE $MIGRATION
 
   echo "Finished importing $COLLECTION"
