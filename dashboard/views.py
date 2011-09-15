@@ -4,7 +4,6 @@ except:
     import json
 
 from datetime import datetime
-import time
 import re
 import urllib
 import urllib2
@@ -58,22 +57,10 @@ def neighborhood_detail(request, neighborhood_slug):
 
     c = Context({
         'neighborhood' : neighborhood,
-        'json' : json.dumps(neighborhood['geometry']),
         'requests' : requests
         })
-    return render(request, 'neighborhood_test.html', c)
-    """c = Context({
-        'title': title,
-        'geometry': simple_shape.geojson,
-        'centroid': [simple_shape.centroid[0], simple_shape.centroid[1]],
-        'extent': simple_shape.extent,
-        'stats': stats,
-        'nearby': nearby,
-        'type': 'neighborhood',
-        'id': neighborhood_id
-        })
 
-    return render(request, 'geo_detail.html', c) """
+    return render(request, 'neighborhood_test.html', c)
 
 # Street specific pages.
 def street_list(request):
@@ -193,8 +180,10 @@ def api_handler(request, collection):
         del row['_id']
         resp.append(row)
 
+        # TODO: Clean up datetimes.
+
     if collection in geo_collections:
-        resp = { 'type' : "FeatureColection",
+        resp = { 'type' : "FeatureCollection",
                 'features' : resp }
 
     json_resp = json.dumps(resp, default=bson.json_util.default)

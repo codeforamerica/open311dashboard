@@ -1,33 +1,54 @@
-e% extends 'base/main.html' %}
+{% extends 'base/main.html' %}
 {% block content %}
 <h1>{{ neighborhood.properties.name }}</h1>
 <div class="span12 column">
   <div id="map"></div>
+  <div id="requests">
+    <table>
+      <tr>
+        <th>Request ID</th>
+        <th>Type</th>
+        <th>Status</th>
+        <th>Date</th>
+      </tr>
+    </table>
+  </div>
 </div>
-<script type="text/javascript">
-  {% autoescape off %}
-  geometry = {{ json }};
-  {% endautoescape %}
-</script>
 {% endblock %}
 
 {% block custom_scripts %}
 <script type="text/javascript">
-var po = org.polymaps;
+  var po = org.polymaps;
 
-var map = po.map()
-    .container(document.getElementById("map").appendChild(po.svg("svg")))
+  $(document).ready(function() {
 
-map.add(po.image()
-    .url(po.url("http://{S}tile.cloudmade.com"
-    + "/b60fbbd51f17456794d2b0e4ed4f0d0c"
-    + "/998/256/{Z}/{X}/{Y}.png")
-    .hosts(["a.", "b.", "c.", ""])));
+      var map = po.map()
+      .container(document.getElementById("map").appendChild(po.svg("svg")))
 
-map.add(po.geoJson()
-  .features([{ "type": "Feature",
-    "geometry": geometry,
-    "properties": {}}])
-  .id("geometry"));
-</script>
-{% endblock %}
+      map.add(po.image()
+        .url(po.url("http://{S}tile.cloudmade.com"
+            + "/b60fbbd51f17456794d2b0e4ed4f0d0c"
+            + "/998/256/{Z}/{X}/{Y}.png")
+          .hosts(["a.", "b.", "c.", ""])));
+
+      map.add(po.geoJson()
+        .url("/api/polygons/?slug={{ neighborhood.properties.slug }}")
+        .id("geometry"));
+
+
+      $.get('/api/requests/?status=Open&coordinates_bounds={{ neighborhood.geometry.coordinates.0 }}&page_size=10',
+        function(data) {
+          for (var i = 0; i < data.length; i += 1) {
+          var tmp_data = "<tr>";
+          tmp_data += "<td>" + data[i]['service_request_id']+ "</td>";
+          tmp_data += "<td>" + data[i]['service_name']+ "</td>";
+          tmp_data += "<td>" + data[i]['status'] + "</td>";
+          var requested_date = new Date(data[i]['requested_datetime']['$date']);
+          tmp_data += "<td>" + requested_date.toString() + "</td>";
+          tmp_data += "</tr>";
+          $("#requests table").append(tmp_data);
+          }
+        });
+      });
+    </script>
+    {% endblock %}
