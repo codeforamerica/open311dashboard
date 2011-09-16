@@ -1,6 +1,9 @@
 from pymongo import Connection
 from pymongo.code import Code
 
+from settings import SITE_ROOT
+SCRIPT_BASE = "%s/mongoutils/mapreduce/" % SITE_ROOT
+
 connection = Connection('localhost')
 db = connection['open311']
 
@@ -10,15 +13,18 @@ def mreduce(map_file, reduce_file):
   return db.requests.inline_map_reduce(map, reduce)
 
 def day_counts():
-  return mreduce(open('day_map.js', 'r').read(), open('day_reduce.js', 'r').read())
+  return mreduce(open(SCRIPT_BASE + 'day_map.js', 'r').read(),
+          open(SCRIPT_BASE + 'day_reduce.js', 'r').read())
 
 def month_counts():
-  return mreduce(open('month_map.js', 'r').read(), open('day_reduce.js','r').read())
+  return mreduce(open(SCRIPT_BASE + 'month_map.js', 'r').read(),
+          open(SCRIPT_BASE + 'day_reduce.js','r').read())
 
 def year_counts():
-  return mreduce(open('year_map.js', 'r').read(), open('day_reduce.js', 'r').read())
+  return mreduce(open(SCRIPT_BASE + 'year_map.js', 'r').read(),
+          open(SCRIPT_BASE + 'day_reduce.js', 'r').read())
 
-def avg_response_time(start_time=null, end_time=null):
+def avg_response_time(start_time=None, end_time=None):
   map_str = """
       function(){
         var diff = new Date();
