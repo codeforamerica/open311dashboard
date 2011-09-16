@@ -7,22 +7,25 @@ SCRIPT_BASE = "%s/mongoutils/mapreduce/" % SITE_ROOT
 connection = Connection('localhost')
 db = connection['open311']
 
-def mreduce(map_file, reduce_file):
+def mreduce(map_file, reduce_file, query):
   map = Code(map_file)
   reduce = Code(reduce_file)
-  return db.requests.inline_map_reduce(map, reduce)
+  return db.requests.inline_map_reduce(map, reduce, query=query)
 
-def day_counts():
+def day_counts(query={}):
   return mreduce(open(SCRIPT_BASE + 'day_map.js', 'r').read(),
-          open(SCRIPT_BASE + 'day_reduce.js', 'r').read())
+          open(SCRIPT_BASE + 'day_reduce.js', 'r').read(),
+          query)
 
-def month_counts():
+def month_counts(query={}):
   return mreduce(open(SCRIPT_BASE + 'month_map.js', 'r').read(),
-          open(SCRIPT_BASE + 'day_reduce.js','r').read())
+          open(SCRIPT_BASE + 'day_reduce.js','r').read(),
+          query)
 
-def year_counts():
+def year_counts(query={}):
   return mreduce(open(SCRIPT_BASE + 'year_map.js', 'r').read(),
-          open(SCRIPT_BASE + 'day_reduce.js', 'r').read())
+          open(SCRIPT_BASE + 'day_reduce.js', 'r').read(),
+          query)
 
 def avg_response_time(start_time=None, end_time=None):
   map_str = """
