@@ -1,6 +1,7 @@
 from pymongo.connection import Connection
 from django.template.defaultfilters import slugify
 
+from dashboard.scripts.bounding_box import create_bounding_box
 from dashboard.scripts.calculate_centroid import compute_centroid
 
 from settings import MONGODB
@@ -52,8 +53,19 @@ def find_centroid(filter = {}):
         db.streets.update({ '_id' : street['_id'] },
                 { '$set' : { 'properties.centroid' : centroid }})
 
+def find_bounding_box(filter = {}):
+    """
+    Find the bounding box.
+    """
+    streets = db.streets.find(filter)
+
+    for street in streets:
+        bbox = create_bounding_box(street['geometry']['coordinates'])
+        db.streets.update({ '_id' : street['_id']},
+                { '$set': { 'properties.bbox' : bbox }})
 
 if __name__ == "__main__":
     clean_up()
     add_indexes()
     find_centroid()
+    find_bounding_box()
