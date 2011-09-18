@@ -45,9 +45,10 @@ def service_counts(query={}):
 
 def avg_response_time(query={}):
     """ Find how long the average response time is. """
+    tmp_query = query
 
-    if "status" not in query or query['status'] != "Closed":
-        query['status'] = "Closed"
+    if "status" not in tmp_query or tmp_query['status'] != "Closed":
+        tmp_query['status'] = "Closed"
 
     return mreduce(open(SCRIPT_BASE + 'map_avg_response.js', 'r').read(),
             open(SCRIPT_BASE + 'reduce_avg_response.js', 'r').read(),

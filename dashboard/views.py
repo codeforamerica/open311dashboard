@@ -3,7 +3,7 @@ try:
 except:
     import json
 
-from datetime import datetime
+import datetime
 import re
 import urllib
 import urllib2
@@ -16,6 +16,7 @@ from pymongo.connection import Connection
 import bson.json_util
 
 from settings import MONGODB
+from mongoutils.mapreduce import open311stats
 
 # Set up the database connection as a global variable
 connection = Connection(MONGODB['host'])
@@ -51,13 +52,46 @@ def neighborhood_detail(request, neighborhood_slug):
     """
     neighborhood = db.polygons \
             .find_one({ 'properties.slug' : neighborhood_slug})
-    requests = db.requests.find({'coordinates' :
-        { '$within' : neighborhood['geometry']['coordinates'] }
-        }).limit(10)
+    request_dict = {'coordinates' :
+        { '$within' : {
+            "$polygon" : neighborhood['geometry']['coordinates'][0] }}
+        }
+
+    # Set the dictionary to do within specific item.
+    today = datetime.datetime.now()
+    year_ago = today + datetime.timedelta(-365)
+    request_dict['requested_datetime'] = {
+            '$gte' : year_ago,
+            '$lte' : today
+            }
+
+    # Open requests
+    status_counts = open311stats.status_counts(request_dict)
+    print status_counts
+    for status in status_counts:
+        if status['_id'] == {'status': 'Open'}:
+            open_count = status
+
+    # Top Requests
+    service_counts = open311stats.service_counts(request_dict)
+    top_services = sorted(service_counts,
+            key=lambda service: -service['value']['count'])
+    for service in top_services:
+        service["id"] = service["_id"]
+        service["id"]["service_name"] = service["id"]["service_name"] \
+                .replace("_", " ")
+        service['value']['count'] = int(service['value']['count'])
+
+    # Average response time.
+    avg_time = open311stats.avg_response_time(request_dict)
+    days = avg_time[0]['value']['avg_time'] / 86400000
 
     c = Context({
         'neighborhood' : neighborhood,
-        'requests' : requests
+        'avg_response': int(days),
+        'bbox' : json.dumps(neighborhood['properties']['bbox']),
+        'top_services': top_services[0:9],
+        'open_requests': int(open_count['value']['count'])
         })
 
     return render(request, 'neighborhood_test.html', c)
@@ -138,7 +172,7 @@ def api_handler(request, collection):
         # Handle dates.
         if re.search('date', k):
             year, month, day = v.split('-')
-            v = datetime(int(year), int(month), int(day))
+            v = datetime.datetime(int(year), int(month), int(day))
 
         # Ranges
         r = re.search('^(?P<key>.+)_(?P<side>start|end)$', k)
