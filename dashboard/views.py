@@ -144,6 +144,7 @@ def api_handler(request, collection):
     """
     resp = []
     lookup = {}
+    query_params = {}
     get_params = request.GET.copy()
     geo_collections = ['polygons', 'streets']
 
@@ -152,19 +153,33 @@ def api_handler(request, collection):
     else:
         prefix = ''
 
-    # What page number?
-    if 'page' in get_params:
-        page = int(get_params.get('page'))
-        del get_params['page']
-    else:
-        page = 1
-
     # How big should the page be?
     if 'page_size' in get_params:
-        page_size = int(get_params['page_size'])
+        query_params['limit'] = int(get_params['page_size'])
         del get_params['page_size']
     else:
-        page_size = 1000
+        query_params['limit'] = 1000
+
+    # What page number?
+    if 'page' in get_params:
+        query_params['offset'] = (int(get_params.get('page'))-1) * \
+            query_params['limit']
+        del get_params['page']
+    else:
+        query_params['offset'] = 0
+
+    # Define the sort key.
+    if 'sort' in get_params:
+        sort = get_params.get('sort')
+        if re.search('^-', sort):
+            order = -1
+            sort = re.sub('^-', '', sort)
+        else:
+            order = 1
+
+        query_params['sort'] = [(sort, order)]
+        print query_params['sort']
+        del get_params['sort']
 
     # Handle the special methods
     for k, v in get_params.iteritems():
@@ -206,7 +221,7 @@ def api_handler(request, collection):
 
     try:
         results = db[collection].find(lookup,
-                skip=(page_size * (page-1)), limit=page_size)
+                **query_params)
     except:
         return HttpResponse('Error',status=400)
 
