@@ -1,4 +1,5 @@
 import re
+
 from pymongo import Connection
 from pymongo.code import Code
 
@@ -8,40 +9,50 @@ SCRIPT_BASE = "%s/mongoutils/mapreduce/" % SITE_ROOT
 connection = Connection('localhost')
 db = connection['open311']
 
-def mreduce(map_file, reduce_file, query, finalize=None):
-    map = Code(map_file)
-    reduce = Code(reduce_file)
+def count(keys, query={}):
+    """
+    Calculate the counts across multiple keys.
+    """
+    map_key = '{ '
 
-    if finalize is not None:
-        finalize = Code(finalize)
+    for key in keys:
+        if re.search('_year$', key):
+            key = re.sub('_year$', '', key)
+            map_key += "%s_year: this.%s.getFullYear(), " % (key, key)
+        elif re.search('_month$', key):
+            key = re.sub('_month$', '', key)
+            map_key += "%s_year: this.%s.getFullYear(), " % (key, key)
+            map_key += "%s_month: this.%s.getMonth(), " % (key, key)
 
-    return db.requests.inline_map_reduce(map, reduce,
-            query=query, finalize=finalize)
+        elif re.search('_day$', key):
+            key = re.sub('_day$', '', key)
+            map_key += "%s_year: this.%s.getFullYear(), " % (key, key)
+            map_key += "%s_month: this.%s.getMonth(), " % (key, key)
+            map_key += "%s_day: this.%s.getDate(), " % (key, key)
+        else:
+            map_key += "%s: this.%s, " % (key, key)
 
-def day_counts(query={}):
-    return mreduce(open(SCRIPT_BASE + 'day_map.js', 'r').read(),
-            open(SCRIPT_BASE + 'day_reduce.js', 'r').read(),
-            query)
+    map_key += " }"
 
-def month_counts(query={}):
-    return mreduce(open(SCRIPT_BASE + 'month_map.js', 'r').read(),
-            open(SCRIPT_BASE + 'day_reduce.js','r').read(),
-            query)
+    map_function = Code("""function() {
+        emit(%s, {count: 1});
+    }""" % map_key)
 
-def year_counts(query={}):
-    return mreduce(open(SCRIPT_BASE + 'year_map.js', 'r').read(),
-            open(SCRIPT_BASE + 'day_reduce.js', 'r').read(),
-            query)
+    reduce_function = Code("""function day_reduce(key, values){
+        var total = 0;
+        for (var i=0; i< values.length; i++){
+            total += values[i].count;
+        }
+        return {count: total};
+    }""")
 
-def status_counts(query={}):
-    return mreduce(open(SCRIPT_BASE + 'status_map.js', 'r').read(),
-            open(SCRIPT_BASE + 'day_reduce.js', 'r').read(),
-            query)
+    return db.requests.inline_map_reduce(map_function, reduce_function,
+            query=query)
 
-def service_counts(query={}):
-    return mreduce(open(SCRIPT_BASE + 'service_map.js', 'r').read(),
-            open(SCRIPT_BASE + 'day_reduce.js', 'r').read(),
-            query)
+def calculate_delta(date_range):
+    """
+    Calculate the from a date range to the same number of days previous.
+    """
 
 def avg_response_time(query={}):
     """ Find how long the average response time is. """
@@ -50,6 +61,9 @@ def avg_response_time(query={}):
     if "status" not in tmp_query or tmp_query['status'] != "Closed":
         tmp_query['status'] = "Closed"
 
-    return mreduce(open(SCRIPT_BASE + 'map_avg_response.js', 'r').read(),
-            open(SCRIPT_BASE + 'reduce_avg_response.js', 'r').read(),
-            query, open(SCRIPT_BASE + 'finalize_avg_response.js', 'r').read())
+    return db.requests.inline_map_reduce(
+            Code(open(SCRIPT_BASE + 'map_avg_response.js', 'r').read()),
+            Code(open(SCRIPT_BASE + 'reduce_avg_response.js', 'r').read()),
+            query=query,
+            finalize=Code(open(SCRIPT_BASE + 'finalize_avg_response.js',
+                'r').read()))

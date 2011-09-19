@@ -66,14 +66,14 @@ def neighborhood_detail(request, neighborhood_slug):
             }
 
     # Open requests
-    status_counts = open311stats.status_counts(request_dict)
+    status_counts = open311stats.count(['status'], request_dict)
     print status_counts
     for status in status_counts:
         if status['_id'] == {'status': 'Open'}:
             open_count = status
 
     # Top Requests
-    service_counts = open311stats.service_counts(request_dict)
+    service_counts = open311stats.count(['service_name'], request_dict)
     top_services = sorted(service_counts,
             key=lambda service: -service['value']['count'])
     for service in top_services:
