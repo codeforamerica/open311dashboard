@@ -39,48 +39,48 @@
   }
 </style>
 <div class="row main">
-<div class="span12 column">
-  <div id="map"></div>
-  <div id="requests">
-    <table>
-      <tr>
-        <th>Request ID</th>
-        <th>Type</th>
-        <th>Status</th>
-        <th>Date</th>
-      </tr>
-    </table>
+  <div class="span12 column">
+    <div id="map"></div>
+    <div id="requests">
+      <table>
+        <tr>
+          <th>Request ID</th>
+          <th>Type</th>
+          <th>Status</th>
+          <th>Date</th>
+        </tr>
+      </table>
+    </div>
   </div>
-</div>
-<div class="span4 column sidebar">
-  <h1>{{ neighborhood.properties.name }}</h1>
-  <div class="box">
-    Sparkline goes here.
-  </div>
-  <div id="open-requests" class="box">
-    {{ open_requests }} open request{{ open_requests|pluralize }}
-  </div>
-  <div id="avg-response" class="box">
-    {{ avg_response }} day{{ avg_response|pluralize }}
-    <h3>Average Response Time</h3>
-  </div>
+  <div class="span4 column sidebar">
+    <h1>{{ neighborhood.properties.name }}</h1>
+    <div class="box">
+      Sparkline goes here.
+    </div>
+    <div id="open-requests" class="box">
+      {{ open_requests }} open request{{ open_requests|pluralize }}
+    </div>
+    <div id="avg-response" class="box">
+      {{ avg_response }} day{{ avg_response|pluralize }}
+      <h3>Average Response Time</h3>
+    </div>
 
-  <div id="top-requests" class="box">
-    <h3>Top Requests</h3>
-    <table>
-    {% for service in top_services %}
-      <tr>
-        <td>{{ service.id.service_name }}</td>
-        <td>{{ service.value.count }}</td>
-      </tr>
-    {% endfor %}
-  </table>
-  </div>
+    <div id="top-requests" class="box">
+      <h3>Top Requests</h3>
+      <table>
+        {% for service in top_services %}
+        <tr>
+          <td>{{ service.id.service_name }}</td>
+          <td>{{ service.value.count }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
 
-  <div id="sparkline">
-  </div>
+    <div id="sparkline">
+    </div>
 
-</div>
+  </div>
 </div>
 {% endblock %}
 
@@ -89,11 +89,18 @@
   var po = org.polymaps;
 
   $(document).ready(function() {
+      var padBox = function(box, padding) {
+        box[0].lat -= padding;
+        box[0].lon -= padding;
+        box[1].lat += padding;
+        box[1].lon += padding;
+        return box;
+      };
 
-    var map = po.map()
-      .container(document.getElementById("map").appendChild(po.svg("svg")))
-      .extent({{ bbox|safe }})
-      .zoomRange([10, 16]);
+      var map = po.map()
+        .container(document.getElementById("map").appendChild(po.svg("svg")))
+        .extent(padBox({{ bbox|safe }},.001))
+        .zoomRange([10, 16]);
 
       map.add(po.image()
         .url(po.url("http://{S}tile.cloudmade.com"
@@ -109,51 +116,51 @@
         function(data) {
           var points = [];
           for (var i = 0; i < data.length; i += 1) {
-            // Generate the rows.
-            var tmp_data = "<tr id=\""+data[i]['service_request_id']+ "-row\">";
-            tmp_data += "<td>" + data[i]['service_request_id']+ "</td>";
-            tmp_data += "<td>" + data[i]['service_name']+ "</td>";
-            tmp_data += "<td>" + data[i]['status'] + "</td>";
-            var requested_date = new Date(data[i]['requested_datetime']['$date']);
-            tmp_data += "<td>" + requested_date.toString() + "</td>";
-            tmp_data += "</tr>";
-            $("#requests table").append(tmp_data);
+          // Generate the rows.
+          var tmp_data = "<tr id=\""+data[i]['service_request_id']+ "-row\">";
+          tmp_data += "<td>" + data[i]['service_request_id']+ "</td>";
+          tmp_data += "<td>" + data[i]['service_name']+ "</td>";
+          tmp_data += "<td>" + data[i]['status'] + "</td>";
+          var requested_date = new Date(data[i]['requested_datetime']['$date']);
+          tmp_data += "<td>" + requested_date.toString() + "</td>";
+          tmp_data += "</tr>";
+          $("#requests table").append(tmp_data);
 
-            // Push the features onto an array.
-            points.push({ "type": "Feature",
-                  "geometry": {
-                    "type": "Point",
-                    "coordinates": data[i]['coordinates']
-                    }, "properties" : {
-                    "id": data[i]['service_request_id']
-                    }});
+          // Push the features onto an array.
+          points.push({ "type": "Feature",
+            "geometry": {
+            "type": "Point",
+            "coordinates": data[i]['coordinates']
+            }, "properties" : {
+            "id": data[i]['service_request_id']
+          }});
 
-            $("#"+data[i]['service_request_id']+"-row").hover(function() {
-                var sri = this.id.split('-')[0];
-                $('#'+sri+"-point").show();
-                }, function() {
-                var sri = this.id.split('-')[0];
-                $('#'+sri+"-point").hide();
-                });
+        $("#"+data[i]['service_request_id']+"-row").hover(function() {
+              var sri = this.id.split('-')[0];
+              $('#'+sri+"-point").show();
+            }, function() {
+              var sri = this.id.split('-')[0];
+              $('#'+sri+"-point").hide();
+            });
+        }
+
+        var loadPoints = function (e) {
+          // Load the points, set the ID, class, and hide.
+          for (var i = 0; i < e.features.length; i += 1) {
+            e.features[i].element.id = e.features[i].data.properties.id + "-point";
+            $(e.features[i].element).attr('class', 'request-point');
+            $(e.features[i].element).hide();
           }
+        }
 
-          var loadPoints = function (e) {
-            // Load the points, set the ID, class, and hide.
-            for (var i = 0; i < e.features.length; i += 1) {
-              e.features[i].element.id = e.features[i].data.properties.id + "-point";
-              $(e.features[i].element).attr('class', 'request-point');
-              $(e.features[i].element).hide();
-            }
-          }
-
-          // Add the features.
-          map.add(po.geoJson()
-              .features(points)
-              .id("points")
-              .on("load", loadPoints));
+        // Add the features.
+        map.add(po.geoJson()
+            .features(points)
+            .id("points")
+            .on("load", loadPoints));
 
         });
 
-      });
-    </script>
-    {% endblock %}
+  });
+</script>
+{% endblock %}
