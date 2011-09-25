@@ -5,7 +5,7 @@ def extract_tiles():
   """
   Shoutout to @rosskarchner: https://gist.github.com/837851
   Extracting images out of mbtiles. Creating folders and filenames.
-  Need to add S3 support.
+  Works with mbtiles exported out of TileMill v0.4.2.
   """
 
   #Connect to the database
