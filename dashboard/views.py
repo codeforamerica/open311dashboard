@@ -66,7 +66,7 @@ def neighborhood_detail(request, neighborhood_slug):
             }
 
     # Open requests
-    open_request_dict = request_dict
+    open_request_dict = request_dict.copy()
     open_request_dict['status'] = "Open"
     open_count = db.requests.find(open_request_dict).count()
 

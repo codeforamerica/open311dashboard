@@ -56,7 +56,7 @@ def calculate_delta(date_range):
 
 def avg_response_time(query={}):
     """ Find how long the average response time is. """
-    tmp_query = query
+    tmp_query = query.copy()
 
     if "status" not in tmp_query or tmp_query['status'] != "Closed":
         tmp_query['status'] = "Closed"
