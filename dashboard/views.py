@@ -66,11 +66,9 @@ def neighborhood_detail(request, neighborhood_slug):
             }
 
     # Open requests
-    status_counts = open311stats.count(['status'], request_dict)
-    print status_counts
-    for status in status_counts:
-        if status['_id'] == {'status': 'Open'}:
-            open_count = status
+    open_request_dict = request_dict
+    open_request_dict['status'] = "Open"
+    open_count = db.requests.find(open_request_dict).count()
 
     # Top Requests
     service_counts = open311stats.count(['service_name'], request_dict)
@@ -91,7 +89,7 @@ def neighborhood_detail(request, neighborhood_slug):
         'avg_response': int(days),
         'bbox' : json.dumps(neighborhood['properties']['bbox']),
         'top_services': top_services[0:9],
-        'open_requests': int(open_count['value']['count'])
+        'open_requests': open_count
         })
 
     return render(request, 'neighborhood_test.html', c)
