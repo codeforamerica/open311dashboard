@@ -17,6 +17,7 @@ import bson.json_util
 
 from settings import MONGODB
 from mongoutils.mapreduce import open311stats
+from mongoutils.api import api_query
 
 # Set up the database connection as a global variable
 connection = Connection(MONGODB['host'])
@@ -145,11 +146,9 @@ def api_handler(request, collection):
     query_params = {}
     get_params = request.GET.copy()
     geo_collections = ['polygons', 'streets']
-
+    geo = False
     if collection in geo_collections:
-        prefix = 'properties.'
-    else:
-        prefix = ''
+        geo = True
 
     # How big should the page be?
     if 'page_size' in get_params:
@@ -160,11 +159,11 @@ def api_handler(request, collection):
 
     # What page number?
     if 'page' in get_params:
-        query_params['offset'] = (int(get_params.get('page'))-1) * \
+        query_params['skip'] = (int(get_params.get('page'))-1) * \
             query_params['limit']
         del get_params['page']
     else:
-        query_params['offset'] = 0
+        query_params['skip'] = 0
 
     # Define the sort key.
     if 'sort' in get_params:
@@ -179,63 +178,112 @@ def api_handler(request, collection):
         print query_params['sort']
         del get_params['sort']
 
-    # Handle the special methods
-    for k, v in get_params.iteritems():
+    # Form up the query dictionary.
+    lookup = api_query(collection, get_params, geo)
 
-        # Handle dates.
-        if re.search('date', k):
-            year, month, day = v.split('-')
-            v = datetime.datetime(int(year), int(month), int(day))
-
-        # Ranges
-        r = re.search('^(?P<key>.+)_(?P<side>start|end)$', k)
-        if r:
-            matches = r.groupdict()
-            k = matches['key']
-            map_dict = { 'start' : "$gte", 'end' : '$lte' }
-
-            if k in lookup:
-                lookup_v = lookup[k]
-            else:
-                lookup_v = {}
-
-            lookup_v[map_dict[matches['side']]] = v
-            v = lookup_v
-
-        # Inside polygon.
-        bounds = re.search('^(?P<key>.+)_bounds$', k)
-        if bounds:
-            if collection in geo_collections:
-                prefix = 'geometry.'
-
-            key = bounds.groups()[0]
-            json_bounds = json.loads(v)
-            lookup_type = '$box' if len(json_bounds) == 2 else '$polygon'
-
-            k = key
-            v = {'$within' : { lookup_type : json_bounds }}
-
-        lookup['%s%s' % (prefix, k)] = v
-
+    # Run the query.
     try:
         results = db[collection].find(lookup,
                 **query_params)
     except:
         return HttpResponse('Error',status=400)
 
+    # Clean up the results
     for row in results:
         del row['_id']
         resp.append(row)
 
         # TODO: Clean up datetimes.
 
-    if collection in geo_collections:
+    if geo is True:
         resp = { 'type' : "FeatureCollection",
                 'features' : resp }
 
     json_resp = json.dumps(resp, default=bson.json_util.default)
     return HttpResponse(json_resp, 'application/json')
 
+def api_count_handler(request):
+    """
+    API endpoint for mapreduce counts.
+    """
+    get_params = request.GET.copy()
+    after_params = {}
+
+    try:
+        keys = get_params['keys'].split(',')
+        del(get_params['keys'])
+    except:
+        return HttpResponse('Error: No count keys defined.', status=400)
+
+    # Store the sort order.
+    if 'sort' in get_params:
+        after_params['sort'] = get_params['sort']
+        del(get_params['sort'])
+
+    # Store page number
+    if 'page' in get_params:
+        after_params['page'] = get_params['page']
+        del(get_params['page'])
+
+    # Store page size
+    if 'page_size' in get_params:
+        after_params['page_size'] = get_params['page_size']
+        del(get_params['page_size'])
+
+    # Form up a query.
+    query = api_query('requests', get_params)
+
+    # Run the mapreduce
+    try:
+        count = open311stats.count(keys, query)
+    except:
+        return HttpResponse("Error", status=400)
+
+    # Clean it up a little.
+    clean_count = []
+    for row in count:
+        row = dict(row['_id'], **row['value'])
+        clean_count.append(row)
+
+    # Sort, page, size
+    if 'sort' in after_params:
+        sort = after_params.get('sort')
+
+        # Regular expression search for negative sorting.
+        if re.search('^-', sort):
+            reverse = True
+            sort = re.sub('^-', '', sort)
+        else:
+            reverse = False
+        print "Triggered"
+
+        clean_count = sorted(clean_count, key=lambda count: count[sort], reverse=reverse)
+
+    begin = 0
+    if 'page_size' in after_params:
+        page_size = int(after_params['page_size'])
+    else:
+        page_size = 30
+
+    if 'page' in after_params:
+        begin = (int(after_params['page']) - 1) * page_size
+        end = int(after_params['page']) * page_size
+    else:
+        end = page_size
+
+    clean_count = clean_count[begin:end]
+
+    json_resp = json.dumps(clean_count, default=bson.json_util.default)
+    return HttpResponse(json_resp, 'application/json')
+
+def api_avg_response_handler(request):
+    """ Average response things. """
+    get_params = request.GET.copy()
+    query = api_query('requests', get_params)
+
+    avg_response = open311stats.avg_response_time(query)
+    json_resp = json.dumps(avg_response, default=bson.json_util.default)
+    return HttpResponse(json_resp, 'application/json')
 
 # Search for an address!
 def street_search(request):

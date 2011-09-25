@@ -32,7 +32,7 @@
     font-style:italic;
   }
 
-  #avg-response {
+  #avg-response, #open-requests {
     font-size:32pt;
     line-height:1;
     font-weight:bold;
@@ -58,16 +58,17 @@
       Sparkline goes here.
     </div>
     <div id="open-requests" class="box">
-      {{ open_requests }} open request{{ open_requests|pluralize }}
+      <h3>Open Request{{ open_requests|pluralize }}</h3>
+      {{ open_requests }}
     </div>
     <div id="avg-response" class="box">
-      {{ avg_response }} day{{ avg_response|pluralize }}
       <h3>Average Response Time</h3>
+      {{ avg_response }} day{{ avg_response|pluralize }}
     </div>
 
     <div id="top-requests" class="box">
-      <h3>Top Requests</h3>
-      <table>
+      <h3>Top Request Types</h3>
+      <table id="top-requests-table">
         {% for service in top_services %}
         <tr>
           <td>{{ service.id.service_name }}</td>
@@ -89,17 +90,10 @@
   var po = org.polymaps;
 
   $(document).ready(function() {
-      var padBox = function(box, padding) {
-        box[0].lat -= padding;
-        box[0].lon -= padding;
-        box[1].lat += padding;
-        box[1].lon += padding;
-        return box;
-      };
 
       var map = po.map()
         .container(document.getElementById("map").appendChild(po.svg("svg")))
-        .extent(padBox({{ bbox|safe }},.001))
+        .extent(Open311Dashboard.padBox({{ bbox|safe }},.001))
         .zoomRange([10, 16]);
 
       map.add(po.image()
@@ -112,37 +106,53 @@
         .url("/api/polygons/?slug={{ neighborhood.properties.slug }}")
         .id("geometry"));
 
+      // Load top request types.
+      $.get('/api/requests/count/?page_size=10&sort=-count&coordinates_bounds={{ neighborhood.geometry.coordinates.0 }}&keys=service_name',
+          function(data) {
+            $("#top-requests-table").html('');
+            for (var i = 0; i < data.length; i += 1) {
+              var tmp_data = "<tr>";
+              tmp_data += "<td>" + data[i]['service_name'] + "</td>";
+              tmp_data += "<td>" + parseInt(data[i]['count']) + "</td>";
+              tmp_data += "</tr>";
+              $('#top-requests-table').append(tmp_data);
+            }
+          });
+
+      // Load the map data.
       $.get('/api/requests/?status=Open&coordinates_bounds={{ neighborhood.geometry.coordinates.0 }}&page_size=10&sort=-requested_datetime',
         function(data) {
           var points = [];
           for (var i = 0; i < data.length; i += 1) {
-          // Generate the rows.
-          var tmp_data = "<tr id=\""+data[i]['service_request_id']+ "-row\">";
-          tmp_data += "<td>" + data[i]['service_request_id']+ "</td>";
-          tmp_data += "<td>" + data[i]['service_name']+ "</td>";
-          tmp_data += "<td>" + data[i]['status'] + "</td>";
-          var requested_date = new Date(data[i]['requested_datetime']['$date']);
-          tmp_data += "<td>" + requested_date.toString() + "</td>";
-          tmp_data += "</tr>";
-          $("#requests table").append(tmp_data);
 
-          // Push the features onto an array.
-          points.push({ "type": "Feature",
-            "geometry": {
-            "type": "Point",
-            "coordinates": data[i]['coordinates']
-            }, "properties" : {
-            "id": data[i]['service_request_id']
-          }});
+            // Generate the rows.
+            var tmp_data = "<tr id=\""+data[i]['service_request_id']+ "-row\">";
+            tmp_data += "<td>" + data[i]['service_request_id']+ "</td>";
+            tmp_data += "<td>" + data[i]['service_name']+ "</td>";
+            tmp_data += "<td>" + data[i]['status'] + "</td>";
+            var requested_date = new Date(data[i]['requested_datetime']['$date']);
+            tmp_data += "<td>" + requested_date.toString() + "</td>";
+            tmp_data += "</tr>";
+            $("#requests table").append(tmp_data);
 
-        $("#"+data[i]['service_request_id']+"-row").hover(function() {
-              var sri = this.id.split('-')[0];
-              $('#'+sri+"-point").show();
-            }, function() {
-              var sri = this.id.split('-')[0];
-              $('#'+sri+"-point").hide();
+            // Push the features onto an array.
+            points.push({ "type": "Feature",
+              "geometry": {
+              "type": "Point",
+              "coordinates": data[i]['coordinates']
+              }, "properties" : {
+              "id": data[i]['service_request_id']
+              }
             });
-        }
+
+            $("#"+data[i]['service_request_id']+"-row").hover(function() {
+                var sri = this.id.split('-')[0];
+                $('#'+sri+"-point").show();
+            }, function() {
+                var sri = this.id.split('-')[0];
+                $('#'+sri+"-point").hide();
+            });
+          }
 
         var loadPoints = function (e) {
           // Load the points, set the ID, class, and hide.

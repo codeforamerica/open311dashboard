@@ -23,12 +23,14 @@ def count(keys, query={}):
             key = re.sub('_month$', '', key)
             map_key += "%s_year: this.%s.getFullYear(), " % (key, key)
             map_key += "%s_month: this.%s.getMonth(), " % (key, key)
-
         elif re.search('_day$', key):
             key = re.sub('_day$', '', key)
             map_key += "%s_year: this.%s.getFullYear(), " % (key, key)
             map_key += "%s_month: this.%s.getMonth(), " % (key, key)
             map_key += "%s_day: this.%s.getDate(), " % (key, key)
+        elif re.search('_hour$', key):
+            key = re.sub('_hour$', '', key)
+            map_key += "%s_hour: this.%s.getHours(), " % (key, key)
         else:
             map_key += "%s: this.%s, " % (key, key)
 

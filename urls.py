@@ -22,7 +22,11 @@ urlpatterns = patterns('',
         'dashboard.views.street_search'),
 
     # API Calls
+    url(r'^api/requests/count/$',
+        'dashboard.views.api_count_handler'),
+    url(r'^api/requests/avg_response/$',
+        'dashboard.views.api_avg_response_handler'),
     url(r'^api/(?P<collection>.+)/$',
-            'dashboard.views.api_handler'),
+        'dashboard.views.api_handler'),
 
 )
