@@ -3,16 +3,20 @@ try:
 except:
     import json
 
+import datetime
+import re
 import urllib
 import urllib2
 
 from django.template import Context
 from django.shortcuts import render # , redirect
-# from django.http import HttpResponse
+from django.http import HttpResponse
 
 from pymongo.connection import Connection
+import bson.json_util
 
 from settings import MONGODB
+from mongoutils.mapreduce import open311stats
 
 # Set up the database connection as a global variable
 connection = Connection(MONGODB['host'])
@@ -24,7 +28,6 @@ def index(request, geography=None, is_json=False):
     """
     c = Context({'test' : "Hello World!"})
     return render(request, 'index.html', c)
-
 
 # Neighborhood specific pages.
 def neighborhood_list(request):
@@ -49,38 +52,49 @@ def neighborhood_detail(request, neighborhood_slug):
     """
     neighborhood = db.polygons \
             .find_one({ 'properties.slug' : neighborhood_slug})
-    requests = db.requests.find({'coordinates' :
-        { '$within' : neighborhood['geometry']['coordinates'] }
-        }).limit(10)
+    request_dict = {'coordinates' :
+        { '$within' : {
+            "$polygon" : neighborhood['geometry']['coordinates'][0] }}
+        }
+
+    # Set the dictionary to do within specific item.
+    today = datetime.datetime.now()
+    year_ago = today + datetime.timedelta(-365)
+    request_dict['requested_datetime'] = {
+            '$gte' : year_ago,
+            '$lte' : today
+            }
+
+    # Open requests
+    status_counts = open311stats.count(['status'], request_dict)
+    print status_counts
+    for status in status_counts:
+        if status['_id'] == {'status': 'Open'}:
+            open_count = status
+
+    # Top Requests
+    service_counts = open311stats.count(['service_name'], request_dict)
+    top_services = sorted(service_counts,
+            key=lambda service: -service['value']['count'])
+    for service in top_services:
+        service["id"] = service["_id"]
+        service["id"]["service_name"] = service["id"]["service_name"] \
+                .replace("_", " ")
+        service['value']['count'] = int(service['value']['count'])
+
+    # Average response time.
+    avg_time = open311stats.avg_response_time(request_dict)
+    days = avg_time[0]['value']['avg_time'] / 86400000
 
     c = Context({
         'neighborhood' : neighborhood,
-        'json' : json.dumps(neighborhood['geometry']),
-        'requests' : requests
+        'avg_response': int(days),
+        'bbox' : json.dumps(neighborhood['properties']['bbox']),
+        'top_services': top_services[0:9],
+        'open_requests': int(open_count['value']['count'])
         })
+
     return render(request, 'neighborhood_test.html', c)
-    """c = Context({
-        'title': title,
-        'geometry': simple_shape.geojson,
-        'centroid': [simple_shape.centroid[0], simple_shape.centroid[1]],
-        'extent': simple_shape.extent,
-        'stats': stats,
-        'nearby': nearby,
-        'type': 'neighborhood',
-        'id': neighborhood_id
-        })
-
-    return render(request, 'geo_detail.html', c) """
-
-
-def neighborhood_detail_json(request, neighborhood_id):
-    """
-
-    Download JSON of the requests that built the page. Caution: slow!
-
-    TODO: Speed it up.
-
-    """
 
 # Street specific pages.
 def street_list(request):
@@ -123,6 +137,107 @@ def street_view(request, street_name, min_val, max_val):
         })
 
     return render(request, 'street_test.html', c)
+
+def api_handler(request, collection):
+    """
+    Serialize values returned from the database.
+    """
+    resp = []
+    lookup = {}
+    query_params = {}
+    get_params = request.GET.copy()
+    geo_collections = ['polygons', 'streets']
+
+    if collection in geo_collections:
+        prefix = 'properties.'
+    else:
+        prefix = ''
+
+    # How big should the page be?
+    if 'page_size' in get_params:
+        query_params['limit'] = int(get_params['page_size'])
+        del get_params['page_size']
+    else:
+        query_params['limit'] = 1000
+
+    # What page number?
+    if 'page' in get_params:
+        query_params['offset'] = (int(get_params.get('page'))-1) * \
+            query_params['limit']
+        del get_params['page']
+    else:
+        query_params['offset'] = 0
+
+    # Define the sort key.
+    if 'sort' in get_params:
+        sort = get_params.get('sort')
+        if re.search('^-', sort):
+            order = -1
+            sort = re.sub('^-', '', sort)
+        else:
+            order = 1
+
+        query_params['sort'] = [(sort, order)]
+        print query_params['sort']
+        del get_params['sort']
+
+    # Handle the special methods
+    for k, v in get_params.iteritems():
+
+        # Handle dates.
+        if re.search('date', k):
+            year, month, day = v.split('-')
+            v = datetime.datetime(int(year), int(month), int(day))
+
+        # Ranges
+        r = re.search('^(?P<key>.+)_(?P<side>start|end)$', k)
+        if r:
+            matches = r.groupdict()
+            k = matches['key']
+            map_dict = { 'start' : "$gte", 'end' : '$lte' }
+
+            if k in lookup:
+                lookup_v = lookup[k]
+            else:
+                lookup_v = {}
+
+            lookup_v[map_dict[matches['side']]] = v
+            v = lookup_v
+
+        # Inside polygon.
+        bounds = re.search('^(?P<key>.+)_bounds$', k)
+        if bounds:
+            if collection in geo_collections:
+                prefix = 'geometry.'
+
+            key = bounds.groups()[0]
+            json_bounds = json.loads(v)
+            lookup_type = '$box' if len(json_bounds) == 2 else '$polygon'
+
+            k = key
+            v = {'$within' : { lookup_type : json_bounds }}
+
+        lookup['%s%s' % (prefix, k)] = v
+
+    try:
+        results = db[collection].find(lookup,
+                **query_params)
+    except:
+        return HttpResponse('Error',status=400)
+
+    for row in results:
+        del row['_id']
+        resp.append(row)
+
+        # TODO: Clean up datetimes.
+
+    if collection in geo_collections:
+        resp = { 'type' : "FeatureCollection",
+                'features' : resp }
+
+    json_resp = json.dumps(resp, default=bson.json_util.default)
+    return HttpResponse(json_resp, 'application/json')
+
 
 # Search for an address!
 def street_search(request):

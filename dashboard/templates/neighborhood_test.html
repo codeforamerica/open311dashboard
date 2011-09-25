@@ -1,33 +1,159 @@
-e% extends 'base/main.html' %}
+{% extends 'base/main.html' %}
 {% block content %}
-<h1>{{ neighborhood.properties.name }}</h1>
+<style type="text/css">
+  .request-point {
+    fill: green;
+  }
+
+  .main {
+    margin-top:30px;
+  }
+
+  #geometry {
+    fill: rgba(256,256,256, .5);
+    stroke: rgba(100, 100, 100, .8);
+    stroke-width:3px;
+    stroke-linecap: round;
+  }
+
+  .sidebar h1 {
+    text-align:center;
+  }
+
+  .sidebar .box {
+    text-align:center;
+    border-top:1px solid #ccc;
+    padding-top:10px;
+  }
+
+  .sidebar .label {
+    font-size:14pt;
+    font-weight:normal;
+    font-style:italic;
+  }
+
+  #avg-response {
+    font-size:32pt;
+    line-height:1;
+    font-weight:bold;
+  }
+</style>
+<div class="row main">
 <div class="span12 column">
   <div id="map"></div>
+  <div id="requests">
+    <table>
+      <tr>
+        <th>Request ID</th>
+        <th>Type</th>
+        <th>Status</th>
+        <th>Date</th>
+      </tr>
+    </table>
+  </div>
 </div>
-<script type="text/javascript">
-  {% autoescape off %}
-  geometry = {{ json }};
-  {% endautoescape %}
-</script>
+<div class="span4 column sidebar">
+  <h1>{{ neighborhood.properties.name }}</h1>
+  <div class="box">
+    Sparkline goes here.
+  </div>
+  <div id="open-requests" class="box">
+    {{ open_requests }} open request{{ open_requests|pluralize }}
+  </div>
+  <div id="avg-response" class="box">
+    {{ avg_response }} day{{ avg_response|pluralize }}
+    <h3>Average Response Time</h3>
+  </div>
+
+  <div id="top-requests" class="box">
+    <h3>Top Requests</h3>
+    <table>
+    {% for service in top_services %}
+      <tr>
+        <td>{{ service.id.service_name }}</td>
+        <td>{{ service.value.count }}</td>
+      </tr>
+    {% endfor %}
+  </table>
+  </div>
+
+  <div id="sparkline">
+  </div>
+
+</div>
+</div>
 {% endblock %}
 
 {% block custom_scripts %}
 <script type="text/javascript">
-var po = org.polymaps;
+  var po = org.polymaps;
 
-var map = po.map()
-    .container(document.getElementById("map").appendChild(po.svg("svg")))
+  $(document).ready(function() {
 
-map.add(po.image()
-    .url(po.url("http://{S}tile.cloudmade.com"
-    + "/b60fbbd51f17456794d2b0e4ed4f0d0c"
-    + "/998/256/{Z}/{X}/{Y}.png")
-    .hosts(["a.", "b.", "c.", ""])));
+    var map = po.map()
+      .container(document.getElementById("map").appendChild(po.svg("svg")))
+      .extent({{ bbox|safe }})
+      .zoomRange([10, 16]);
 
-map.add(po.geoJson()
-  .features([{ "type": "Feature",
-    "geometry": geometry,
-    "properties": {}}])
-  .id("geometry"));
-</script>
-{% endblock %}
+      map.add(po.image()
+        .url(po.url("http://{S}tile.cloudmade.com"
+            + "/b60fbbd51f17456794d2b0e4ed4f0d0c"
+            + "/998/256/{Z}/{X}/{Y}.png")
+          .hosts(["a.", "b.", "c.", ""])));
+
+      map.add(po.geoJson()
+        .url("/api/polygons/?slug={{ neighborhood.properties.slug }}")
+        .id("geometry"));
+
+      $.get('/api/requests/?status=Open&coordinates_bounds={{ neighborhood.geometry.coordinates.0 }}&page_size=10&sort=-requested_datetime',
+        function(data) {
+          var points = [];
+          for (var i = 0; i < data.length; i += 1) {
+            // Generate the rows.
+            var tmp_data = "<tr id=\""+data[i]['service_request_id']+ "-row\">";
+            tmp_data += "<td>" + data[i]['service_request_id']+ "</td>";
+            tmp_data += "<td>" + data[i]['service_name']+ "</td>";
+            tmp_data += "<td>" + data[i]['status'] + "</td>";
+            var requested_date = new Date(data[i]['requested_datetime']['$date']);
+            tmp_data += "<td>" + requested_date.toString() + "</td>";
+            tmp_data += "</tr>";
+            $("#requests table").append(tmp_data);
+
+            // Push the features onto an array.
+            points.push({ "type": "Feature",
+                  "geometry": {
+                    "type": "Point",
+                    "coordinates": data[i]['coordinates']
+                    }, "properties" : {
+                    "id": data[i]['service_request_id']
+                    }});
+
+            $("#"+data[i]['service_request_id']+"-row").hover(function() {
+                var sri = this.id.split('-')[0];
+                $('#'+sri+"-point").show();
+                }, function() {
+                var sri = this.id.split('-')[0];
+                $('#'+sri+"-point").hide();
+                });
+          }
+
+          var loadPoints = function (e) {
+            // Load the points, set the ID, class, and hide.
+            for (var i = 0; i < e.features.length; i += 1) {
+              e.features[i].element.id = e.features[i].data.properties.id + "-point";
+              $(e.features[i].element).attr('class', 'request-point');
+              $(e.features[i].element).hide();
+            }
+          }
+
+          // Add the features.
+          map.add(po.geoJson()
+              .features(points)
+              .id("points")
+              .on("load", loadPoints));
+
+        });
+
+      });
+    </script>
+    {% endblock %}

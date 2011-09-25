@@ -1,7 +1,4 @@
-function year_map(){
-  try{
-    emit(this.requested_datetime.slice(0,4), {count : 1});
-  } catch (error) { 
-    return ;
-  }
+function year_map() {
+  var rt = this.requested_datetime;
+  emit({ year: rt.getFullYear() }, {count : 1});
 }

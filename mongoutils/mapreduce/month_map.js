@@ -1,7 +1,4 @@
-function month_map(){
-  try{
-    emit(this.requested_datetime.slice(0,7), {count : 1});
-  } catch (error) { 
-    return ;
-  }
+function month_map() {
+  var rt = this.requested_datetime;
+  emit({ year: rt.getFullYear(), month: rt.getMonth() }, {count : 1});
 }

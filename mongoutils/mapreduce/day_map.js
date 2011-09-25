@@ -1,7 +1,5 @@
-function day_map(){
-  try{
-    emit(this.requested_datetime.split('T')[0], {count : 1});
-  } catch (error) { 
-    return ;
-  }
+function day_map() {
+  var rt = this.requested_datetime;
+  emit({ year: rt.getFullYear(), month: rt.getMonth(),
+       day: rt.getDate() }, {count : 1});
 }
