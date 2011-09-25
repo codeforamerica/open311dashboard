@@ -93,7 +93,7 @@
 
       var map = po.map()
         .container(document.getElementById("map").appendChild(po.svg("svg")))
-        .extent(Open311Dashboard.padBox({{ bbox|safe }},.001))
+        .extent(Open311Dashboard.map.padBox({{ bbox|safe }},.001))
         .zoomRange([10, 16]);
 
       map.add(po.image()
