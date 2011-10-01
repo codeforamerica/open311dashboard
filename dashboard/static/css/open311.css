@@ -41,3 +41,32 @@ body{
   list-style-type: none;
   width: 250px;
 }
+
+.block {
+  background-color:#fff;
+  height:125px;
+  text-align:center;
+}
+
+.block .main {
+  font-size:16pt;
+}
+
+.main .numberbox {
+  font-size:30pt;
+  font-weight:bold;
+}
+
+.red {
+  background-color: red;
+  color: white;
+}
+
+.green {
+  background-color: green;
+  color:white;
+}
+
+#streets path:hover, #sidewalk_cleaning path:hover, #graffiti path:hover {
+  stroke-width:5px;
+}

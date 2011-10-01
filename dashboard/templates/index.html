@@ -1,31 +1,5 @@
 {% extends 'base/main.html' %}
 {% block content %}
-<style>
-  .block {
-    background-color:#fff;
-    height:125px;
-    text-align:center;
-  }
-
-  .block .main {
-    font-size:16pt;
-  }
-
-  .main .numberbox {
-    font-size:30pt;
-    font-weight:bold;
-  }
-
-  .red {
-    background-color: red;
-    color: white;
-  }
-
-  .green {
-    background-color: green;
-    color:white;
-  }
-</style>
 <div class="row show-grid">
   <div class="span-one-third column {% if delta.closed_count > 0 %}green{% else %}red{% endif %}">
     <strong>{{ this_week_stats.closed_request_count }} </strong> 
@@ -74,12 +48,6 @@
   </div>
 </div>
 <!-- Display map here -->
-<style>
-  #streets path:hover, #sidewalk_cleaning path:hover, #graffiti path:hover {
-    stroke-width:5px;
-  }
-</style>
-
 <div id="map" style="border:1px solid #ccc;" class="container border-radius">
 </div>
 {% endblock %}
@@ -102,7 +70,6 @@
 
 <script>
   $(document).ready(function() {
-    $('.chzn-select').chosen();
 
     $('#neighborhood-selector').chosen().change(function (e, s) {
       if (!isNaN(parseInt(this.value))) {
