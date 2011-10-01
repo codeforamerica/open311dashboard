@@ -42,6 +42,9 @@ map.add(po.geoJson()
     "properties": {}}])
   .id("geometry"));
 
+map.center({lat: geometry.coordinates[0][1], lon: geometry.coordinates[0][0]}); //placeholder
+console.log(geometry);
+
 map.add(po.compass()
         .pan("none"));
 </script>
