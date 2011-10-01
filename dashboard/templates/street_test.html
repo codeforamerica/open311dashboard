@@ -41,6 +41,9 @@ map.add(po.geoJson()
     "geometry": geometry,
     "properties": {}}])
   .id("geometry"));
+
+map.add(po.compass()
+        .pan("none"));
 </script>
 
 {% endblock %}
