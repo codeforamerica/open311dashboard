@@ -28,6 +28,7 @@ var map = po.map()
   .add(po.hash());
 
 map.zoom(17);
+   .zoomRange([16, 18])
 
 map.add(po.image()
     .url(po.url("http://{S}tile.cloudmade.com"
