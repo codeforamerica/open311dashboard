@@ -24,6 +24,7 @@ var po = org.polymaps;
 
 var map = po.map()
     .container(document.getElementById("map").appendChild(po.svg("svg")))
+    .zoom(13)
     .add(po.interact())
     .add(po.hash());
 
