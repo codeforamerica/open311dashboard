@@ -67,6 +67,10 @@ body{
   color:white;
 }
 
+.span6.column{
+    margin-top: 0;
+}
+
 #streets path:hover, #sidewalk_cleaning path:hover, #graffiti path:hover {
   stroke-width:5px;
 }
