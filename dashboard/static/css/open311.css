@@ -1,9 +1,9 @@
 
 body{overflow:hidden;}
-.topbar{background-color:black;background-color:#333333;background-repeat:repeat-x;background-image:-khtml-gradient(linear, left top, left bottom, from(#222222), to(#333333));background-image:-moz-linear-gradient(top, #222222, #333333);background-image:-ms-linear-gradient(top, #222222, #333333);background-image:-webkit-gradient(linear, left top, left bottom, color-stop(0%, #222222), color-stop(100%, #333333));background-image:-webkit-linear-gradient(top, #222222, #333333);background-image:-o-linear-gradient(top, #222222, #333333);background-image:linear-gradient(top, #222222, #333333);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#222222', endColorstr='#333333', GradientType=0);border-bottom:1px solid #111;margin:0 -20px;padding-left:20px;padding-right:20px;-moz-border-radius:4px;border-radius:4px;}
-.show-grid{margin-top:40px;margin-bottom:20px;}.show-grid .column,.show-grid .columns{text-align:center;-moz-border-radius:3px;border-radius:3px;}
+.topbar{background-color:black;background-color:#333333;background-repeat:repeat-x;background-image:-khtml-gradient(linear, left top, left bottom, from(#222222), to(#333333));background-image:-moz-linear-gradient(top, #222222, #333333);background-image:-ms-linear-gradient(top, #222222, #333333);background-image:-webkit-gradient(linear, left top, left bottom, color-stop(0%, #222222), color-stop(100%, #333333));background-image:-webkit-linear-gradient(top, #222222, #333333);background-image:-o-linear-gradient(top, #222222, #333333);background-image:linear-gradient(top, #222222, #333333);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#222222', endColorstr='#333333', GradientType=0);border-bottom:1px solid #111;margin:0 -20px;padding-left:20px;padding-right:20px;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;}
+.show-grid{margin-top:40px;margin-bottom:20px;}.show-grid .column,.show-grid .columns{text-align:center;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;}
 .search-select{color:#E6E6E6;background-color:darkGray;}
-#map{background-color:#DCEAF4;border:1px solid #ccc;height:350px;margin-top:40px;-moz-border-radius:5px;border-radius:5px;}
+#map{background-color:#DCEAF4;border:1px solid #ccc;height:350px;margin-top:40px;-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px;}
 .ui-autocomplete,.ui-corner-all{list-style-type:none;width:250px;}
 .red{background-color:red;color:white;}
 .green{background-color:green;color:white;}
