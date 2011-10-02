@@ -9,12 +9,6 @@ body{
   overflow:hidden;
 }
 
-div.topbar-wrapper {
-  position: relative;
-  height: 40px;
-  margin: 5px 0 15px;
-}
-
 .topbar{
   background-color:black;
   #gradient > .vertical(#222, #333);
@@ -29,12 +23,11 @@ div.topbar-wrapper {
 .show-grid {
     margin-top: 40px;
     margin-bottom: 20px;
-}
-
-.show-grid .column, .show-grid .columns {
-  text-align: center;
-  -moz-border-radius: 3px;
-  border-radius: 3px;
+    .column, .columns{
+      text-align: center;
+      -moz-border-radius: 3px;
+      border-radius: 3px;
+    }
 }
 
 .search-select {
@@ -54,21 +47,6 @@ div.topbar-wrapper {
 .ui-autocomplete, .ui-corner-all{
   list-style-type: none;
   width: 250px;
-}
-
-.block {
-  background-color: #fff;
-  height: 125px;
-  text-align: center;
-}
-
-.block .main {
-  font-size: 16pt;
-}
-
-.main .numberbox {
-  font-size: 30pt;
-  font-weight: bold;
 }
 
 .red {
