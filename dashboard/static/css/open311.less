@@ -2,6 +2,10 @@
 
 @import "bootstrap/lib/mixins.less";
 
+body{
+  overflow:hidden;
+}
+
 div.topbar-wrapper {
   position: relative;
   height: 40px;
@@ -18,13 +22,9 @@ div.topbar-wrapper {
   border-radius: 4px;
 }
 
-body{
-  overflow:hidden;
-}
-
 .show-grid {
-  margin-top: 20px;
-  margin-bottom: 20px;
+    margin-top: 40px;
+    margin-bottom: 20px;
 }
 
 .show-grid .column, .show-grid .columns {
@@ -39,10 +39,12 @@ body{
 }
 
 #map{
+  background-color: #DCEAF4;
+  border: 1px solid #ccc;
+  height: 350px;
+  margin-top: 40px;
   -moz-border-radius: 5px;
   border-radius: 5px;
-  height: 350px;
-  background-color: #DCEAF4;
 }
 
 .ui-autocomplete, .ui-corner-all{
@@ -77,10 +79,6 @@ body{
 
 .span6.column{
     margin-top: 0;
-}
-
-#map{
-    border: 1px solid #ccc;
 }
 
 #streets path:hover, #sidewalk_cleaning path:hover, #graffiti path:hover {
