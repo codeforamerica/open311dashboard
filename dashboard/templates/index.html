@@ -1,4 +1,5 @@
 {% extends 'base/main.html' %}
+
 {% block content %}
 <div class="row show-grid">
   <div class="span-one-third column {% if delta.closed_count > 0 %}green{% else %}red{% endif %}">
@@ -7,7 +8,7 @@
     <strong>{{ delta.closed_count}}%</strong> change in requests closed from last week to
     this.
   </div>
-  
+
   <div class="span-one-third column">
     <strong>{{ this_week_stats.request_count}} </strong>requests opened this week.
     <strong>{{ delta.opened_count }}%</strong> change in requests from last week to
@@ -22,7 +23,7 @@
 </div>
 
 <div class="row">
-  <div class="span10 column" style="background-color:#fff;">
+  <div class="span10 column">
    Hello 
     <select class="chzn-select" id="neighborhood-selector">
       <option>San Francisco</option>
@@ -47,9 +48,9 @@
     </select>
   </div>
 </div>
+
 <!-- Display map here -->
-<div id="map" style="border:1px solid #ccc;" class="container border-radius">
-</div>
+<div id="map" class="container border-radius"></div>
 {% endblock %}
 
 {% block custom_scripts %}

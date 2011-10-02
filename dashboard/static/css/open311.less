@@ -1,0 +1,88 @@
+/* Use some of Bootstrap's mixins... */
+
+@import "bootstrap/lib/mixins.less";
+
+div.topbar-wrapper {
+  position: relative;
+  height: 40px;
+  margin: 5px 0 15px;
+}
+
+.topbar{
+  background-color:black;
+  #gradient > .vertical(#222, #333);
+  margin: 0 -20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+
+body{
+  overflow:hidden;
+}
+
+.show-grid {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.show-grid .column, .show-grid .columns {
+  text-align: center;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+}
+
+.search-select {
+  color: #E6E6E6;
+  background-color: darkGray;
+}
+
+#map{
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  height: 350px;
+  background-color: #DCEAF4;
+}
+
+.ui-autocomplete, .ui-corner-all{
+  list-style-type: none;
+  width: 250px;
+}
+
+.block {
+  background-color:#fff;
+  height:125px;
+  text-align:center;
+}
+
+.block .main {
+  font-size:16pt;
+}
+
+.main .numberbox {
+  font-size:30pt;
+  font-weight:bold;
+}
+
+.red {
+  background-color: red;
+  color: white;
+}
+
+.green {
+  background-color: green;
+  color:white;
+}
+
+.span6.column{
+    margin-top: 0;
+}
+
+#map{
+    border: 1px solid #ccc;
+}
+
+#streets path:hover, #sidewalk_cleaning path:hover, #graffiti path:hover {
+  stroke-width:5px;
+}
