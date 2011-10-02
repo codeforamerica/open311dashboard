@@ -2,6 +2,9 @@
 
 @import "bootstrap/lib/mixins.less";
 
+
+/* And styles for Open 311 Dashboard below... */
+
 body{
   overflow:hidden;
 }
@@ -15,6 +18,7 @@ div.topbar-wrapper {
 .topbar{
   background-color:black;
   #gradient > .vertical(#222, #333);
+  border-bottom: 1px solid #111;
   margin: 0 -20px;
   padding-left: 20px;
   padding-right: 20px;
@@ -53,18 +57,18 @@ div.topbar-wrapper {
 }
 
 .block {
-  background-color:#fff;
-  height:125px;
-  text-align:center;
+  background-color: #fff;
+  height: 125px;
+  text-align: center;
 }
 
 .block .main {
-  font-size:16pt;
+  font-size: 16pt;
 }
 
 .main .numberbox {
-  font-size:30pt;
-  font-weight:bold;
+  font-size: 30pt;
+  font-weight: bold;
 }
 
 .red {
@@ -83,4 +87,11 @@ div.topbar-wrapper {
 
 #streets path:hover, #sidewalk_cleaning path:hover, #graffiti path:hover {
   stroke-width:5px;
+}
+
+footer{
+    border-bottom: 1px solid #111;
+    #gradient > .vertical(#222, #333);
+    margin-top: 100px;
+    min-height: 200px;
 }
