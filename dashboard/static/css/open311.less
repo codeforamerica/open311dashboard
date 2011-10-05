@@ -72,3 +72,68 @@ footer{
     min-height: 200px;
     .box-shadow(inset 0 0 5px black);
 }
+
+.detail-page {
+  #map {
+    margin-top:10px;
+    margin-bottom:10px;
+  }
+
+  #spark-line path {
+      stroke: steelblue;
+      stroke-width: 2;
+      fill: none;
+      }
+
+  #spark-line .line, circle.area {
+    fill: none;
+    stroke: steelblue;
+    stroke-width: 1.5px;
+  }
+
+  #spark-line circle.area {
+    fill: #fff;
+  }
+
+  #spark-line .point {
+      fill: #C80000;
+      stroke: #FFFFFF;
+      stroke-width: 0px;
+  }
+  .request-point {
+    fill: green;
+  }
+
+  .main {
+    margin-top:30px;
+  }
+
+  #geometry {
+    fill: rgba(256,256,256, .5);
+    stroke: rgba(100, 100, 100, .8);
+    stroke-width:3px;
+    stroke-linecap: round;
+  }
+
+  .sidebar h1 {
+    text-align:center;
+  }
+
+  .sidebar .box {
+    text-align:center;
+    border-top:1px solid #ccc;
+    padding-top:10px;
+  }
+
+  .sidebar .label {
+    font-size:14pt;
+    font-weight:normal;
+    font-style:italic;
+  }
+
+  #avg-response, #open-requests {
+    font-size:32pt;
+    line-height:1;
+    font-weight:bold;
+  }
+}
