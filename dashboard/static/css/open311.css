@@ -90,6 +90,23 @@ footer {
   margin-top: 10px;
   margin-bottom: 10px;
 }
+.detail-page g.ticks line {
+  stroke: #ccc;
+  stroke-width: .5px;
+}
+.detail-page g.ticks text {
+  font-size: 10px;
+}
+.detail-page .graph-label {
+  font-size: 10px;
+}
+.detail-page .axis {
+  stroke: #333;
+  stroke-width: .5px;
+}
+.detail-page #status-pie {
+  margin-right: 10px;
+}
 .detail-page #spark-line path {
   stroke: steelblue;
   stroke-width: 2;
@@ -137,4 +154,10 @@ footer {
   font-size: 32pt;
   line-height: 1;
   font-weight: bold;
+}
+.detail-page #top-requests-info {
+  display: none;
+  padding: 3px;
+  background: #fff;
+  border: 1px solid #ccc;
 }

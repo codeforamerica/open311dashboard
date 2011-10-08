@@ -9,18 +9,27 @@ o3d.API.buildPage = function loadStats() {
     function (data) {
       $("#top-requests-table tbody").html('');
       for (var i = 0; i < data.length; i += 1) {
-        var tmp_data = "<tr>";
-        tmp_data += "<td>" + data[i]['service_name'].replace(/_/g, ' ') + "</td>";
-        tmp_data += "<td>" + parseInt(data[i]['count']) + "</td>";
-        tmp_data += "</tr>";
-        $('#top-requests-table').append(tmp_data);
+        // var tmp_data = "<tr>";
+        // tmp_data += "<td>" + data[i]['service_name'].replace(/_/g, ' ') + "</td>";
+        // tmp_data += "<td>" + parseInt(data[i]['count']) + "</td>";
+        // tmp_data += "</tr>";
+        // $('#top-requests-table').append(tmp_data);
       }
+
+      o3d.viz.top_requests_histo(data, "#top-requests-chart", 220, 80);
   });
 
   // Load open request count.
-  $.get('/api/requests/count/?'+$.param(o3d.API.query) + '&status=Open&keys=status',
+  $.get('/api/requests/count/?'+$.param(o3d.API.query) + '&&keys=status',
     function(data){
-      $('#open-request-value').html(data[0].count);
+      var open_data = data.filter( function (d) { return (d.status == "Open")});
+      if (open_data.length > 0) {
+        $('#open-request-value').html(open_data[0].count);
+      } else {
+        $("#open-request-value").html('0');
+      }
+
+      o3d.viz.status_pie(data, '#status-pie', 32);
   });
 
   // Load average response.

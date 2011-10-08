@@ -81,7 +81,8 @@ def neighborhood_detail(request, neighborhood_slug):
     # Average response time.
 
     c = Context({
-        'neighborhood' : neighborhood,
+        'geometry' : neighborhood,
+        'geometry_type' : 'polygons',
         'end_date': today.strftime('%Y-%m-%d'),
         'start_date': year_ago.strftime('%Y-%m-%d'),
         'sparkline_data': json.dumps(sparkline_data),
@@ -129,12 +130,44 @@ def street_view(request, street_name, min_val, max_val):
     if street is None:
         raise Http404
 
+    request_dict = { 'street' : street['_id'] }
+
+    # Set the dictionary to do within specific item.
+    today = datetime.datetime.now()
+    year_ago = today + datetime.timedelta(-365)
+    request_dict['requested_datetime'] = {
+            '$gte' : year_ago,
+            '$lte' : today
+            }
+
+    thirty_ago = today + datetime.timedelta(-30)
+
+    sparkline_data = open311stats.pad_day_range(open311stats.count(
+        ['requested_datetime_day'], request_dict),
+            thirty_ago, today)
+
+    # Open requests
+    # Average response time.
+
     c = Context({
-        'street': street,
-        'json' : json.dumps(street['geometry'])
+        'geometry' : street,
+        'id' : street['_id'],
+        'geometry_type' : 'streets',
+        'end_date': today.strftime('%Y-%m-%d'),
+        'start_date': year_ago.strftime('%Y-%m-%d'),
+        'sparkline_data': json.dumps(sparkline_data),
+        'bbox' : json.dumps(street['properties']['bbox']),
         })
 
-    return render(request, 'street_test.html', c)
+    return render(request, 'neighborhood_test.html', c)
+
+
+    # c = Context({
+        # 'street': street,
+        # 'json' : json.dumps(street['geometry'])
+        # })
+
+    # return render(request, 'street_test.html', c)
 
 def api_handler(request, collection):
     """

@@ -9,6 +9,8 @@ except:
 import re
 import datetime
 
+import bson
+
 def api_query(collection, get_params, geo=False):
     """
     Formulate a query based on request parameters.
@@ -22,6 +24,14 @@ def api_query(collection, get_params, geo=False):
 
     # Handle the special methods
     for k, v in get_params.iteritems():
+
+        # Auto cast some stuff
+        # http://stackoverflow.com/questions/7019283/automatically-type-cast-parameters-in-python
+        for fn in (int, float):
+            try:
+                v = fn(v)
+            except ValueError:
+                pass
 
         # Handle dates.
         if re.search('date', k):
@@ -42,6 +52,15 @@ def api_query(collection, get_params, geo=False):
 
             lookup_v[map_dict[matches['side']]] = v
             v = lookup_v
+
+        # IDs
+        id_lookup = re.search('(?P<key>.+)_id$', k)
+        if id_lookup:
+            matches = id_lookup.groupdict()
+
+            k = matches['key']
+            v = bson.objectid.ObjectId(v)
+
 
         # Inside polygon.
         bounds = re.search('^(?P<key>.+)_bounds$', k)

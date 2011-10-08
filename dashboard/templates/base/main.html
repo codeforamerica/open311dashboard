@@ -82,16 +82,15 @@
         <script src="{{ STATIC_URL }}js/libs/chosen.jquery.min.js"></script>
         <script src="{{ STATIC_URL }}js/libs/polymaps.min.js"></script>
         <script src="{{ STATIC_URL }}js/libs/d3.min.js"></script>
+        <script src="{{ STATIC_URL }}js/libs/d3.layout.min.js"></script>
         <script src="{{ STATIC_URL }}js/date.js"></script>
+        <script src="{{ STATIC_URL }}js/o3d.js"></script>
+        <script src="{{ STATIC_URL }}js/o3d.api.js"></script>
+        <script src="{{ STATIC_URL }}js/o3d.map.js"></script>
+        <script src="{{ STATIC_URL }}js/o3d.time.js"></script>
+        <script src="{{ STATIC_URL }}js/o3d.viz.js"></script>
         {% block custom_scripts %}{% endblock %}
 
-            <!-- scripts concatenated and minified via ant build script-->
-            <script src="{{ STATIC_URL }}js/o3d.js"></script>
-            <script src="{{ STATIC_URL }}js/o3d.api.js"></script>
-            <script src="{{ STATIC_URL }}js/o3d.map.js"></script>
-            <script src="{{ STATIC_URL }}js/o3d.time.js"></script>
-            <script src="{{ STATIC_URL }}js/o3d.viz.js"></script>
-            <!-- end scripts-->
 
 
             <!--[if lt IE 7 ]>
