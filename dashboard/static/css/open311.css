@@ -161,3 +161,6 @@ footer {
   background: #fff;
   border: 1px solid #ccc;
 }
+#street-view-place {
+  height: 300px;
+}
