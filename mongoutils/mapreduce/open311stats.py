@@ -1,19 +1,25 @@
+import datetime
 import re
 
 from pymongo import Connection
 from pymongo.code import Code
 
-from settings import SITE_ROOT
+from settings import SITE_ROOT, MONGODB
 SCRIPT_BASE = "%s/mongoutils/mapreduce/" % SITE_ROOT
 
-connection = Connection('localhost')
-db = connection['open311']
+connection = Connection(MONGODB['host'])
+db = connection[MONGODB['db']]
 
-def count(keys, query={}):
+def count(keys=[], query={}):
     """
     Calculate the counts across multiple keys.
     """
     map_key = '{ '
+    print "Hi"
+
+    if len(keys) is 0:
+        count = db.requests.find(query).count()
+        return [{"_id": {}, 'value': {'count': count}}]
 
     for key in keys:
         if re.search('_year$', key):
@@ -51,10 +57,25 @@ def count(keys, query={}):
     return db.requests.inline_map_reduce(map_function, reduce_function,
             query=query)
 
-def calculate_delta(date_range):
+def pad_day_range(mapreduce, start_date, end_date):
     """
-    Calculate the from a date range to the same number of days previous.
+    Turn a date count into a list with a value per day/month/year
     """
+    time_between = end_date - start_date
+    days = time_between.days + 1
+
+    data_list = [0 for i in range(1, days)]
+
+    for day in mapreduce:
+        date = datetime.datetime(int(day['_id']['requested_datetime_year']),
+                int(day['_id']['requested_datetime_month'])+1,
+                int(day['_id']['requested_datetime_day']))
+
+        day_num = (date - start_date).days
+        if day_num <= days and day_num > -1:
+            data_list[day_num - 1] = day['value']['count']
+
+    return data_list
 
 def avg_response_time(query={}):
     """ Find how long the average response time is. """
@@ -66,6 +87,6 @@ def avg_response_time(query={}):
     return db.requests.inline_map_reduce(
             Code(open(SCRIPT_BASE + 'map_avg_response.js', 'r').read()),
             Code(open(SCRIPT_BASE + 'reduce_avg_response.js', 'r').read()),
-            query=query,
+            query=tmp_query,
             finalize=Code(open(SCRIPT_BASE + 'finalize_avg_response.js',
                 'r').read()))

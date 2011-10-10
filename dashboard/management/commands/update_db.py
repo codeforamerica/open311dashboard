@@ -1,6 +1,4 @@
 from django.core.management.base import BaseCommand, CommandError
-from django.core.exceptions import ValidationError
-from open311dashboard.dashboard.models import City, Request
 from dateutil import parser
 
 from optparse import make_option
@@ -8,6 +6,16 @@ import urllib2
 import urllib
 import datetime as dt
 import xml.dom.minidom as dom
+
+from settings import MONGODB, CITY
+from pymongo.connection import Connection
+import bson.json_util
+from mongoutils.mapreduce import open311stats
+from mongoutils.api import api_query
+
+# Set up the database connection as a global variable
+connection = Connection(MONGODB['host'])
+db = connection[MONGODB['db']]
 
 ONE_DAY = dt.timedelta(days=1)
 
@@ -24,7 +32,7 @@ def get_time_range(on_day=None):
 
 def parse_date(date_string):
     new_date = parser.parse(date_string)
-    return new_date.strftime("%Y-%m-%d %I:%M")
+    return new_date
 
 def validate_dt_value(datetime):
     """
@@ -38,7 +46,7 @@ def validate_dt_value(datetime):
     if datetime.tzinfo is not None:
         raise ValueError('Tzinfo on datetime must be None: %s' % datetime)
 
-def get_requests_from_SF(start,end,page,city):
+def get_requests_from_SF(start,end,page):
     """
     Retrieve the requests from the San Francisco 311 API within the time range
     specified by the dates start and end.
@@ -50,11 +58,11 @@ def get_requests_from_SF(start,end,page,city):
     validate_dt_value(end)
 
     #url = r'https://open311.sfgov.org/dev/Open311/v2/requests.xml' #dev
-    url = city.url
+    url = CITY['URL']
     query_data = {
         'start_date' : start.isoformat() + 'Z',
         'end_date' : end.isoformat() + 'Z',
-        'jurisdiction_id' : city.jurisdiction_id,
+        'jurisdiction_id' : CITY['JURISDICTION'],
     }
 
     if page > 0:
@@ -103,15 +111,14 @@ def parse_requests_doc(stream):
                 if request_attr.tagName.find('datetime') > -1:
                     request_attr.childNodes[0].data = parse_date(request_attr.childNodes[0].data)
 
-                if request_attr.tagName in Request._meta.get_all_field_names():
-                    indiv_columns_list.append(request_attr.tagName)
-                    indiv_values_list.append(request_attr.childNodes[0].data)
+                indiv_columns_list.append(request_attr.tagName)
+                indiv_values_list.append(request_attr.childNodes[0].data)
 
         columns.append(indiv_columns_list)
         values.append(indiv_values_list)
     return (columns,values)
 
-def insert_data(requests, city):
+def insert_data(requests):
     '''
     Takes the requests tuple, turns it into a dictionary, and saves it to the
     Requests model in django.
@@ -124,40 +131,42 @@ def insert_data(requests, city):
         # Put the key-value pairs into a dictionary and then an arguments list.
         request_dict = dict(zip(columns[i], values[i]))
 
-        # Check if the record already exists.
-        try:
-            exists = Request.objects.get(service_request_id = request_dict['service_request_id'],
-                                        service_code = request_dict['service_code'])
-            request_dict['id'] = exists.id
-        except:
-            pass
+        request_dict['coordinates'] = [float(request_dict['long']),
+                float(request_dict['lat'])]
 
-        r = Request(**request_dict)
+        del(request_dict['long'])
+        del(request_dict['lat'])
+
+        db.requests.update({ 'service_request_id':
+            request_dict['service_request_id']},
+            { "$set" : request_dict}, upsert=True)
+
+        # Check if the record already exists.
 
         # Hardcoded for now.
-        r.city_id = city.id
+        # r.city_id = city.id
 
-        try:
-            r.save()
-            print "Successfully saved %s" % r.service_request_id
-        except ValidationError, e:
-            raise CommandError('Request "%s" does not validate correctly\n %s' %
-                    (r.service_request_id, e))
+        # try:
+            # r.save()
+            # print "Successfully saved %s" % r.service_request_id
+        # except ValidationError, e:
+            # raise CommandError('Request "%s" does not validate correctly\n %s' %
+                    # (r.service_request_id, e))
 
-def process_requests(start, end, page, city):
-    requests_stream = get_requests_from_SF(start, end, page, city)
+def process_requests(start, end, page):
+    requests_stream = get_requests_from_SF(start, end, page)
     requests = parse_requests_doc(requests_stream)
 
     if requests != False:
-        insert_data(requests, city)
+        insert_data(requests)
 
         if page != 0:
             page = page+1
-            process_requests(start, end, page, city)
+            process_requests(start, end, page)
     return requests
 
-def handle_open_requests(city):
-    url = city.url
+def handle_open_requests():
+    url = CITY['URL']
     open_requests = Request.objects.all().filter(status__iexact="open")
     length = len(open_requests)
     print "Checking %d tickets for changed status" % length
@@ -168,7 +177,7 @@ def handle_open_requests(city):
             data.append(open_requests[index + i].service_request_id)
 
         query_data = {
-                'jurisdiction_id': city.jurisdiction_id,
+                'jurisdiction_id': CITY['JURISDICTION'],
                 'service_request_id': ','.join(data)
                 }
 
@@ -197,35 +206,32 @@ class Command(BaseCommand):
     Makes calls one day at a time"""
 
     def handle(self, *args, **options):
-        cities = City.objects.all()
+        if options['default'] is True:
+            if len(args) >= 1:
+                start, end = get_time_range(dt.datetime.strptime(args[0], '%Y-%m-%d'))
+            else:
+                start, end = get_time_range()
 
-        for city in cities:
-            if options['default'] is True:
-                if len(args) >= 1:
-                    start, end = get_time_range(dt.datetime.strptime(args[0], '%Y-%m-%d'))
-                else:
-                    start, end = get_time_range()
+            if len(args) >= 2:
+                num_days = int(args[1])
+                print(args[1])
+            else:
+                num_days = 1
 
-                if len(args) >= 2:
-                    num_days = int(args[1])
-                    print(args[1])
-                else:
-                    num_days = 1
+            if CITY['PAGINATE']:
+                page = 1
+            else:
+                page = False
 
-                if city.paginated:
-                    page = 1
-                else:
-                    page = False
+            for _ in xrange(num_days):
+                requests = process_requests(start, end, page)
 
-                for _ in xrange(num_days):
-                    requests = process_requests(start, end, page, city)
+                start -= ONE_DAY
+                end -= ONE_DAY
 
-                    start -= ONE_DAY
-                    end -= ONE_DAY
+                print start
 
-                    print start
-
-            if options['open'] is True:
-                handle_open_requests()
+        if options['open'] is True:
+            handle_open_requests()
 
 

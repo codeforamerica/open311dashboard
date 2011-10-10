@@ -1,12 +1,163 @@
-
-body{overflow:hidden;}
-.topbar{background-color:black;background-color:#333333;background-repeat:repeat-x;background-image:-khtml-gradient(linear, left top, left bottom, from(#222222), to(#333333));background-image:-moz-linear-gradient(top, #222222, #333333);background-image:-ms-linear-gradient(top, #222222, #333333);background-image:-webkit-gradient(linear, left top, left bottom, color-stop(0%, #222222), color-stop(100%, #333333));background-image:-webkit-linear-gradient(top, #222222, #333333);background-image:-o-linear-gradient(top, #222222, #333333);background-image:linear-gradient(top, #222222, #333333);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#222222', endColorstr='#333333', GradientType=0);border-bottom:1px solid #111;margin:0 -20px;padding-left:20px;padding-right:20px;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;}
-.show-grid{margin-top:40px;margin-bottom:20px;}.show-grid .column,.show-grid .columns{text-align:center;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;}
-.search-select{color:#E6E6E6;background-color:darkGray;}
-#map{background-color:#DCEAF4;border:1px solid #ccc;height:350px;margin-top:40px;-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px;}
-.ui-autocomplete,.ui-corner-all{list-style-type:none;width:250px;}
-.red{background-color:red;color:white;}
-.green{background-color:green;color:white;}
-.span6.column{margin-top:0;}
-#streets path:hover,#sidewalk_cleaning path:hover,#graffiti path:hover{stroke-width:5px;}
-footer{border-top:1px solid #111;background-color:#333333;background-repeat:repeat-x;background-image:-khtml-gradient(linear, left top, left bottom, from(#222222), to(#333333));background-image:-moz-linear-gradient(top, #222222, #333333);background-image:-ms-linear-gradient(top, #222222, #333333);background-image:-webkit-gradient(linear, left top, left bottom, color-stop(0%, #222222), color-stop(100%, #333333));background-image:-webkit-linear-gradient(top, #222222, #333333);background-image:-o-linear-gradient(top, #222222, #333333);background-image:linear-gradient(top, #222222, #333333);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#222222', endColorstr='#333333', GradientType=0);color:#fff;margin-top:100px;min-height:200px;-webkit-box-shadow:inset 0 0 5px black;-moz-box-shadow:inset 0 0 5px black;box-shadow:inset 0 0 5px black;}
+/* Use some of Bootstrap's mixins... */
+/* Variables.less
+ * Snippets of reusable CSS to develop faster and keep code readable
+ * ----------------------------------------------------------------- */
+/* And styles for Open 311 Dashboard below... */
+body {
+  overflow: hidden;
+}
+.topbar {
+  background-color: black;
+  background-color: #333333;
+  background-repeat: repeat-x;
+  background-image: -khtml-gradient(linear, left top, left bottom, from(#222222), to(#333333));
+  background-image: -moz-linear-gradient(top, #222222, #333333);
+  background-image: -ms-linear-gradient(top, #222222, #333333);
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #222222), color-stop(100%, #333333));
+  background-image: -webkit-linear-gradient(top, #222222, #333333);
+  background-image: -o-linear-gradient(top, #222222, #333333);
+  background-image: linear-gradient(top, #222222, #333333);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#222222', endColorstr='#333333', GradientType=0);
+  border-bottom: 1px solid #111;
+  margin: 0 -20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+.show-grid {
+  margin-top: 40px;
+  margin-bottom: 20px;
+}
+.show-grid .column, .show-grid .columns {
+  text-align: center;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+}
+.search-select {
+  color: #E6E6E6;
+  background-color: darkGray;
+}
+#map {
+  background-color: #DCEAF4;
+  border: 1px solid #ccc;
+  height: 350px;
+  margin-top: 40px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+.ui-autocomplete, .ui-corner-all {
+  list-style-type: none;
+  width: 250px;
+}
+.red {
+  background-color: red;
+  color: white;
+}
+.green {
+  background-color: green;
+  color: white;
+}
+.span6.column {
+  margin-top: 0;
+}
+#streets path:hover, #sidewalk_cleaning path:hover, #graffiti path:hover {
+  stroke-width: 5px;
+}
+footer {
+  border-top: 1px solid #111;
+  background-color: #333333;
+  background-repeat: repeat-x;
+  background-image: -khtml-gradient(linear, left top, left bottom, from(#222222), to(#333333));
+  background-image: -moz-linear-gradient(top, #222222, #333333);
+  background-image: -ms-linear-gradient(top, #222222, #333333);
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #222222), color-stop(100%, #333333));
+  background-image: -webkit-linear-gradient(top, #222222, #333333);
+  background-image: -o-linear-gradient(top, #222222, #333333);
+  background-image: linear-gradient(top, #222222, #333333);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#222222', endColorstr='#333333', GradientType=0);
+  color: #fff;
+  margin-top: 100px;
+  min-height: 200px;
+  -webkit-box-shadow: inset 0 0 5px black;
+  -moz-box-shadow: inset 0 0 5px black;
+  box-shadow: inset 0 0 5px black;
+}
+.detail-page #map {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.detail-page g.ticks line {
+  stroke: #ccc;
+  stroke-width: .5px;
+}
+.detail-page g.ticks text {
+  font-size: 10px;
+}
+.detail-page .graph-label {
+  font-size: 10px;
+}
+.detail-page .axis {
+  stroke: #333;
+  stroke-width: .5px;
+}
+.detail-page #status-pie {
+  margin-right: 10px;
+}
+.detail-page #spark-line path {
+  stroke: steelblue;
+  stroke-width: 2;
+  fill: none;
+}
+.detail-page #spark-line .line, .detail-page circle.area {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
+.detail-page #spark-line circle.area {
+  fill: #fff;
+}
+.detail-page #spark-line .point {
+  fill: #C80000;
+  stroke: #FFFFFF;
+  stroke-width: 0px;
+}
+.detail-page .request-point {
+  fill: green;
+}
+.detail-page .main {
+  margin-top: 30px;
+}
+.detail-page #geometry {
+  fill: rgba(256, 256, 256, 0.5);
+  stroke: rgba(100, 100, 100, 0.8);
+  stroke-width: 3px;
+  stroke-linecap: round;
+}
+.detail-page .sidebar h1 {
+  text-align: center;
+}
+.detail-page .sidebar .box {
+  text-align: center;
+  border-top: 1px solid #ccc;
+  padding-top: 10px;
+}
+.detail-page .sidebar .label {
+  font-size: 14pt;
+  font-weight: normal;
+  font-style: italic;
+}
+.detail-page #avg-response, .detail-page #open-requests {
+  font-size: 32pt;
+  line-height: 1;
+  font-weight: bold;
+}
+.detail-page #top-requests-info {
+  display: none;
+  padding: 3px;
+  background: #fff;
+  border: 1px solid #ccc;
+}

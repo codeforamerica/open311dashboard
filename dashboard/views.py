@@ -10,7 +10,7 @@ import urllib2
 
 from django.template import Context
 from django.shortcuts import render # , redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 
 from pymongo.connection import Connection
 import bson.json_util
@@ -53,6 +53,11 @@ def neighborhood_detail(request, neighborhood_slug):
     """
     neighborhood = db.polygons \
             .find_one({ 'properties.slug' : neighborhood_slug})
+
+    # Raise 404 if no object is found.
+    if neighborhood is None:
+        raise Http404
+
     request_dict = {'coordinates' :
         { '$within' : {
             "$polygon" : neighborhood['geometry']['coordinates'][0] }}
@@ -66,31 +71,22 @@ def neighborhood_detail(request, neighborhood_slug):
             '$lte' : today
             }
 
+    thirty_ago = today + datetime.timedelta(-30)
+
+    sparkline_data = open311stats.pad_day_range(open311stats.count(
+        ['requested_datetime_day'], request_dict),
+            thirty_ago, today)
+
     # Open requests
-    open_request_dict = request_dict.copy()
-    open_request_dict['status'] = "Open"
-    open_count = db.requests.find(open_request_dict).count()
-
-    # Top Requests
-    service_counts = open311stats.count(['service_name'], request_dict)
-    top_services = sorted(service_counts,
-            key=lambda service: -service['value']['count'])
-    for service in top_services:
-        service["id"] = service["_id"]
-        service["id"]["service_name"] = service["id"]["service_name"] \
-                .replace("_", " ")
-        service['value']['count'] = int(service['value']['count'])
-
     # Average response time.
-    avg_time = open311stats.avg_response_time(request_dict)
-    days = avg_time[0]['value']['avg_time'] / 86400000
 
     c = Context({
-        'neighborhood' : neighborhood,
-        'avg_response': int(days),
+        'geometry' : neighborhood,
+        'geometry_type' : 'polygons',
+        'end_date': today.strftime('%Y-%m-%d'),
+        'start_date': year_ago.strftime('%Y-%m-%d'),
+        'sparkline_data': json.dumps(sparkline_data),
         'bbox' : json.dumps(neighborhood['properties']['bbox']),
-        'top_services': top_services[0:9],
-        'open_requests': open_count
         })
 
     return render(request, 'neighborhood_test.html', c)
@@ -130,12 +126,48 @@ def street_view(request, street_name, min_val, max_val):
         'properties.max' : int(max_val) }
         )
 
+    # If nothing is returned, raise 404.
+    if street is None:
+        raise Http404
+
+    request_dict = { 'street' : street['_id'] }
+
+    # Set the dictionary to do within specific item.
+    today = datetime.datetime.now()
+    year_ago = today + datetime.timedelta(-365)
+    request_dict['requested_datetime'] = {
+            '$gte' : year_ago,
+            '$lte' : today
+            }
+
+    thirty_ago = today + datetime.timedelta(-30)
+
+    sparkline_data = open311stats.pad_day_range(open311stats.count(
+        ['requested_datetime_day'], request_dict),
+            thirty_ago, today)
+
+    # Open requests
+    # Average response time.
+
     c = Context({
-        'street': street,
-        'json' : json.dumps(street['geometry'])
+        'geometry' : street,
+        'id' : street['_id'],
+        'geometry_type' : 'streets',
+        'end_date': today.strftime('%Y-%m-%d'),
+        'start_date': year_ago.strftime('%Y-%m-%d'),
+        'sparkline_data': json.dumps(sparkline_data),
+        'bbox' : json.dumps(street['properties']['bbox']),
         })
 
-    return render(request, 'street_test.html', c)
+    return render(request, 'neighborhood_test.html', c)
+
+
+    # c = Context({
+        # 'street': street,
+        # 'json' : json.dumps(street['geometry'])
+        # })
+
+    # return render(request, 'street_test.html', c)
 
 def api_handler(request, collection):
     """
@@ -208,12 +240,14 @@ def api_count_handler(request):
     """
     get_params = request.GET.copy()
     after_params = {}
+    keys = []
 
     try:
         keys = get_params['keys'].split(',')
         del(get_params['keys'])
     except:
-        return HttpResponse('Error: No count keys defined.', status=400)
+        # return HttpResponse('Error: No count keys defined.', status=400)
+        pass
 
     # Store the sort order.
     if 'sort' in get_params:
@@ -237,7 +271,8 @@ def api_count_handler(request):
     try:
         count = open311stats.count(keys, query)
     except:
-        return HttpResponse("Error", status=400)
+        print "Test"
+        # return HttpResponse("Error", status=400)
 
     # Clean it up a little.
     clean_count = []
@@ -280,9 +315,15 @@ def api_avg_response_handler(request):
     """ Average response things. """
     get_params = request.GET.copy()
     query = api_query('requests', get_params)
+    print query
 
     avg_response = open311stats.avg_response_time(query)
-    json_resp = json.dumps(avg_response, default=bson.json_util.default)
+    try:
+        clean_avg_response = avg_response[0]['value']
+    except:
+        clean_avg_response = { "avg_time": 0 }
+
+    json_resp = json.dumps(clean_avg_response, default=bson.json_util.default)
     return HttpResponse(json_resp, 'application/json')
 
 # Search for an address!
