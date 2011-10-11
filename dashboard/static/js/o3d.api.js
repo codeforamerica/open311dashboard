@@ -5,17 +5,8 @@ o3d.API.query = {};
 
 o3d.API.buildPage = function loadStats() {
   // Load top request types.
-  $.get('/api/requests/count/?' + $.param(o3d.API.query) + '&page_size=10&sort=-count&keys=service_name',
+  $.get('/api/requests/count/?' + $.param(o3d.API.query) + '&page_size=8&sort=-count&keys=service_name',
     function (data) {
-      $("#top-requests-table tbody").html('');
-      for (var i = 0; i < data.length; i += 1) {
-        // var tmp_data = "<tr>";
-        // tmp_data += "<td>" + data[i]['service_name'].replace(/_/g, ' ') + "</td>";
-        // tmp_data += "<td>" + parseInt(data[i]['count']) + "</td>";
-        // tmp_data += "</tr>";
-        // $('#top-requests-table').append(tmp_data);
-      }
-
       o3d.viz.top_requests_histo(data, "#top-requests-chart", 220, 80);
   });
 
