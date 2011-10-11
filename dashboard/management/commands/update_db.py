@@ -12,6 +12,7 @@ from pymongo.connection import Connection
 import bson.json_util
 from mongoutils.mapreduce import open311stats
 from mongoutils.api import api_query
+from mongoutils.migrations import requests
 
 # Set up the database connection as a global variable
 connection = Connection(MONGODB['host'])
@@ -206,6 +207,9 @@ class Command(BaseCommand):
     Makes calls one day at a time"""
 
     def handle(self, *args, **options):
+        print "Dropping indexes..."
+        requests.drop_indexes()
+
         if options['default'] is True:
             if len(args) >= 1:
                 start, end = get_time_range(dt.datetime.strptime(args[0], '%Y-%m-%d'))
@@ -224,7 +228,7 @@ class Command(BaseCommand):
                 page = False
 
             for _ in xrange(num_days):
-                requests = process_requests(start, end, page)
+                process_requests(start, end, page)
 
                 start -= ONE_DAY
                 end -= ONE_DAY
@@ -233,5 +237,10 @@ class Command(BaseCommand):
 
         if options['open'] is True:
             handle_open_requests()
+
+        requests.add_indexes()
+
+        # Lookup the nearest street.
+        requests.update_nearest_streets({ 'street' : {'$exits' : False }})
 
 
