@@ -15,7 +15,7 @@ def add_indexes():
     db.requests.ensure_index([('coordinates', '2d')])
 
 def drop_indexes():
-    db.requests.drop_index([('coordinates', '2d')])
+    db.requests.drop_index('coordinates_')
 
 def find_nearest_street(coordinate_list, max_distance):
     """
@@ -29,6 +29,7 @@ def find_nearest_street(coordinate_list, max_distance):
     for street in streets:
         # Loop through each street and convert it to x,y.
         xy_line = []
+        print street['properties']['name']
 
         for coordinate_point in street['geometry']['coordinates']:
             xy_point = nearest_street. \
@@ -44,9 +45,9 @@ def find_nearest_street(coordinate_list, max_distance):
                 distance = computed_distance
                 street_id = street['_id']
 
-    return street_id
+        return street_id
 
-def update_nearest_streets(filter_requests={}, max_distance=.001):
+def update_nearest_streets(filter_requests={}, max_distance=.005):
     """
     Find the nearest street to each request in a queryset.
     """
@@ -54,6 +55,7 @@ def update_nearest_streets(filter_requests={}, max_distance=.001):
     requests = db.requests.find(filter_requests)
 
     for request in requests:
+        print request['service_request_id']
         street_id = find_nearest_street(request['coordinates'], max_distance)
         db.requests.update({'_id' : request['_id']},
                 { '$set' : {'street' : street_id }})

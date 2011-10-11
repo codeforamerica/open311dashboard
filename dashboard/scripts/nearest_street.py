@@ -165,4 +165,4 @@ def process_data():
     f2 = open('output/scored_centerlines_final.json','w')
     simplejson.dump(centerlines,f2)
     f2.close()
-process_data()
+# process_data()
