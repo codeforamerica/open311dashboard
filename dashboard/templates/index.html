@@ -1,29 +1,55 @@
 {% extends 'base/main.html' %}
-
 {% block content %}
-<div class="row show-grid">
-  <div class="span-one-third column {% if delta.closed_count > 0 %}green{% else %}red{% endif %}">
-    <strong>{{ this_week_stats.closed_request_count }} </strong> 
+<style>
+  .block {
+    background-color:#fff;
+    height:125px;
+    text-align:center;
+    padding:15px 0;
+  }
+
+  .block {
+    font-size:16pt;
+  }
+
+  .numberbox {
+    font-size:30pt;
+    font-weight:bold;
+  }
+
+  .red {
+    background-color: red;
+    color: white;
+  }
+
+  .green {
+    background-color: green;
+    color:white;
+  }
+</style>
+<div class="row show-grid" style="padding-top:15px;">
+  <div class="span-one-third column block {% if delta.closed_count > 0 %}green{% else %}red{% endif %}">
+    <div id="closed-requests" class="numberbox">{{ this_week_stats.closed_request_count }} </div> 
     requests closed this week.
     <strong>{{ delta.closed_count}}%</strong> change in requests closed from last week to
     this.
   </div>
 
-  <div class="span-one-third column">
-    <strong>{{ this_week_stats.request_count}} </strong>requests opened this week.
+  <div class="span-one-third column block">
+    <div id="opened-requests" class="numberbox">{{ this_week_stats.request_count}} </div>requests opened this week.
     <strong>{{ delta.opened_count }}%</strong> change in requests from last week to
     this.
   </div>
 
-  <div class="span-one-third column {% if delta.time < 0 %}green{% else %}red{% endif %}">
-    {{ this_week_stats.average_response }} day{{ this_week_stats.average_response|pluralize }}
+  <div class="span-one-third column block {% if delta.time < 0 %}green{% else %}red{% endif %}">
+    <div id="average-response" class="numberbox"></div>
       average response time.
    {{ delta.time }}% change in response time from last week to this.
   </div>
 </div>
 
 <div class="row">
-  <div class="span10 column">
+  <div class="span10 column" style="background-color:#fff;">
    Hello 
     <select class="chzn-select" id="neighborhood-selector">
       <option>San Francisco</option>
@@ -48,15 +74,20 @@
     </select>
   </div>
 </div>
-
 <!-- Display map here -->
-<div id="map" class="container border-radius"></div>
+<style>
+  #streets path:hover, #sidewalk_cleaning path:hover, #graffiti path:hover {
+    stroke-width:5px;
+  }
+</style>
+
+<div id="map" style="border:1px solid #ccc;" class="container border-radius">
+</div>
 {% endblock %}
 
 {% block custom_scripts %}
-<link rel="stylesheet" href="/static/css/tipsy.css">
-<script src="/static/js/jquery.tipsy.js"></script>
 <script src="/static/js/map.js"></script>
+<script src="{{ STATIC_URL }}/js/date.js"></script>
 <script src="/static/js/raycasting.js"></script>
 
 <script>
@@ -66,56 +97,46 @@
     $("#layer-select").chosen().change(function (e) {
       Map.switchVisibleLayer(window[this.value]);
     });
-  });
-</script>
 
-<script>
-  $(document).ready(function() {
+    // Get open/closed counts, average response time.
+    var today = Date.today().toString('yyyy-M-d');
+    var week_ago = Date.today().addDays(-7).toString('yyyy-M-d');
+    o3d.API.query = {
+      requested_datetime_start: week_ago,
+      requested_datetime_end: today
+    }
+    $.get('/api/requests/count/?'+ $.param(o3d.API.query),
+      function(data) {
+          $("#opened-requests").html(data[0].count);
+        }
+    );
 
-    $('#neighborhood-selector').chosen().change(function (e, s) {
-      if (!isNaN(parseInt(this.value))) {
-        //window.location = '/neighborhood/'+this.value+'/';
-        url = "/api/home/"+this.value+".json";
-        var id = this.value;
-        $.ajax({
-          url: url,
-          success: function (data) {
-            $('.see-more').html('<p><a href="/neighborhood/'+id+'">See more</a></p>');
-            this_week = data.this_week_stats;
-            // Update the numbers
-            $("#request-count .number").html(this_week.open_request_count);
-            $("#closed-count .number").html(this_week.closed_request_count);
-            $("#open-time .number").html(this_week.average_response);
-
-            if (this_week.average_response === 1) {
-              $("#open-time .number").append(" day");
-              } else {
-              $("#open-time .number").append(" days");
-            }
-
-            // Update the deltas
-            delta = data.delta;
-            $("#request-count .delta").html(delta.opened_count);
-            $("#closed-count .delta").html(delta.closed_count);
-            $("#open-time .delta").html(delta.time);
-
-            $("#closed-count, #open-time").removeClass('red').removeClass('green');
-
-            if (delta.closed_count > 0) {
-              $("#closed-count").addClass('green');
-            } else {
-              $("#closed-count").addClass('red');
-            }
-
-            if (delta.time <= 0) {
-              $("#open-time").addClass('green');
-            } else {
-              $("#open-time").addClass('red');
-            }
-          }
-        });
+    $.get('/api/requests/avg_response/?'+ $.param(o3d.API.query),
+      function(data) {
+        try {
+          $("#average-response").html(o3d.time.ms2human(data.avg_time));
+        } catch (err) {
+          $("#average-response").html("0");
+        }
       }
+    );
+
+    o3d.API.query = {
+      updated_datetime_start: week_ago,
+      updated_datetime_end: today,
+      status: 'Closed'
+    }
+
+    $.get('/api/requests/count/?' + $.param(o3d.API.query),
+    function(data) {
+      try {
+        $("#closed-requests").html(data[0].count);
+      } catch(err) {
+      $("#closed-requests").html("0");
+    }
     });
+    $.get('/api/requests/count/?keys=status&status=Closed')
   });
 </script>
+
 {% endblock %}
