@@ -241,6 +241,6 @@ class Command(BaseCommand):
         requests.add_indexes()
 
         # Lookup the nearest street.
-        requests.update_nearest_streets({ 'street' : {'$exits' : False }})
+        requests.update_nearest_streets({ 'street' : {'$exists' : False }})
 
 
