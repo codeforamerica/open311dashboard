@@ -15,7 +15,7 @@ def add_indexes():
     db.requests.ensure_index([('coordinates', '2d')])
 
 def drop_indexes():
-    db.requests.drop_index('coordinates_')
+    db.requests.drop_index('coordinates_2d')
 
 def find_nearest_street(coordinate_list, max_distance):
     """
@@ -62,5 +62,6 @@ def update_nearest_streets(filter_requests={}, max_distance=.005):
 
 
 if __name__ == '__main__':
+    add_indexes()
     update_nearest_streets()
 
