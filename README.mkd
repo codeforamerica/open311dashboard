@@ -26,7 +26,7 @@ Getting Started
 
 A Word on Mapnik
 ----------------
-Mapnik is a real pain to install. The [TileMill](http://tilemill.com/index.html) homepage has resources and packages for installing Mapnik2 on Mac and Ubuntu.
+[Mapnik2's Wiki](https://github.com/mapnik/mapnik/wiki/Mapnik2) has instructions for installing Mapnik2 on Mac OSX and Linux.
 
 Database Update Script
 ----------------------
