@@ -7,3 +7,4 @@ dashboard/static/tiles/
 epio.ini
 .epio-app
 dashboard/static/*.json
+*.swp
