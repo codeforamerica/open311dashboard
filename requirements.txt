@@ -17,6 +17,7 @@ psycopg2==2.4.1
 mock
 coverage
 django-test-coverage
+mocker
 
 
 # ----------------------

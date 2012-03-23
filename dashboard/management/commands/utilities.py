@@ -1,7 +1,40 @@
+import urllib2
+import urllib
 import datetime as dt
 from dateutil import parser
 
 ONE_DAY = dt.timedelta(days=1)
+
+def get_data_from_endpoint(url_query, url_handler):
+    """
+    TBD
+    """
+    query_result_file = url_handler.urlopen(url_query)
+    return query_result_file
+
+def format_url_query(start, end, page, city):
+    """
+    Accept start, end datetimes, a paging indicator and a City model object
+    format the passed in data to create a url suitable for calling 
+    an open 311 endpoint 
+    """
+
+    # TODO:
+    # classic version does data validation here
+    # remember to add that back in when building the new command
+    # function
+
+    query_data = {
+        'start_date' : start.isoformat() + 'Z',
+        'end_date' : end.isoformat() + 'Z',
+        'jurisdiction_id' : city.jurisdiction_id,
+    }
+    if page > 0:
+        query_data['page'] = page
+
+    query_str = urllib.urlencode(query_data)
+
+    return city.url + '?' + query_str
 
 def get_time_range(on_day=None):
     """
