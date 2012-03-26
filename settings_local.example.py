@@ -13,7 +13,7 @@ DATABASES = {
 # SECRET KEY
 SECRET_KEY = ''
 
-# Enagle Geographic data
+# Enable Geographic data
 ENABLE_GEO = True
 
 # Open311 City
