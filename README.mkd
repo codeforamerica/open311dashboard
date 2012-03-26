@@ -1,10 +1,10 @@
 Open311 Dashboard
 =================
-We are creating a set of interactive widgets to help people visualize and analyze 311 data on one unified dashboard.
+We are creating an application to help people visualize and analyze 311 data on one unified dashboard.
 
 Non-Python Requirements
 -----------------------
-Basically, you need all of the libraries to run [GeoDjango](https://docs.djangoproject.com/en/dev/ref/contrib/gis/install/). If you are so inclined, you can install most of these with [homebrew](https://github.com/mxcl/homebrew).
+You will need all of the libraries to run [GeoDjango](https://docs.djangoproject.com/en/dev/ref/contrib/gis/install/). If you are so inclined, you can install most of these with [homebrew](https://github.com/mxcl/homebrew).
 [KyngChaos](http://www.kyngchaos.com/software:frameworks) may also be a useful resource for MacOS X users. 
 
 * [GEOS](http://trac.osgeo.org/geos/)
@@ -27,6 +27,7 @@ Getting Started
 A Word on Mapnik
 ----------------
 [Mapnik2's Wiki](https://github.com/mapnik/mapnik/wiki/Mapnik2) has instructions for installing Mapnik2 on Mac OSX and Linux.
+Dane Springmeyer recently released [Mapnik2 binaries for Mac OSX](https://github.com/mapnik/mapnik/downloads).
 
 Database Update Script
 ----------------------
@@ -59,7 +60,7 @@ There are a number API calls to return JSON in various forms.
 
 More Information
 ----------------
-Visit our [project page](http://codeforamerica.org/?cfa_project=open311-dashboard) and our [homepage](http://www.311dashboard.com).
+Visit our [project page](http://codeforamerica.org/?cfa_project=open311-dashboard).
 
 Join the [official Open311 Dashboard mailing list](http://groups.google.com/group/open311-dashboard).
 
