@@ -2,6 +2,8 @@ Open311 Dashboard
 =================
 We are creating an application to help people visualize and analyze 311 data on one unified dashboard.
 
+<img src="http://i.imgur.com/Kmjmy.png"/>
+
 Non-Python Requirements
 -----------------------
 You will need all of the libraries to run [GeoDjango](https://docs.djangoproject.com/en/dev/ref/contrib/gis/install/). If you are so inclined, you can install most of these with [homebrew](https://github.com/mxcl/homebrew).
